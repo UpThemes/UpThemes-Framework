@@ -1,6 +1,8 @@
 <?php
 
-function upfw_text_field($value,$attr){ ?>
+function upfw_text_field($value,$attr){
+    global $up_options,$wpdb;
+?>
 
                 <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
                     <fieldset class="title">
@@ -21,7 +23,9 @@ function upfw_text_field($value,$attr){ ?>
 
 }
 
-function upfw_text_list($value,$attr){ ?>
+function upfw_text_list($value,$attr){
+    global $up_options,$wpdb;
+?>
 
                 <li class="type-<?php echo $value['type'];?>" id="<?php echo $value['id']; ?>_list">
                     <fieldset class="title">
@@ -90,7 +94,9 @@ function upfw_text_list($value,$attr){ ?>
                 <?php $attr = '';
 }
 
-function upfw_textarea($value,$attr){ ?>
+function upfw_textarea($value,$attr){
+    global $up_options,$wpdb;
+?>
 
                 <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
                     <fieldset class="title">
@@ -110,7 +116,9 @@ function upfw_textarea($value,$attr){ ?>
                 <?php $attr = '';
 }
 
-function upfw_select($value,$attr){ ?>
+function upfw_select($value,$attr){
+    global $up_options,$wpdb;
+?>
 
                 <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
                     <fieldset class="title">
@@ -151,7 +159,9 @@ function upfw_select($value,$attr){ ?>
 
 }
 
-function upfw_multiple($value,$attr){ ?>
+function upfw_multiple($value,$attr){
+    global $up_options,$wpdb;
+?>
 
                 <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
                     <fieldset class="title">
@@ -213,7 +223,9 @@ function upfw_multiple($value,$attr){ ?>
 
 }
 
-function upfw_checkbox($value,$attr){ ?>
+function upfw_checkbox($value,$attr){
+    global $up_options,$wpdb;
+?>
 
                 <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
                     <fieldset class="title">
@@ -263,7 +275,9 @@ function upfw_checkbox($value,$attr){ ?>
 
 }
 
-function upfw_color($value,$attr){ ?>
+function upfw_color($value,$attr){
+    global $up_options,$wpdb;
+?>
 
                 <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
                     <fieldset class="title">
@@ -297,7 +311,9 @@ function upfw_color($value,$attr){ ?>
 
 }
 
-function upfw_image($value,$attr){ ?>
+function upfw_image($value,$attr){
+    global $up_options,$wpdb;
+?>
 
                 <script type="text/javascript">
                     jQuery(function(){
@@ -329,12 +345,14 @@ function upfw_image($value,$attr){ ?>
                         );
                         
                         //Select and image from the gallery
-                        jQuery('#<?php echo $value['id']; ?>allimages a').live('click', function(){
+                        jQuery('#<?php echo $value['id']; ?>allimages a').live('click', function(e){
+                        
+                            e.preventDefault();
                             //Add image source to hidden input
                             jQuery('input#<?php echo $value['id']; ?>').attr('value', jQuery(this).attr('href'));
                             //Send image to preview
                             jQuery('#<?php echo $value['id']; ?>preview').html('<img src="'+jQuery(this).attr('href')+'" alt="<?php echo $value['id']; ?> Image" />');
-                            activate_save_animation();
+                            activate_save_animation(e);
                             return false;
                         });
                         <?php //Upload Security
@@ -454,9 +472,9 @@ function upfw_image($value,$attr){ ?>
 
 }
 
-function upfw_category($value,$attr){  
-
-	global $wpdb; ?>
+function upfw_category($value,$attr){
+    global $up_options,$wpdb;
+?>
 
                 <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
                     <fieldset class="title">
@@ -496,9 +514,9 @@ function upfw_category($value,$attr){
 
 }
 
-function upfw_categories($value,$attr){ 
-
-	global $wpdb; ?>
+function upfw_categories($value,$attr){
+    global $up_options,$wpdb;
+?>
 
                 <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
                     <fieldset class="title">
@@ -555,9 +573,9 @@ function upfw_categories($value,$attr){
 
 }
 
-function upfw_page($value,$attr){  
-
-	global $wpdb; ?>
+function upfw_page($value,$attr){
+    global $up_options,$wpdb;
+?>
 
                 <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
                     <fieldset class="title">
@@ -595,9 +613,9 @@ function upfw_page($value,$attr){
                 <?php $attr = '';
 }
 
-function upfw_pages($value,$attr){  
-
-	global $wpdb; ?>
+function upfw_pages($value,$attr){
+    global $up_options,$wpdb;
+?>
 
                 <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
                     <fieldset class="title">
@@ -655,7 +673,9 @@ function upfw_pages($value,$attr){
 
 }
 
-function upfw_submit($value,$attr){ ?>
+function upfw_submit($value,$attr){
+    global $up_options,$wpdb;
+?>
 
                 <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
                     <fieldset class="title">
@@ -678,9 +698,9 @@ function upfw_submit($value,$attr){ ?>
 
 }
 
-function upfw_taxonomy($value,$attr){  
-
-	global $wpdb; ?>
+function upfw_taxonomy($value,$attr){
+    global $up_options,$wpdb;
+?>
 
                 <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
                     <fieldset class="title">
@@ -738,7 +758,9 @@ function upfw_taxonomy($value,$attr){
 
 }
 
-function upfw_button($value,$attr){ ?>
+function upfw_button($value,$attr){
+    global $up_options,$wpdb;
+?>
 
                 <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
                     <fieldset class="title">
@@ -760,7 +782,9 @@ function upfw_button($value,$attr){ ?>
                 <?php $attr = '';
 }
 
-function upfw_divider($value,$attr){ ?>
+function upfw_divider($value,$attr){
+    global $up_options,$wpdb;
+?>
 
                 <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
                     <h2 class="tight"><?php echo $value['name']; ?></h2>
@@ -770,7 +794,9 @@ function upfw_divider($value,$attr){ ?>
 
 }
 
-function upfw_typography($value,$attr){ ?>
+function upfw_typography($value,$attr){
+    global $up_options,$wpdb;
+?>
 
                 <li class="type-<?php echo $value['type'];?> typography" id="<?php echo $value['id']; ?> container-<?php echo $value['id']; ?>">
                     <fieldset class="title">
@@ -866,7 +892,9 @@ function upfw_typography($value,$attr){ ?>
                 <?php $attr = '';
 }
 
-function upfw_layouts($value,$attr){ ?>
+function upfw_layouts($value,$attr){
+    global $up_options,$wpdb;
+?>
 
                 <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
                     <fieldset class="title">

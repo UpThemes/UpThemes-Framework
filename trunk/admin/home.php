@@ -12,6 +12,7 @@
 		
 		<?php
 		
+		
 		/* ----------------------- Form Security Check -------------------------- */
 		if(isset($_POST['_wpnonce'])):
 		    //Check if submitted from this domain
@@ -20,7 +21,6 @@
 		    if (!wp_verify_nonce($_POST['_wpnonce'], 'save_upthemes') ) 
 				wp_die('Security exception detected, please try again.');
 		endif;
-		
 		
 		/* ------------------Import/Export Functions ----------------------- */
 		//Restore Previous Options
@@ -71,6 +71,8 @@
 	    
 		/* ------------------------- Save Theme Options ------------------------------- */
 		if(isset($_POST['up_save'])):
+		
+			echo "saving";
 			$posts = $_POST;
 			foreach($posts as $k => $v):
 			    //Check if option is array (mulitple selects)

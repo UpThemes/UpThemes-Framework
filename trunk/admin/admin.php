@@ -414,9 +414,7 @@ function find_defaults($options){
 ** Render theme options
 *************************************/
 function render_options($options){
-    
-    global $up_options,$wpdb;
-    
+        
     foreach ($options as $value) {
         //Check if there are additional attributes
         if(is_array($value['attr'])):
