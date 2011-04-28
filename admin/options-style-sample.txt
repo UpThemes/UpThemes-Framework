@@ -1,0 +1,13 @@
+/*
+
+Rename this file to: style.css and place in the theme-options folder.
+
+Sample Tab Icon Style:
+
+	#upthemes_framework #up_header #up_topnav li.YOUR_TAB_CLASS a{
+		background: url("YOUR_ICON_URL") no-repeat left 4px;
+	}
+
+Add your custom CSS below.
+
+*/
