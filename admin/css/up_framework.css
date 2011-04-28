@@ -415,6 +415,7 @@
 	border: 1px solid #e3e3e3;
 	border-top: 0;
 	background: #fff url("../images/upfw_sidebar_bg.jpg") repeat-y top left;
+	min-width: 830px;
 }
 
 #upthemes_framework #up_main #up_sidebar{
@@ -485,7 +486,9 @@
 
 #upthemes_framework #up_main #up_content{
 	padding: 20px;
-	margin-left: 170px;
+	margin-left: 0;
+	float: left;
+	width: 630px;
 }
 
 #upthemes_framework #tabber, 
@@ -636,10 +639,13 @@
 	margin-right: 10px;
 }
 
+#upthemes_framework fieldset{
+	position: relative;
+}
+
 #upthemes_framework fieldset a.clear{
-	position: absolute;
-	right: 10px;
-	top: 6px;
+	display: inline-block;
+	margin-left: 10px;
 }
 
 #upthemes_framework	.thumbs{
