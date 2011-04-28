@@ -1,4 +1,7 @@
 <?php
+
+default_theme_fonts();
+
 function register_theme_font($args){
     global $up_fonts;
     extract($args);
@@ -12,16 +15,6 @@ function register_theme_font($args){
 
 function default_theme_fonts(){
     $args = array(
-        array(
-            'id' => 'existence_light',
-            'name' => 'Existence Light',
-            'style' => get_bloginfo("template_directory")."/library/fonts/existence-light/stylesheet.css",
-            'font_family' => "ExistenceLight"),
-        array(
-            'id' => 'existence_unicase_light',
-            'name' => 'Existence Unicase Light',
-            'font_family' => "ExistenceUnicaseLight",
-            'parent' => 'existence_light'),
         array(
             'id' => 'georgia',
             'name' => 'Georgia',

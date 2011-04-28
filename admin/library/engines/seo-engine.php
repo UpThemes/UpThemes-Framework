@@ -321,11 +321,11 @@ function up_title(){
         
         /* SEO Settings and Default Settings */
 	$disable = $up_options->seo_disable;
-	$home_layout = $up_options->seo_home_title_layout ? $up_options->seo_home_title_layout : "BLOG DESC";
-        $page_layout = $up_options->seo_page_title_layout ? $up_options->seo_page_title_layout : "TITLE BLOG DESC";
-	$single_layout = $up_options->seo_single_title_layout ? $up_options->seo_single_title_layout : "TITLE BLOG DESC";
-	$archive_layout = $up_options->seo_archive_title_layout ? $up_options->seo_archive_title_layout : "ARCHIVE TITLE DESC";
-        $search_layout = $up_options->seo_search_title_layout ? $up_options->seo_search_title_layout : "SEARCH TITLE DESC";
+	$home_layout = $up_options->seo_home_title_layout ? $up_options->seo_home_title_layout : "%BLOG% %DESC%";
+        $page_layout = $up_options->seo_page_title_layout ? $up_options->seo_page_title_layout : "%TITLE% %BLOG% %DESC%";
+	$single_layout = $up_options->seo_single_title_layout ? $up_options->seo_single_title_layout : "%TITLE% %BLOG% %DESC%";
+	$archive_layout = $up_options->seo_archive_title_layout ? $up_options->seo_archive_title_layout : "%ARCHIVE% %TITLE% %DESC%";
+        $search_layout = $up_options->seo_search_title_layout ? $up_options->seo_search_title_layout : "%SEARCH% %TITLE% %DESC%";
         
         /* If Not Disabled */
 	if(!$disable){

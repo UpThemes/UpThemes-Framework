@@ -231,6 +231,14 @@ function upfw_queue_scripts_styles(){
 	wp_enqueue_script('upfw', 
 		$upthemes . "js/up_framework.js", 
 		array('farbtastic','jquery.history','ajaxupload'));
+		
+    /* For Typography Engine */
+    wp_enqueue_script('jquery-ui-core');
+    wp_enqueue_script('jquery-ui-widget');
+    wp_enqueue_script('jquery-ui-mouse');
+    wp_enqueue_script('jquery-ui-slider', get_bloginfo('template_directory').'/admin/js/jquery.ui.slider.js', array('jquery-ui-core', 'jquery-ui-widget', 'jquery-ui-mouse'));
+    wp_enqueue_style('up-slider', get_bloginfo('template_directory').'/admin/css/ui-themes/smoothness/style.css');
+
 }
 
 if( is_admin() && is_upthemes_page() ):
@@ -344,10 +352,10 @@ function upfw_setup_theme_options(){
 	$up_options_db = get_option('up_themes_'.UPTHEMES_SHORT_NAME);
 			
 	global $up_options;
-	
+		
 	//Check if options are stored properly
 	if( isset($up_options_db) && is_array($up_options_db) ):
-	
+		
 	    //Check array to an object
 	    foreach ($up_options_db as $k => $v) {
 			$up_options -> {$k} = $v;
@@ -414,7 +422,7 @@ function find_defaults($options){
 ** Render theme options
 *************************************/
 function render_options($options){
-        
+    
     foreach ($options as $value) {
         //Check if there are additional attributes
         if(is_array($value['attr'])):
@@ -487,6 +495,10 @@ function render_options($options){
 
             //Render Typography Selector
             case 'typography': upfw_typography($value,$attr);
+            break;
+            
+            //Render Style Selector
+            case 'styles': upfw_style($value,$attr);
             break;
             
             //Render Form Button

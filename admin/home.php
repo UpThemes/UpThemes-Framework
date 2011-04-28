@@ -72,7 +72,6 @@
 		/* ------------------------- Save Theme Options ------------------------------- */
 		if(isset($_POST['up_save'])):
 		
-			echo "saving";
 			$posts = $_POST;
 			foreach($posts as $k => $v):
 			    //Check if option is array (mulitple selects)

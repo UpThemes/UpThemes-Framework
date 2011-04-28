@@ -17,10 +17,10 @@ function upfw_text_field($value,$attr){
                             <input type="text" name="<?php echo $value['id']; ?>" value="<?php if($up_options->$value['id']): echo $up_options->$value['id']; else: echo $value['value']; endif;?>" id="<?php echo $value['id']; ?>" <?php echo $attr; ?> />
                         </div>
                     </fieldset>
+                    <div class="clear"></div>
                 </li>
                 
-                <?php $attr = '';
-
+<?php
 }
 
 function upfw_text_list($value,$attr){
@@ -89,9 +89,10 @@ function upfw_text_list($value,$attr){
                             </div>
                         </div>
                     </fieldset>
+                    <div class="clear"></div>
                 </li>
                 
-                <?php $attr = '';
+<?php
 }
 
 function upfw_textarea($value,$attr){
@@ -111,9 +112,10 @@ function upfw_textarea($value,$attr){
                             <textarea name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" <?php echo $attr; ?>><?php if($up_options->$value['id']): echo $up_options->$value['id']; else: echo $value['value']; endif;?></textarea>
                         </div>
                     </fieldset>
+                    <div class="clear"></div>
                 </li>
                 
-                <?php $attr = '';
+<?php
 }
 
 function upfw_select($value,$attr){
@@ -153,10 +155,10 @@ function upfw_select($value,$attr){
                             </select>
                         </div>
                     </fieldset>
+                    <div class="clear"></div>
                 </li>
                 
-                <?php $attr = '';
-
+<?php
 }
 
 function upfw_multiple($value,$attr){
@@ -217,10 +219,10 @@ function upfw_multiple($value,$attr){
                             </select>
                         </div>
                     </fieldset>
+                    <div class="clear"></div>
                 </li>
                 
-                <?php $attr = '';
-
+<?php
 }
 
 function upfw_checkbox($value,$attr){
@@ -269,10 +271,10 @@ function upfw_checkbox($value,$attr){
                             <div class="clear"></div>
                         </div>
                     </fieldset>
+                    <div class="clear"></div>
                 </li>
                 
-                <?php $attr = '';
-
+<?php
 }
 
 function upfw_color($value,$attr){
@@ -305,10 +307,10 @@ function upfw_color($value,$attr){
                     	jQuery(this).parent().find('input').val('').css('backgroundColor','#f9f9f9');
                     });
                     </script>
+                    <div class="clear"></div>
                 </li>
                 
-                <?php
-
+<?php
 }
 
 function upfw_image($value,$attr){
@@ -344,6 +346,15 @@ function upfw_image($value,$attr){
                             }
                         );
                         
+                        jQuery("#container-<?php echo $value['id']; ?>").find('.clear').live('click', function(e){
+                    		
+                    		e.preventDefault();
+							jQuery('#<?php echo $value['id']; ?>preview').html('<img src="<?php echo THEME_DIR; ?>/admin/images/upfw_noimage.gif" alt="N Image" />');
+							jQuery('input#<?php echo $value['id']; ?>').attr('value', '');
+
+                        
+                        });
+                        
                         //Select and image from the gallery
                         jQuery('#<?php echo $value['id']; ?>allimages a').live('click', function(e){
                         
@@ -352,7 +363,7 @@ function upfw_image($value,$attr){
                             jQuery('input#<?php echo $value['id']; ?>').attr('value', jQuery(this).attr('href'));
                             //Send image to preview
                             jQuery('#<?php echo $value['id']; ?>preview').html('<img src="'+jQuery(this).attr('href')+'" alt="<?php echo $value['id']; ?> Image" />');
-                            activate_save_animation(e);
+                            activate_save_animation();
                             return false;
                         });
                         <?php //Upload Security
@@ -410,11 +421,11 @@ function upfw_image($value,$attr){
                         
                         if($up_options->$value['id']):
                             echo "<img src='".$up_options->$value['id']."' alt='Preview Image' />";
-                        elseif($value['url']):
-                            echo "<img src='".$value['url']."' alt='Preview Image' />";
                         else:
                         	echo "<img src='".THEME_DIR."/admin/images/upfw_noimage.gif' alt='No Image Available' />";
-                        endif;?></div>	
+                        endif;?></div>
+                        <a href="#" class="clear"><img src="<?php echo THEME_DIR; ?>/admin/images/upfw_ico_delete.png" alt="Delete Text Field" /></a>
+
                         
                     </fieldset>
 
@@ -467,9 +478,9 @@ function upfw_image($value,$attr){
 
                             </div>
                     </fieldset>
+                    <div class="clear"></div>
                 </li>
-            <?php
-
+<?php
 }
 
 function upfw_category($value,$attr){
@@ -508,10 +519,10 @@ function upfw_category($value,$attr){
                             </select>
                         </div>
                     </fieldset>
+                    <div class="clear"></div>
                 </li>
                 
-                <?php $attr = '';
-
+<?php
 }
 
 function upfw_categories($value,$attr){
@@ -567,10 +578,10 @@ function upfw_categories($value,$attr){
                             </select>
                         </div>
                     </fieldset>
+                    <div class="clear"></div>
                 </li>
                 
-                <?php $attr = '';
-
+<?php
 }
 
 function upfw_page($value,$attr){
@@ -608,9 +619,10 @@ function upfw_page($value,$attr){
                             </select>
                         </div>
                     </fieldset>
+                    <div class="clear"></div>
                 </li>
                 
-                <?php $attr = '';
+<?php
 }
 
 function upfw_pages($value,$attr){
@@ -668,9 +680,10 @@ function upfw_pages($value,$attr){
                             </select>
                         </div>
                     </fieldset>
+                    <div class="clear"></div>
                 </li>
-                <?php $attr = '';
 
+<?php
 }
 
 function upfw_submit($value,$attr){
@@ -692,10 +705,10 @@ function upfw_submit($value,$attr){
                             </div>
                         </div>
                     </fieldset>
+                    <div class="clear"></div>
                 </li>
                 
-                <?php $attr = '';
-
+<?php
 }
 
 function upfw_taxonomy($value,$attr){
@@ -752,10 +765,10 @@ function upfw_taxonomy($value,$attr){
                             </select>
                         </div>
                     </fieldset>
+                    <div class="clear"></div>
                 </li>
                 
-                <?php $attr = '';
-
+<?php
 }
 
 function upfw_button($value,$attr){
@@ -777,9 +790,10 @@ function upfw_button($value,$attr){
                             </div>
                         </div>
                     </fieldset>
+                    <div class="clear"></div>
                 </li>
                 
-                <?php $attr = '';
+<?php
 }
 
 function upfw_divider($value,$attr){
@@ -788,108 +802,176 @@ function upfw_divider($value,$attr){
 
                 <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
                     <h2 class="tight"><?php echo $value['name']; ?></h2>
+                    <div class="clear"></div>
                 </li>
 
-                <?php $attr = '';
-
+<?php
 }
 
 function upfw_typography($value,$attr){
-    global $up_options,$wpdb;
-?>
+    global $up_options,$up_fonts,$wpdb;
 
-                <li class="type-<?php echo $value['type'];?> typography" id="<?php echo $value['id']; ?> container-<?php echo $value['id']; ?>">
-                    <fieldset class="title">
-                        <div class="inner">
-                            <label><?php echo $value['name']; ?></label>
-                            <?php if($value['desc']): ?><kbd><?php echo $value['desc']; ?></kbd><?php endif;?>
-                        </div>
-                    </fieldset>
+    $option = $up_options->$value['id'];
+    $family  = $option['font'];
+    $family = $family ? $family : "Arial";
+    $size  = $option['size'];
+    $size = $size ? $size : '12px';
+    $lineheight = $option['lineheight'];
+    $lineheight = $lineheight ? $lineheight : '16px';
+    $selector = $option['selector'];
+    $fonts = $up_fonts['library']; ?>
                     
-                    <fieldset class="data">
-                        <div class="inner">
+                    <li class="type-<?php echo $value['type'];?> typography" id="<?php echo $value['id']; ?> container-<?php echo $value['id']; ?>">
+                        <fieldset class="title">
+                            <div class="inner">
+                                <label><?php echo $value['name']; ?></label>
+                                <?php if($value['desc']): ?><kbd><?php echo $value['desc']; ?></kbd><?php endif;?>
+                                <label class="font-preview-label"><?php _e('Font Preview', 'upfw');?></label>
+                                <div id="font-preview" class="<?php echo $value['id']; ?>_type_preview" style="font-family:<?php echo $up_fonts['library'][$family]['font_family']; ?>; font-size: <?php echo $size; ?>; line-height:<?php echo $lineheight;?>  "><?php _e('AaBbCcDdEeFfGgHhIiJjKkLlMmNn', 'upfw');?><br /><?php _e('OoPpQqRrSsTtUuVvWwXxYyZz', 'upfw');?></div>
+                            </div>
+                        </fieldset>
                         
-                        	<fieldset class="type_fields">
-                        	
-                            	<?php 
-                            	
-                            	$font_family = $value['id']."_font";
-                            	$font_size   = $value['id']."_fontsize";
-                            	$font_lineheight  = $value['id']."_lineheight";
-                            	
-                            	$font  = $up_options->$font_family;
-                            	$size  = $up_options->$font_size;
-                            	$lineheight = $up_options->$font_lineheight;
-                            	
-                            	?>
+                        <fieldset class="data">
+                            <div class="inner">
+                            
+                            	<fieldset class="type_fields">
 
-                                <label for="<?php echo $value['id']; ?>_font"><?php _e('Font Family','upfw'); ?></label>
-                                <select id="<?php echo $value['id']; ?>_font" name="<?php echo $value['id']; ?>_font">
-                                	<option value="Arial" <?php if( $font == 'Arial' ) echo 'selected'; ?>>Arial</option>
-                                	<option value="Helvetica" <?php if( $font == 'Helvetica' ) echo 'selected'; ?>>Helvetica</option>
-                                	<option value="Georgia" <?php if( $font == 'Georgia' ) echo 'selected'; ?>>Georgia</option>
-                                	<option value="Times New Roman" <?php if( $font == 'Times New Roman' ) echo 'selected'; ?>>Times New Roman</option>
-                                	<option value="Impact" <?php if( $font == 'Impact' ) echo 'selected'; ?>>Impact</option>
-                                	<option value="Palatino" <?php if( $font == 'Palatino' ) echo 'selected'; ?>>Palatino</option>
-                                	<option value="Courier New" <?php if( $font == 'Courier New' ) echo 'selected'; ?>>Courier New</option>
-                                </select>
+                                        <label class="font-label" for="<?php echo $value['id']; ?>_selector"><?php _e('CSS Selector','upfw'); ?></label>
+                                        <input class="font-selector" type="text" id="<?php echo $value['id']; ?>_selector" name="<?php echo $value['id']; ?>[selector]" value="<?php echo $selector;?>">
+                                        
+	                                <label class="font-label" for="<?php echo $value['id']; ?>_font"><?php _e('Font Family','upfw'); ?></label>
+	                                <?php if(is_array($fonts)): ksort($fonts);?>
+                                            <select id="<?php echo $value['id']; ?>_font" name="<?php echo $value['id']; ?>[font]">
+                                                <?php foreach($fonts as $font):
+                                                    $selected = ($font['id'] == $option['font']) ? 'selected="selected"' : '';?>
+                                                    <option id="<?php echo $font['font_family'];?>" value="<?php echo $font['id'];?>" <?php echo $selected;?>><?php echo $font['name'];?></option>
+                                                <?php endforeach;?>
+                                            </select>
+                                            
+                                            <?php /* We need to create an option for fonts */ ?>
+                                        <?php else:?>
+                                            <p><?php _e('No fonts registered yet', 'upfw');?></p>
+                                        <?php endif;?>
+	
+	                                <label class="font-label" for="<?php echo $value['id']; ?>_fontsize"><?php _e('Font Size','upfw'); ?>: <span class="<?php echo $value['id']; ?>_font_size_preview"><?php echo $size;?></span></label>
+                                        <div id="<?php echo $value['id'];?>-font-size" class="font-slider"></div>
+	                                <input type="hidden" id="<?php echo $value['id']; ?>_fontsize" name="<?php echo $value['id']; ?>[size]" value="<?php echo $size;?>">
+                                        
+                                        <label class="font-label" for="<?php echo $value['id']; ?>_lineheight"><?php _e('Line Height','upfw'); ?>: <span class="<?php echo $value['id']; ?>_line_height_preview"><?php echo $lineheight;?></span></label>
+                                        <div id="<?php echo $value['id'];?>-line-height" class="font-slider"></div>
+	                                <input type="hidden" id="<?php echo $value['id']; ?>_lineheight" name="<?php echo $value['id']; ?>[lineheight]" value="<?php echo $lineheight;?>">
 
-                                <label for="<?php echo $value['id']; ?>_fontsize"><?php _e('Font Size','upfw'); ?></label>
-                                <select id="<?php echo $value['id']; ?>_fontsize" name="<?php echo $value['id']; ?>_fontsize">
-                                	<?php
-                                	$firstnumber = 7;
-                                	$secondnumber = 60;
-                                	while($firstnumber < $secondnumber):
-                                		echo '<option value="'. $firstnumber .'px"';
-                                		if( $firstnumber."px" == $size )
-	                                		echo 'selected';
-	                                	echo '>'. $firstnumber .'px</option>';
-                                		$firstnumber++;
-                                	endwhile;
-                                	?>
-                                </select>
+                                </fieldset>
                                 
-                                <label for="<?php echo $value['id']; ?>_lineheight"><?php _e('Line Height','upfw'); ?></label>
-                                <select id="<?php echo $value['id']; ?>_lineheight" name="<?php echo $value['id']; ?>_lineheight">
-                                	<?php
-                                	$firstnumber = 7;
-                                	$secondnumber = 80;
-                                	while($firstnumber < $secondnumber):
-                                		echo '<option value="'. $firstnumber .'px"';
-                                		if( $firstnumber."px" == $lineheight )
-	                                		echo 'selected';
-	                                	echo '>'. $firstnumber .'px</option>';
-                                		$firstnumber++;
-                                	endwhile;
-                                	?>
-                                </select>
-                                
+                            </div>
+
+                        </fieldset>
+
+	                    <script type="text/javascript">
+                                jQuery(function($){
+                                    
+                                    /* Font Size Slider */
+                                    $( "#<?php echo $value['id'];?>-font-size" ).slider({
+                                            range: "min",
+                                            value: <?php echo str_replace('px', '', $size);?>,
+                                            min: 7,
+                                            max: 59,
+                                            slide: function( event, ui ) {
+                                                $("#<?php echo $value['id']; ?>_fontsize").val(ui.value+"px");
+                                                $(".<?php echo $value['id']; ?>_type_preview").css('font-size',ui.value+"px");
+                                                $(".<?php echo $value['id']; ?>_font_size_preview").text(ui.value+"px");
+                                            }
+                                    });
+
+                                    
+                                    /* Line Height Slider */
+                                    $( "#<?php echo $value['id'];?>-line-height" ).slider({
+                                            range: "min",
+                                            value: <?php echo str_replace('px', '', $lineheight);?>,
+                                            min: 7,
+                                            max: 79,
+                                            slide: function( event, ui ) {
+                                                $("#<?php echo $value['id']; ?>_lineheight").val(ui.value+"px");
+                                                $(".<?php echo $value['id']; ?>_type_preview").css('line-height',ui.value+"px");
+                                                $(".<?php echo $value['id']; ?>_line_height_preview").text(ui.value+"px");
+                                            }
+                                    });
+
+
+                                    /* Font Family */
+                                    $("#<?php echo $value['id']; ?>_font").live('change', function(e){
+                                        var selector = $(this).find(':selected')[0].id;
+                                        $(".<?php echo $value['id']; ?>_type_preview").css('font-family', selector);
+                                    });
+                                    
+                                    /* Queue Up Font Preview */
+                                    //$(".<?php echo $value['id']; ?>_type_preview").css('font-family', $("#<?php echo $value['id']; ?>_font").find(':selected')[0].id);
+
+                                });
+	                    </script>
+
+                   		<div class="clear"></div>
+                    </li>
+
+                
+<?php
+}
+
+function upfw_style($value,$attr){
+    global $up_options,$wpdb; ?>
+
+                        <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
+                            <fieldset class="title">
+                                <div class="inner">
+                                    <label for="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></label>
+                                    <?php if($value['desc']): ?><kbd><?php echo $value['desc']; ?></kbd><?php endif;?>
+                                </div>
                             </fieldset>
                             
-                        </div>
-
-                    </fieldset>
-
-                <div class="type_preview" style="font-family:<?php echo $font; ?>; font-size: <?php echo $size; ?>; font-family:<?php echo $font; ?>; ">AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz</div>
-
-                    <script type="text/javascript">
-                    
-                        jQuery("#<?php echo $value['id']; ?>_size").change(function(e){
-                            jQuery("#<?php echo $value['id']; ?> .type_preview").css('font-size',jQuery(this).val());
-                        });
-                        jQuery("#<?php echo $value['id']; ?>_font").change(function(e){
-                            jQuery("#<?php echo $value['id']; ?> .type_preview").css('font-family','"'+jQuery(this).val()+'"');
-                        });
-
-                        jQuery("#<?php echo $value['id']; ?>_lineheight").change(function(e){
-                            jQuery("#<?php echo $value['id']; ?> .type_preview").css('line-height','"'+jQuery(this).val()+'"');
-                        });
-
-                    </script>
-
-                </li>
-                
-                <?php $attr = '';
+                            <fieldset class="data">
+                                <div class="inner">
+                                    <script type="text/javascript">
+                                        jQuery(function($){
+                                            $('.up-style-<?php echo $value['id'];?>').click(function(){
+                                                $('#style-<?php echo $value['id'];?>').val($(this).attr('rel'));
+                                                $('.up-style-<?php echo $value['id'];?>').removeClass('up-style-active');
+                                                $(this).addClass('up-style-active');
+                                                return false;
+                                            });
+                                        });
+                                    </script>
+                                    <input type="hidden" id="style-<?php echo $value['id'];?>" name="<?php echo $value['id'];?>" value="<?php echo $up_options->$value['id'];?>" />
+                                    <div class="up-style-container">
+                                        <?php global $up_styles;
+                                        if(is_array($up_styles)):
+                                            delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_styles');
+                                            foreach($up_styles as $up_style):
+                                                global $up_options;
+                                                $selected = ($up_options->$value['id'] == $up_style['style']) ? ' up-style-active' : '';
+                                                if($selected):
+                                                    //Add layout to enqueue_theme_layout()
+                                                    $context = $value['context'] ? $value['context'] : 'global';
+                                                    $styles = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_styles');
+                                                    $style[$context] = array('id' => $up_style['id']);
+                                                    if(is_array($styles)):
+                                                        $styles = array_merge($styles, $style);
+                                                        update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_styles', $styles);
+                                                    else:
+                                                        update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_styles', $style);
+                                                    endif;
+                                                endif;?>
+                                                <a class="up-style up-style-<?php echo $value['id'].$selected;?>" href="<?php echo $up_style['style'];?>" rel="<?php echo $up_style['style'];?>"><span><em><?php echo $up_style['name'];?></em></span><img src="<?php echo $up_style['image'];?>" alt="<?php echo $up_style['name'];?>" id="<?php echo $up_style['id'];?>" /></a>
+                                            <?php endforeach;
+                                        else:
+                                            echo "<p>".__('No styles are registered yet for this theme.', 'upfw')."</p>";
+                                        endif;?>
+                                    </div>
+                                </div>
+                            </fieldset>
+		                    <div class="clear"></div>
+                        </li>
+                        
+<?php
 }
 
 function upfw_layouts($value,$attr){
@@ -946,8 +1028,8 @@ function upfw_layouts($value,$attr){
                             </div>
                         </div>
                     </fieldset>
+                    <div class="clear"></div>
                 </li>
                 
-                <?php $attr = '';
-
+<?php
 }
