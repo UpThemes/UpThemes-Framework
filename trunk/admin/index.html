@@ -1,1 +1,0 @@
-<?php //This is to protect the admin directory. Do not delete. ?>
