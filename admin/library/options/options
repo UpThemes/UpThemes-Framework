@@ -55,7 +55,8 @@ function upfw_text_list($value,$attr){
                     <fieldset class="data">
                         <div class="inner">
                             <div class="text_list">
-                                <p class="add_text_list"><a href="#">Add New Field</a></p>
+                                <?php $add_text = $value['default_text']?$value['default_text'] : __('Add New Field');?>
+                                <p class="add_text_list"><a href="#"><?php echo $add_text;?></a></p>
                                 <?php
                                 if($up_options->$value['id']):
                                     if(is_array($up_options->$value['id'])):
@@ -158,7 +159,8 @@ function upfw_select($value,$attr){
                     <div class="clear"></div>
                 </li>
                 
-<?php
+                <?php $attr = '';
+
 }
 
 function upfw_multiple($value,$attr){
@@ -222,7 +224,8 @@ function upfw_multiple($value,$attr){
                     <div class="clear"></div>
                 </li>
                 
-<?php
+                <?php $attr = '';
+
 }
 
 function upfw_checkbox($value,$attr){
@@ -318,7 +321,7 @@ function upfw_image($value,$attr){
 ?>
 
                 <script type="text/javascript">
-					jQuery(document).ready(function($){
+                    jQuery(function(){
                         
                         //View UpThemes Gallery
                         jQuery('a#<?php echo $value['id']; ?>viewgallery').toggle(
@@ -821,17 +824,21 @@ function upfw_divider($value,$attr){
 }
 
 function upfw_typography($value,$attr){
-    global $up_options,$up_fonts,$wpdb;
+    global $up_options,$wpdb;
 
-    $option = $up_options->$value['id'];
-    $family  = $option['font'];
-    $family = $family ? $family : "Arial";
-    $size  = $option['size'];
-    $size = $size ? $size : '12px';
-    $lineheight = $option['lineheight'];
-    $lineheight = $lineheight ? $lineheight : '16px';
-    $selector = $option['selector'];
-    $fonts = $up_fonts['library']; ?>
+
+                    $option = $up_options->$value['id'];
+                    $family  = $option['font'];
+                    $family = $family ? $family : "Arial";
+                    $size  = $option['size'];
+                    $size = $size ? $size : '12px';
+                    $lineheight = $option['lineheight'];
+                    $lineheight = $lineheight ? $lineheight : '16px';
+                    $selector = $option['selector'];
+                    $show_selector = $value['show_selector'];
+                    global $up_fonts;
+                    $fonts = $up_fonts['library'];
+                    ?>
                     
                     <li class="type-<?php echo $value['type'];?> typography" id="<?php echo $value['id']; ?> container-<?php echo $value['id']; ?>">
                         <fieldset class="title">
@@ -847,17 +854,22 @@ function upfw_typography($value,$attr){
                             <div class="inner">
                             
                             	<fieldset class="type_fields">
-
-                                        <label class="font-label" for="<?php echo $value['id']; ?>_selector"><?php _e('CSS Selector','upfw'); ?></label>
-                                        <input class="font-selector" type="text" id="<?php echo $value['id']; ?>_selector" name="<?php echo $value['id']; ?>[selector]" value="<?php echo $selector;?>">
-                                        
+                                        <?php if($show_selector):?>
+                                            <label class="font-label" for="<?php echo $value['id']; ?>_selector"><?php _e('CSS Selector','upfw'); ?></label>
+                                            <input class="font-selector" type="text" id="<?php echo $value['id']; ?>_selector" name="<?php echo $value['id']; ?>[selector]" value="<?php echo $selector;?>">
+                                        <?php else:?>
+                                            <input class="font-selector" type="hidden" id="<?php echo $value['id']; ?>_selector" name="<?php echo $value['id']; ?>[selector]" value="<?php echo $selector;?>">
+                                        <?php endif;?>
+                                        <div class="<?php echo $value['id'];?>-import-style"></div>
 	                                <label class="font-label" for="<?php echo $value['id']; ?>_font"><?php _e('Font Family','upfw'); ?></label>
 	                                <?php if(is_array($fonts)): ksort($fonts);?>
                                             <select id="<?php echo $value['id']; ?>_font" name="<?php echo $value['id']; ?>[font]">
                                                 <?php foreach($fonts as $font):
-                                                    $selected = ($font['id'] == $option['font']) ? 'selected="selected"' : '';?>
-                                                    <option id="<?php echo $font['font_family'];?>" value="<?php echo $font['id'];?>" <?php echo $selected;?>><?php echo $font['name'];?></option>
-                                                <?php endforeach;?>
+                                                    if($up_options->$value['id'])$selected = ($font['id'] == $option['font']) ? 'selected="selected"' : '';
+                                                    if(!$up_options->$value['id'])$selected = ($font['name'] == $value['value']) ? 'selected="selected"' : '';?>
+                                                    <option title="<?php echo $font['style'];?>" id="<?php echo $font['font_family'];?>" value="<?php echo $font['id'];?>" <?php echo $selected;?>><?php echo $font['name'];?></option>
+                                                <?php $selected = '';
+                                                endforeach;?>
                                             </select>
                                             
                                             <?php /* We need to create an option for fonts */ ?>
@@ -892,6 +904,9 @@ function upfw_typography($value,$attr){
                                                 $("#<?php echo $value['id']; ?>_fontsize").val(ui.value+"px");
                                                 $(".<?php echo $value['id']; ?>_type_preview").css('font-size',ui.value+"px");
                                                 $(".<?php echo $value['id']; ?>_font_size_preview").text(ui.value+"px");
+                                                $('.button-zone').addClass('formChanged');
+                                                $('.button-zone button').addClass('save-me-fool');
+                                                $('.formState').fadeIn( 400 );
                                             }
                                     });
 
@@ -906,18 +921,31 @@ function upfw_typography($value,$attr){
                                                 $("#<?php echo $value['id']; ?>_lineheight").val(ui.value+"px");
                                                 $(".<?php echo $value['id']; ?>_type_preview").css('line-height',ui.value+"px");
                                                 $(".<?php echo $value['id']; ?>_line_height_preview").text(ui.value+"px");
+                                                $('.button-zone').addClass('formChanged');
+                                                $('.button-zone button').addClass('save-me-fool');
+                                                $('.formState').fadeIn( 400 );
                                             }
                                     });
 
-
                                     /* Font Family */
                                     $("#<?php echo $value['id']; ?>_font").live('change', function(e){
+                                        var stylesheet = $(this).find(':selected')[0].title;
                                         var selector = $(this).find(':selected')[0].id;
+                                        var link = $('.<?php echo $value['id']; ?>-import-style');
+                                        if(link){
+                                            link.attr('href', stylesheet);
+                                        }else{
+                                            $('head').append('<link class="<?php echo $value['id']; ?>-import-style" rel="stylesheet" type="text/css" href="'+stylesheet+'" />');
+                                        }
                                         $(".<?php echo $value['id']; ?>_type_preview").css('font-family', selector);
                                     });
                                     
+                                    
+                                    /* Queue Up Stylesheet */
+                                    $('head').append('<link class="<?php echo $value['id']; ?>-import-style" rel="stylesheet" type="text/css" href="'+$("#<?php echo $value['id']; ?>_font").find(':selected')[0].title+'" />');
+                                    
                                     /* Queue Up Font Preview */
-                                    //$(".<?php echo $value['id']; ?>_type_preview").css('font-family', $("#<?php echo $value['id']; ?>_font").find(':selected')[0].id);
+                                    $(".<?php echo $value['id']; ?>_type_preview").css('font-family', $("#<?php echo $value['id']; ?>_font").find(':selected')[0].id);
 
                                 });
 	                    </script>

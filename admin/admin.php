@@ -166,14 +166,16 @@ function upfw_engines_init(){
 	if( !defined('DISABLE_STYLE_ENGINE') )
 		require_once('library/engines/style-engine.php');
 	
-	if( !defined('DISABLE-TYPOGRAPHY-ENGINE') )
+	if( !defined('DISABLE_TYPOGRAPHY_ENGINE') )
 		require_once('library/engines/typography-engine.php');
 	
 	if( !defined('DISABLE_SEO_ENGINE') )
 		require_once('library/engines/seo-engine.php');
 
 	require_once('library/options/options.php');
-
+	require_once('library/widgets/dashboard.php');
+	
+	add_action('wp_dashboard_setup', 'upfw_dbwidget_setup' );
 	add_action('init','default_theme_layouts',1);
 
 }

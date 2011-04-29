@@ -5,7 +5,21 @@ http://pixelgraphics.us
 
 */
 
+function activate_save_animation(e){
+	
+	jQuery('.button-zone').addClass('formChanged');
+	jQuery('.button-zone button').addClass('save-me-fool');
+	jQuery('.formState').fadeIn( 400 );
+
+}
+
 jQuery(document).ready(function($){
+
+	$('button[type="reset"]').each(function(i){
+		
+		$(this).replaceWith($("<a class='button' href='"+document.location+"'>"+$(this).text()+"</a>"));
+	
+	});
 
 	$('li#toplevel_page_upthemes a').live('click', function(){
 		scroll(0,0);
@@ -79,15 +93,7 @@ jQuery(document).ready(function($){
 	$('#upthemes_framework input, #upthemes_framework select,#upthemes_framework textarea[class!=click-copy][class!=up_import_code]').live('change', function(e){
 		activate_save_animation(e);
 	});
-	
-	var activate_save_animation = function(){
 		
-		$('.button-zone').addClass('formChanged');
-		$('.button-zone button').addClass('save-me-fool');
-		$('.formState').fadeIn( 400 );
-
-	}
-	
 	$colorpicker_inputs = $('input.popup-colorpicker');
 	
 	$colorpicker_inputs.each(
