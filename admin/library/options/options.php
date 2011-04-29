@@ -838,47 +838,66 @@ function upfw_typography($value,$attr){
                             <div class="inner">
                                 <label><?php echo $value['name']; ?></label>
                                 <?php if($value['desc']): ?><kbd><?php echo $value['desc']; ?></kbd><?php endif;?>
-                                <label class="font-preview-label"><?php _e('Font Preview', 'upfw');?></label>
-                                <div id="font-preview" class="<?php echo $value['id']; ?>_type_preview" style="font-family:<?php echo $up_fonts['library'][$family]['font_family']; ?>; font-size: <?php echo $size; ?>; line-height:<?php echo $lineheight;?>  "><?php _e('AaBbCcDdEeFfGgHhIiJjKkLlMmNn', 'upfw');?><br /><?php _e('OoPpQqRrSsTtUuVvWwXxYyZz', 'upfw');?></div>
                             </div>
                         </fieldset>
                         
                         <fieldset class="data">
                             <div class="inner">
                             
-                            	<fieldset class="type_fields">
+                            	<div class="type_fields">
 
+                                    
+                                    <div class="field">
                                         <label class="font-label" for="<?php echo $value['id']; ?>_selector"><?php _e('CSS Selector','upfw'); ?></label>
                                         <input class="font-selector" type="text" id="<?php echo $value['id']; ?>_selector" name="<?php echo $value['id']; ?>[selector]" value="<?php echo $selector;?>">
-                                        
+                                    </div>
+
+									<div class="field">
+									                                        
 	                                <label class="font-label" for="<?php echo $value['id']; ?>_font"><?php _e('Font Family','upfw'); ?></label>
-	                                <?php if(is_array($fonts)): ksort($fonts);?>
-                                            <select id="<?php echo $value['id']; ?>_font" name="<?php echo $value['id']; ?>[font]">
-                                                <?php foreach($fonts as $font):
-                                                    $selected = ($font['id'] == $option['font']) ? 'selected="selected"' : '';?>
-                                                    <option id="<?php echo $font['font_family'];?>" value="<?php echo $font['id'];?>" <?php echo $selected;?>><?php echo $font['name'];?></option>
-                                                <?php endforeach;?>
-                                            </select>
-                                            
-                                            <?php /* We need to create an option for fonts */ ?>
+	                                	<?php if(is_array($fonts)): ksort($fonts);?>
+                                        
+                                        <select id="<?php echo $value['id']; ?>_font" name="<?php echo $value['id']; ?>[font]">
+                                            <?php foreach($fonts as $font):
+                                                $selected = ($font['id'] == $option['font']) ? 'selected="selected"' : '';?>
+                                                <option id="<?php echo $font['font_family'];?>" value="<?php echo $font['id'];?>" <?php echo $selected;?>><?php echo $font['name'];?></option>
+                                            <?php endforeach;?>
+                                        </select>
+                                        
+                                        <?php /* We need to create an option for fonts */ ?>
                                         <?php else:?>
                                             <p><?php _e('No fonts registered yet', 'upfw');?></p>
                                         <?php endif;?>
-	
-	                                <label class="font-label" for="<?php echo $value['id']; ?>_fontsize"><?php _e('Font Size','upfw'); ?>: <span class="<?php echo $value['id']; ?>_font_size_preview"><?php echo $size;?></span></label>
-                                        <div id="<?php echo $value['id'];?>-font-size" class="font-slider"></div>
-	                                <input type="hidden" id="<?php echo $value['id']; ?>_fontsize" name="<?php echo $value['id']; ?>[size]" value="<?php echo $size;?>">
+									
+									</div>
+									
+									<div class="field">
+										
+		                                <label class="font-label" for="<?php echo $value['id']; ?>_fontsize"><?php _e('Font Size','upfw'); ?>: <span class="<?php echo $value['id']; ?>_font_size_preview"><?php echo $size;?></span></label>
+	                                    <div id="<?php echo $value['id'];?>-font-size" class="font-slider"></div>
+		                                <input type="hidden" id="<?php echo $value['id']; ?>_fontsize" name="<?php echo $value['id']; ?>[size]" value="<?php echo $size;?>">
+
+	                                </div>
                                         
+									<div class="field">
+									
                                         <label class="font-label" for="<?php echo $value['id']; ?>_lineheight"><?php _e('Line Height','upfw'); ?>: <span class="<?php echo $value['id']; ?>_line_height_preview"><?php echo $lineheight;?></span></label>
                                         <div id="<?php echo $value['id'];?>-line-height" class="font-slider"></div>
-	                                <input type="hidden" id="<?php echo $value['id']; ?>_lineheight" name="<?php echo $value['id']; ?>[lineheight]" value="<?php echo $lineheight;?>">
+	                                	<input type="hidden" id="<?php echo $value['id']; ?>_lineheight" name="<?php echo $value['id']; ?>[lineheight]" value="<?php echo $lineheight;?>">
 
-                                </fieldset>
+									</div>
+
+                                </div>
                                 
                             </div>
 
                         </fieldset>
-
+                        
+                        <div class="font-preview">
+	                        <label class="font-preview-label"><?php _e('Preview', 'upfw');?></label>
+	                        <div id="font-preview" class="<?php echo $value['id']; ?>_type_preview" style="font-family:<?php echo $up_fonts['library'][$family]['font_family']; ?>; font-size: <?php echo $size; ?>; line-height:<?php echo $lineheight;?>  "><?php _e('AaBbCcDdEeFfGgHhIiJjKkLlMmNn', 'upfw');?><br /><?php _e('OoPpQqRrSsTtUuVvWwXxYyZz', 'upfw');?></div>
+						</div>
+						
 	                    <script type="text/javascript">
                                 jQuery(function($){
                                     
