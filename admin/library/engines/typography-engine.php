@@ -50,7 +50,15 @@ function upfw_universal_fonts(){
         array(
             'id' => 'century_gothic',
             'name' => 'Century Gothic',
-            'font_family' => "Century Gothic")
+            'font_family' => "Century Gothic"),
+        array(
+            'id' => 'lucida_sans_unicode',
+            'name' => 'Lucida Sans Unicode',
+            'font_family' => "Lucida Sans Unicode"),
+        array(
+            'id' => 'lucida_grande',
+            'name' => 'Lucida Grande',
+            'font_family' => "Lucida Grande")
     );
     
     foreach($args as $arg):
@@ -257,21 +265,21 @@ function upfw_multiple_typography($options){
     
     $multiple = array(
         array(
-        'name' => __('Multiple Selectors', 'upfw'),
-        'desc' => __('Add a new selector category to generate a font style option below. You must save and refresh to see the new font option.', 'upfw'),
+        'name' => __('Selector Groups', 'upfw'),
+        'desc' => __('Add a new selector group (comma delimited) to generate a font style option below. You must save the options first.', 'upfw'),
         'id' => 'upfw_user_selectors',
         'type' => 'text_list',
-        'default_text' => __('Add New Font Category', 'upfw'))
+        'default_text' => __('Add New Selector Group', 'upfw'))
     );
     
     if(is_array($up_options->upfw_user_selectors)):
         foreach($up_options->upfw_user_selectors as $name):
             $multiple[] = array(
                 'name' => $name,
-                'desc' => '',
-                'show_selector' => true,
+                'desc' => __('Custom Selectors', 'upfw'),
                 'type' => 'typography',
-                'id' => preg_replace('/[^a-z\sA-Z\s0-9\s]/', '', strtolower(str_replace(' ', '_', $name)))
+                'id' => preg_replace('/[^a-z\sA-Z\s0-9\s]/', '', strtolower(str_replace(' ', '_', $name))),
+                'selector' => $name
             );
         endforeach;
     endif;

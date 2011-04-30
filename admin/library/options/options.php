@@ -55,7 +55,8 @@ function upfw_text_list($value,$attr){
                     <fieldset class="data">
                         <div class="inner">
                             <div class="text_list">
-                                <p class="add_text_list"><a href="#">Add New Field</a></p>
+                                <?php $add_text = $value['default_text'] ? $value['default_text'] : __('Add New Field', 'upfw');?>
+                                <p class="add_text_list"><a href="#"><?php echo $add_text;?></a></p>
                                 <?php
                                 if($up_options->$value['id']):
                                     if(is_array($up_options->$value['id'])):
@@ -824,125 +825,127 @@ function upfw_typography($value,$attr){
     global $up_options,$up_fonts,$wpdb;
 
     $option = $up_options->$value['id'];
-    $family  = $option['font'];
-    $family = $family ? $family : "Arial";
-    $size  = $option['size'];
-    $size = $size ? $size : '12px';
-    $lineheight = $option['lineheight'];
-    $lineheight = $lineheight ? $lineheight : '16px';
-    $selector = $option['selector'];
+    $family  = $option['font'] ? $option['font'] : 'Arial';
+    $size  = $option['size'] ? $option['size']: '12px';
+    $lineheight = $option['lineheight'] ? $option['lineheight'] : '16px';
+    $show_selector = $value['show_selector'];
+    $selector = $option['selector'] ? $option['selector'] : $value['selector'];
     $fonts = $up_fonts['library']; ?>
                     
-                    <li class="type-<?php echo $value['type'];?> typography" id="<?php echo $value['id']; ?> container-<?php echo $value['id']; ?>">
-                        <fieldset class="title">
-                            <div class="inner">
-                                <label><?php echo $value['name']; ?></label>
-                                <?php if($value['desc']): ?><kbd><?php echo $value['desc']; ?></kbd><?php endif;?>
-                            </div>
-                        </fieldset>
+    <li class="type-<?php echo $value['type'];?> typography" id="<?php echo $value['id']; ?> container-<?php echo $value['id']; ?>">
+        <fieldset class="title">
+            <div class="inner">
+                <label><?php echo $value['name']; ?></label>
+                <?php if($value['desc']): ?><kbd><?php echo $value['desc']; ?></kbd><?php endif;?>
+            </div>
+        </fieldset>
+        
+        <fieldset class="data">
+            <div class="inner">
+                <div class="type_fields">
+                    <div class="field">
+                        <?php if($show_selector):?>
+                            <label class="font-label" for="<?php echo $value['id']; ?>_selector"><?php _e('CSS Selector','upfw'); ?></label>
+                            <input class="font-selector" type="text" id="<?php echo $value['id']; ?>_selector" name="<?php echo $value['id']; ?>[selector]" value="<?php echo $selector;?>">
+                        <?php else:?>
+                            <input class="font-selector" type="hidden" id="<?php echo $value['id']; ?>_selector" name="<?php echo $value['id']; ?>[selector]" value="<?php echo $selector;?>">
+                        <?php endif;?>
+                    </div>
+
+                    <div class="field">
+                        <label class="font-label" for="<?php echo $value['id']; ?>_font"><?php _e('Font Family','upfw'); ?></label>
+                        <?php if(is_array($fonts)): ksort($fonts);?>
+                            <select id="<?php echo $value['id']; ?>_font" name="<?php echo $value['id']; ?>[font]">
+                                <?php foreach($fonts as $font):
+                                    if($option['font'])$selected = ($font['id'] == $option['font']) ? 'selected="selected"' : '';
+                                    if(!$option['font'])$selected = ($font['name'] == $value['default']) ? 'selected="selected"' : '';?>
+                                    <option title="<?php echo $font['style'];?>" id="<?php echo $font['font_family'];?>" value="<?php echo $font['id'];?>" <?php echo $selected;?>><?php echo $font['name'];?></option>
+                                <?php endforeach;?>
+                            </select>
                         
-                        <fieldset class="data">
-                            <div class="inner">
-                            
-                            	<div class="type_fields">
+                        <?php /* We need to create an option for fonts */ ?>
+                        <?php else:?>
+                            <p><?php _e('No fonts registered yet', 'upfw');?></p>
+                        <?php endif;?>
+                    </div>
+                    <div class="field">
+                        <label class="font-label" for="<?php echo $value['id']; ?>_fontsize"><?php _e('Font Size','upfw'); ?>: <span class="<?php echo $value['id']; ?>_font_size_preview"><?php echo $size;?></span></label>
+                        <div id="<?php echo $value['id'];?>-font-size" class="font-slider"></div>
+                        <input type="hidden" id="<?php echo $value['id']; ?>_fontsize" name="<?php echo $value['id']; ?>[size]" value="<?php echo $size;?>">
+                    </div>
+                    <div class="field">
+                        <label class="font-label" for="<?php echo $value['id']; ?>_lineheight"><?php _e('Line Height','upfw'); ?>: <span class="<?php echo $value['id']; ?>_line_height_preview"><?php echo $lineheight;?></span></label>
+                        <div id="<?php echo $value['id'];?>-line-height" class="font-slider"></div>
+                        <input type="hidden" id="<?php echo $value['id']; ?>_lineheight" name="<?php echo $value['id']; ?>[lineheight]" value="<?php echo $lineheight;?>">
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        
+        <div class="font-preview">
+            <label class="font-preview-label"><?php _e('Preview', 'upfw');?></label>
+            <div id="font-preview" class="<?php echo $value['id']; ?>_type_preview" style="font-family:<?php echo $up_fonts['library'][$family]['font_family']; ?>; font-size: <?php echo $size; ?>; line-height:<?php echo $lineheight;?>  "><?php _e('AaBbCcDdEeFfGgHhIiJjKkLlMmNn', 'upfw');?><br /><?php _e('OoPpQqRrSsTtUuVvWwXxYyZz', 'upfw');?></div>
+        </div>
+        
+        <script type="text/javascript">
+            jQuery(function($){
+                
+                /* Font Size Slider */
+                $( "#<?php echo $value['id'];?>-font-size" ).slider({
+                        range: "min",
+                        value: <?php echo str_replace('px', '', $size);?>,
+                        min: 7,
+                        max: 59,
+                        slide: function( event, ui ) {
+                            $("#<?php echo $value['id']; ?>_fontsize").val(ui.value+"px");
+                            $(".<?php echo $value['id']; ?>_type_preview").css('font-size',ui.value+"px");
+                            $(".<?php echo $value['id']; ?>_font_size_preview").text(ui.value+"px");
+                            $('.button-zone').addClass('formChanged');
+                            $('.button-zone button').addClass('save-me-fool');
+                            $('.formState').fadeIn( 400 );
+                        }
+                });
 
-                                    
-                                    <div class="field">
-                                        <label class="font-label" for="<?php echo $value['id']; ?>_selector"><?php _e('CSS Selector','upfw'); ?></label>
-                                        <input class="font-selector" type="text" id="<?php echo $value['id']; ?>_selector" name="<?php echo $value['id']; ?>[selector]" value="<?php echo $selector;?>">
-                                    </div>
+                
+                /* Line Height Slider */
+                $( "#<?php echo $value['id'];?>-line-height" ).slider({
+                        range: "min",
+                        value: <?php echo str_replace('px', '', $lineheight);?>,
+                        min: 7,
+                        max: 79,
+                        slide: function( event, ui ) {
+                            $("#<?php echo $value['id']; ?>_lineheight").val(ui.value+"px");
+                            $(".<?php echo $value['id']; ?>_type_preview").css('line-height',ui.value+"px");
+                            $(".<?php echo $value['id']; ?>_line_height_preview").text(ui.value+"px");
+                            $('.button-zone').addClass('formChanged');
+                            $('.button-zone button').addClass('save-me-fool');
+                            $('.formState').fadeIn( 400 );
+                        }
+                });
 
-									<div class="field">
-									                                        
-	                                <label class="font-label" for="<?php echo $value['id']; ?>_font"><?php _e('Font Family','upfw'); ?></label>
-	                                	<?php if(is_array($fonts)): ksort($fonts);?>
-                                        
-                                        <select id="<?php echo $value['id']; ?>_font" name="<?php echo $value['id']; ?>[font]">
-                                            <?php foreach($fonts as $font):
-                                                $selected = ($font['id'] == $option['font']) ? 'selected="selected"' : '';?>
-                                                <option id="<?php echo $font['font_family'];?>" value="<?php echo $font['id'];?>" <?php echo $selected;?>><?php echo $font['name'];?></option>
-                                            <?php endforeach;?>
-                                        </select>
-                                        
-                                        <?php /* We need to create an option for fonts */ ?>
-                                        <?php else:?>
-                                            <p><?php _e('No fonts registered yet', 'upfw');?></p>
-                                        <?php endif;?>
-									
-									</div>
-									
-									<div class="field">
-										
-		                                <label class="font-label" for="<?php echo $value['id']; ?>_fontsize"><?php _e('Font Size','upfw'); ?>: <span class="<?php echo $value['id']; ?>_font_size_preview"><?php echo $size;?></span></label>
-	                                    <div id="<?php echo $value['id'];?>-font-size" class="font-slider"></div>
-		                                <input type="hidden" id="<?php echo $value['id']; ?>_fontsize" name="<?php echo $value['id']; ?>[size]" value="<?php echo $size;?>">
-
-	                                </div>
-                                        
-									<div class="field">
-									
-                                        <label class="font-label" for="<?php echo $value['id']; ?>_lineheight"><?php _e('Line Height','upfw'); ?>: <span class="<?php echo $value['id']; ?>_line_height_preview"><?php echo $lineheight;?></span></label>
-                                        <div id="<?php echo $value['id'];?>-line-height" class="font-slider"></div>
-	                                	<input type="hidden" id="<?php echo $value['id']; ?>_lineheight" name="<?php echo $value['id']; ?>[lineheight]" value="<?php echo $lineheight;?>">
-
-									</div>
-
-                                </div>
-                                
-                            </div>
-
-                        </fieldset>
-                        
-                        <div class="font-preview">
-	                        <label class="font-preview-label"><?php _e('Preview', 'upfw');?></label>
-	                        <div id="font-preview" class="<?php echo $value['id']; ?>_type_preview" style="font-family:<?php echo $up_fonts['library'][$family]['font_family']; ?>; font-size: <?php echo $size; ?>; line-height:<?php echo $lineheight;?>  "><?php _e('AaBbCcDdEeFfGgHhIiJjKkLlMmNn', 'upfw');?><br /><?php _e('OoPpQqRrSsTtUuVvWwXxYyZz', 'upfw');?></div>
-						</div>
-						
-	                    <script type="text/javascript">
-                                jQuery(function($){
-                                    
-                                    /* Font Size Slider */
-                                    $( "#<?php echo $value['id'];?>-font-size" ).slider({
-                                            range: "min",
-                                            value: <?php echo str_replace('px', '', $size);?>,
-                                            min: 7,
-                                            max: 59,
-                                            slide: function( event, ui ) {
-                                                $("#<?php echo $value['id']; ?>_fontsize").val(ui.value+"px");
-                                                $(".<?php echo $value['id']; ?>_type_preview").css('font-size',ui.value+"px");
-                                                $(".<?php echo $value['id']; ?>_font_size_preview").text(ui.value+"px");
-                                            }
-                                    });
-
-                                    
-                                    /* Line Height Slider */
-                                    $( "#<?php echo $value['id'];?>-line-height" ).slider({
-                                            range: "min",
-                                            value: <?php echo str_replace('px', '', $lineheight);?>,
-                                            min: 7,
-                                            max: 79,
-                                            slide: function( event, ui ) {
-                                                $("#<?php echo $value['id']; ?>_lineheight").val(ui.value+"px");
-                                                $(".<?php echo $value['id']; ?>_type_preview").css('line-height',ui.value+"px");
-                                                $(".<?php echo $value['id']; ?>_line_height_preview").text(ui.value+"px");
-                                            }
-                                    });
-
-
-                                    /* Font Family */
-                                    $("#<?php echo $value['id']; ?>_font").live('change', function(e){
-                                        var selector = $(this).find(':selected')[0].id;
-                                        $(".<?php echo $value['id']; ?>_type_preview").css('font-family', selector);
-                                    });
-                                    
-                                    /* Queue Up Font Preview */
-                                    //$(".<?php echo $value['id']; ?>_type_preview").css('font-family', $("#<?php echo $value['id']; ?>_font").find(':selected')[0].id);
-
-                                });
-	                    </script>
-
-                   		<div class="clear"></div>
-                    </li>
+                /* Font Family */
+                $("#<?php echo $value['id']; ?>_font").live('change', function(e){
+                    var stylesheet = $(this).find(':selected')[0].title;
+                    var selector = $(this).find(':selected')[0].id;
+                    var link = $('.<?php echo $value['id']; ?>-import-style');
+                    if(link){
+                        link.attr('href', stylesheet);
+                    }else{
+                        $('head').append('<link class="<?php echo $value['id']; ?>-import-style" rel="stylesheet" type="text/css" href="'+stylesheet+'" />');
+                    }
+                    $(".<?php echo $value['id']; ?>_type_preview").css('font-family', selector);
+                });
+                
+                
+                /* Queue Up Stylesheet */
+                $('head').append('<link class="<?php echo $value['id']; ?>-import-style" rel="stylesheet" type="text/css" href="'+$("#<?php echo $value['id']; ?>_font").find(':selected')[0].title+'" />');
+                
+                /* Queue Up Font Preview */
+                $(".<?php echo $value['id']; ?>_type_preview").css('font-family', $("#<?php echo $value['id']; ?>_font").find(':selected')[0].id);
+            });
+        </script>
+        <div class="clear"></div>
+    </li>
 
                 
 <?php
