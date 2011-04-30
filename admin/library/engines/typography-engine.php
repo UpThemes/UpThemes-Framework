@@ -31,9 +31,11 @@ function upfw_enqueue_font_css(){
     $custom_fonts = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts');
     
     /* Check stored against current to make sure we don't display deleted css */
-    foreach($custom_fonts as $id => $font):
-        if(!$current_custom[$id])unset($custom_fonts[$id]);
-    endforeach;
+    if(is_array($custom_fonts)):
+        foreach($custom_fonts as $id => $font):
+            if(!$current_custom[$id])unset($custom_fonts[$id]);
+        endforeach;
+    endif;
     
     /* Merge custom fonts into main font array */
     if(is_array($custom_fonts))$fonts = array_merge($fonts, $custom_fonts);
