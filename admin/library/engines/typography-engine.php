@@ -15,6 +15,12 @@ function upfw_typography_init(){
     global $up_fonts;
     ksort($up_fonts);
     
+    if($_['up_defaults']):
+        delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts');
+        delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts_queue');
+        delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts');
+    endif;
+    
 }
 add_action('init', 'upfw_typography_init', 10);
 
@@ -44,12 +50,15 @@ function upfw_enqueue_font_css(){
         foreach($fonts as $option):
             foreach ($option as $font => $property):
                 $lineheight = $property['lineheight'];
+                $lineheight = $lineheight ? "line-height:$lineheight;" : '';
                 $size = $property['size'];
+                $size = $size ? "font-size:$size;" : '';
                 $selector = $property['selector'];
                 $font_family = $up_fonts[$font]['font_family'];
+                $font_family = $font_family ? "font-family:'$font_family';" : '';
                 $stylesheet = $up_fonts[$font]['style'];
                 if($stylesheet)wp_enqueue_style($font, $up_fonts[$font]['style']);
-                $css .= $selector."{font-family:'$font_family'; font-size:$size; line-height:$lineheight;}\n";
+                if($selector)$css .= $selector."{".$font_family.$size.$lineheight."}\n";
             endforeach;
         endforeach;
     endif;
