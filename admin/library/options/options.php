@@ -828,9 +828,10 @@ function upfw_typography($value,$attr){
     $family  = $option['font'] ? $option['font'] : 'Arial';
     $size  = $option['size'] ? $option['size']: '12px';
     $lineheight = $option['lineheight'] ? $option['lineheight'] : '16px';
+    $letterspacing = $option['letterspacing'] ? $option['letterspacing'] : '0px';
     $show_selector = $value['show_selector'];
     $selector = $option['selector'] ? $option['selector'] : $value['selector'];
-    $fonts = $up_fonts['library']; ?>
+    $fonts = $up_fonts; ?>
                     
     <li class="type-<?php echo $value['type'];?> typography" id="<?php echo $value['id']; ?> container-<?php echo $value['id']; ?>">
         <fieldset class="title">
@@ -863,8 +864,35 @@ function upfw_typography($value,$attr){
                                 <?php endforeach;?>
                             </select>
                         
-                        <?php /* We need to create an option for fonts */ ?>
-                        <?php else:?>
+                            <?php /* Update WP Options */
+                            $fonts_option = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts');
+                            $custom_fonts_option = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts');
+                            $new_font[$value['id']][$option['font']] = array(
+                                'selector' => $option['selector'],
+                                'lineheight' => $option['lineheight'],
+                                'letterspacing' => $option['letterspacing'],
+                                'size' => $option['size'],
+                                'id' => $value['id']
+                            );
+                            /* Check For Hardcoded Fonts */
+                            if(!$value['custom']):
+                                if(is_array($fonts_option)):
+                                    $fonts_option = array_merge($fonts_option, $new_font);
+                                    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts', $fonts_option);
+                                else:
+                                    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts', $new_font);
+                                endif;
+                                
+                            /* Check For Dynamic User Fonts */
+                            else:
+                                if(is_array($custom_fonts_option)):
+                                    $custom_fonts_option = array_merge($custom_fonts_option, $new_font);
+                                    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts', $custom_fonts_option);
+                                else:
+                                    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts', $new_font);
+                                endif;
+                            endif;
+                        else:?>
                             <p><?php _e('No fonts registered yet', 'upfw');?></p>
                         <?php endif;?>
                     </div>
@@ -878,13 +906,19 @@ function upfw_typography($value,$attr){
                         <div id="<?php echo $value['id'];?>-line-height" class="font-slider"></div>
                         <input type="hidden" id="<?php echo $value['id']; ?>_lineheight" name="<?php echo $value['id']; ?>[lineheight]" value="<?php echo $lineheight;?>">
                     </div>
+                    
+                    <div class="field">
+                        <label class="font-label" for="<?php echo $value['id']; ?>_letterspacing"><?php _e('Letter Spacing','upfw'); ?>: <span class="<?php echo $value['id']; ?>_letter_spacing_preview"><?php echo $letterspacing;?></span></label>
+                        <div id="<?php echo $value['id'];?>-letter-spacing" class="font-slider"></div>
+                        <input type="hidden" id="<?php echo $value['id']; ?>_letterspacing" name="<?php echo $value['id']; ?>[letterspacing]" value="<?php echo $letterspacing;?>">
+                    </div>
                 </div>
             </div>
         </fieldset>
         
         <div class="font-preview">
             <label class="font-preview-label"><?php _e('Preview', 'upfw');?></label>
-            <div id="font-preview" class="<?php echo $value['id']; ?>_type_preview" style="font-family:<?php echo $up_fonts['library'][$family]['font_family']; ?>; font-size: <?php echo $size; ?>; line-height:<?php echo $lineheight;?>  "><?php _e('AaBbCcDdEeFfGgHhIiJjKkLlMmNn', 'upfw');?><br /><?php _e('OoPpQqRrSsTtUuVvWwXxYyZz', 'upfw');?></div>
+            <div id="font-preview" class="<?php echo $value['id']; ?>_type_preview" style="font-family:<?php echo $up_fonts['library'][$family]['font_family']; ?>; font-size: <?php echo $size; ?>; letter-spacing: <?php echo $letterspacing;?>; line-height:<?php echo $lineheight;?>  "><?php _e('AaBbCcDdEeFfGgHhIiJjKkLlMmNn', 'upfw');?><br /><?php _e('OoPpQqRrSsTtUuVvWwXxYyZz', 'upfw');?></div>
         </div>
         
         <script type="text/javascript">
@@ -905,7 +939,6 @@ function upfw_typography($value,$attr){
                             $('.formState').fadeIn( 400 );
                         }
                 });
-
                 
                 /* Line Height Slider */
                 $( "#<?php echo $value['id'];?>-line-height" ).slider({
@@ -917,6 +950,22 @@ function upfw_typography($value,$attr){
                             $("#<?php echo $value['id']; ?>_lineheight").val(ui.value+"px");
                             $(".<?php echo $value['id']; ?>_type_preview").css('line-height',ui.value+"px");
                             $(".<?php echo $value['id']; ?>_line_height_preview").text(ui.value+"px");
+                            $('.button-zone').addClass('formChanged');
+                            $('.button-zone button').addClass('save-me-fool');
+                            $('.formState').fadeIn( 400 );
+                        }
+                });
+                
+                /* Letter Spacing Slider */
+                $( "#<?php echo $value['id'];?>-letter-spacing" ).slider({
+                        range: "min",
+                        value: <?php echo str_replace('px', '', $letterspacing);?>,
+                        min: 0,
+                        max: 15,
+                        slide: function( event, ui ) {
+                            $("#<?php echo $value['id']; ?>_letterspacing").val(ui.value+"px");
+                            $(".<?php echo $value['id']; ?>_type_preview").css('letter-spacing',ui.value+"px");
+                            $(".<?php echo $value['id']; ?>_letter_spacing_preview").text(ui.value+"px");
                             $('.button-zone').addClass('formChanged');
                             $('.button-zone button').addClass('save-me-fool');
                             $('.formState').fadeIn( 400 );
@@ -936,7 +985,6 @@ function upfw_typography($value,$attr){
                     $(".<?php echo $value['id']; ?>_type_preview").css('font-family', selector);
                 });
                 
-                
                 /* Queue Up Stylesheet */
                 $('head').append('<link class="<?php echo $value['id']; ?>-import-style" rel="stylesheet" type="text/css" href="'+$("#<?php echo $value['id']; ?>_font").find(':selected')[0].title+'" />');
                 
@@ -947,7 +995,6 @@ function upfw_typography($value,$attr){
         <div class="clear"></div>
     </li>
 
-                
 <?php
 }
 
