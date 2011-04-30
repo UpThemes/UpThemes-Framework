@@ -1,27 +1,4 @@
 <?php
-/*  Array Options:
-   
-   name (string)
-   desc (string)
-   id (string)
-   type (string) - text, color, image, select, multiple, textarea, page, pages, category, categories, text_list
-   value (string) 	- default value - replaced when custom value is entered - (text, color, select, textarea, page, category)
-					- For multiple default values in multiple selects, separate with a comma space ("value" => "option 1, options 2")
-						- For pages "value" => "Page Name, Page Name 2"
-						- For categories "value" => "slug, slug2"
-   options (array)
-   attr (array) - any form field attributes
-   url (string) - for image type only - defines the default image
-   default_text (string) - overrides "None" option text in selects
-	
-	How to use this file:
-		1. Save this template to the 'theme-options' folder in the theme root
-		2. Change the file name to this syntax (remember to add the php extension):  
-			tab-name_#.php - # is the position you want your tab to appear. Each tab must have a unique ordinal number.
-			Example: 
-				colors-and-images_0.php - will render a tab "Colors and Images" that will be the first on the list.
-		3. Create your options and BAM!
-*/
 
 $options = array (
 
