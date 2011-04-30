@@ -50,15 +50,17 @@ function upfw_enqueue_font_css(){
         foreach($fonts as $option):
             foreach ($option as $font => $property):
                 $lineheight = $property['lineheight'];
-                $lineheight = $lineheight ? "line-height:$lineheight;" : '';
+                $lineheight = $lineheight ? "line-height:$lineheight !important;" : '';
+                $letterspacing = $property['letterspacing'];
+                $letterspacing = $letterspacing ? "letter-spacing:$letterspacing !important;" : '';
                 $size = $property['size'];
-                $size = $size ? "font-size:$size;" : '';
+                $size = $size ? "font-size:$size !important;" : '';
                 $selector = $property['selector'];
                 $font_family = $up_fonts[$font]['font_family'];
-                $font_family = $font_family ? "font-family:'$font_family';" : '';
+                $font_family = $font_family ? "font-family:'$font_family' !important;" : '';
                 $stylesheet = $up_fonts[$font]['style'];
                 if($stylesheet)wp_enqueue_style($font, $up_fonts[$font]['style']);
-                if($selector)$css .= $selector."{".$font_family.$size.$lineheight."}\n";
+                if($selector)$css .= $selector."{".$font_family.$size.$lineheight.$letterspacing."}\n";
             endforeach;
         endforeach;
     endif;
