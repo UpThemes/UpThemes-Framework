@@ -830,7 +830,7 @@ function upfw_typography($value,$attr){
     $lineheight = $option['lineheight'] ? $option['lineheight'] : '16px';
     $show_selector = $value['show_selector'];
     $selector = $option['selector'] ? $option['selector'] : $value['selector'];
-    $fonts = $up_fonts['library']; ?>
+    $fonts = $up_fonts; ?>
                     
     <li class="type-<?php echo $value['type'];?> typography" id="<?php echo $value['id']; ?> container-<?php echo $value['id']; ?>">
         <fieldset class="title">
@@ -863,8 +863,34 @@ function upfw_typography($value,$attr){
                                 <?php endforeach;?>
                             </select>
                         
-                        <?php /* We need to create an option for fonts */ ?>
-                        <?php else:?>
+                            <?php /* Update WP Options */
+                            $fonts_option = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts');
+                            $custom_fonts_option = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts');
+                            $new_font[$value['id']][$option['font']] = array(
+                                'selector' => $option['selector'],
+                                'lineheight' => $option['lineheight'],
+                                'size' => $option['size'],
+                                'id' => $value['id']
+                            );
+                            /* Check For Hardcoded Fonts */
+                            if(!$value['custom']):
+                                if(is_array($fonts_option)):
+                                    $fonts_option = array_merge($fonts_option, $new_font);
+                                    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts', $fonts_option);
+                                else:
+                                    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts', $new_font);
+                                endif;
+                                
+                            /* Check For Dynamic User Fonts */
+                            else:
+                                if(is_array($custom_fonts_option)):
+                                    $custom_fonts_option = array_merge($custom_fonts_option, $new_font);
+                                    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts', $custom_fonts_option);
+                                else:
+                                    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts', $new_font);
+                                endif;
+                            endif;
+                        else:?>
                             <p><?php _e('No fonts registered yet', 'upfw');?></p>
                         <?php endif;?>
                     </div>
@@ -905,7 +931,6 @@ function upfw_typography($value,$attr){
                             $('.formState').fadeIn( 400 );
                         }
                 });
-
                 
                 /* Line Height Slider */
                 $( "#<?php echo $value['id'];?>-line-height" ).slider({
@@ -936,7 +961,6 @@ function upfw_typography($value,$attr){
                     $(".<?php echo $value['id']; ?>_type_preview").css('font-family', selector);
                 });
                 
-                
                 /* Queue Up Stylesheet */
                 $('head').append('<link class="<?php echo $value['id']; ?>-import-style" rel="stylesheet" type="text/css" href="'+$("#<?php echo $value['id']; ?>_font").find(':selected')[0].title+'" />');
                 
@@ -947,7 +971,6 @@ function upfw_typography($value,$attr){
         <div class="clear"></div>
     </li>
 
-                
 <?php
 }
 

@@ -29,7 +29,7 @@ $options = array (
         "name" => "Product Titles",
         "desc" => "Select the font and style for product titles.",
         "id" => "product_title",
-        "selector" => "h1 a",
+        "selector" => "h2.prodtitle",
         "type" => "typography",
         "default" => "Buda"),
     
@@ -37,15 +37,7 @@ $options = array (
         "name" => "Widget Titles",
         "desc" => "Select the font and style for product titles.",
         "id" => "widget_title",
-        "selector" => "h1 a",
-        "type" => "typography",
-        "default" => "Century Gothic"),
-    
-    array(
-        "name" => "Test",
-        "desc" => "Select the font and style for product titles.",
-        "id" => "widget_test",
-        "selector" => "h1 a",
+        "selector" => "h3.widgettitle",
         "type" => "typography",
         "default" => "Century Gothic")
 );

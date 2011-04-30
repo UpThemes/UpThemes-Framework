@@ -1,72 +1,84 @@
 <?php
-upfw_google_fonts();
-upfw_universal_fonts();
 
-function upfw_register_theme_font($args){
+/* Initialize Font Libraries */
+function upfw_typography_init(){
+    
+    /* Google Fonts */
+    if(!defined('DISABLE_GOOGLE_FONTS') )
+        upfw_google_fonts();
+        
+    /* Universal Fonts */
+    if( !defined('DISABLE_UNIVERSAL_FONTS') )
+        upfw_universal_fonts();
+    
+    /* Sort The Fonts Alphabetically */
+    global $up_fonts;
+    ksort($up_fonts);
+    
+}
+add_action('init', 'upfw_typography_init', 10);
+
+
+/* Enqueue The Font CSS */
+function upfw_enqueue_font_css(){
+    global $up_fonts;
+    $fonts = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts');
+
+    /* Current Custom Fonts - Since we have no way of knowing when a user deletes a font */
+    $current_custom = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts_queue');
+
+    /* Stored Custom Fonts */
+    $custom_fonts = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts');
+    
+    /* Check stored against current to make sure we don't display deleted css */
+    foreach($custom_fonts as $id => $font):
+        if(!$current_custom[$id])unset($custom_fonts[$id]);
+    endforeach;
+    
+    /* Merge custom fonts into main font array */
+    if(is_array($custom_fonts))$fonts = array_merge($fonts, $custom_fonts);
+    
+    if(is_array($fonts)):
+        foreach($fonts as $option):
+            foreach ($option as $font => $property):
+                $lineheight = $property['lineheight'];
+                $size = $property['size'];
+                $selector = $property['selector'];
+                $font_family = $up_fonts[$font]['font_family'];
+                $stylesheet = $up_fonts[$font]['style'];
+                if($stylesheet)wp_enqueue_style($font, $up_fonts[$font]['style']);
+                $css .= $selector."{font-family:'$font_family'; font-size:$size; line-height:$lineheight;}\n";
+            endforeach;
+        endforeach;
+    endif;
+    
+    global $up_fonts_css;
+    $up_fonts_css = $css;
+}
+if(!is_admin())add_action('init', 'upfw_enqueue_font_css');
+
+/* Print the font CSS */
+function upfw_print_fonts_css(){
+    global $up_fonts_css;?>
+    <style type="text/css">
+        <?php echo $up_fonts_css;?>
+    </style>
+
+<?php }
+if(!is_admin())add_action('wp_print_scripts', 'upfw_print_fonts_css', 10);
+
+/* Register A Font*/
+function upfw_register_font($args){
     global $up_fonts;
     extract($args);
     if($id && $name):
-        if($font_family)$up_fonts['library'][$id] = $args;
-        if($style)$up_fonts['styles'][$id] = $style;
+        if($font_family)$up_fonts[$id] = $args;
         return true;
     endif;
-    
 }
 
-function upfw_universal_fonts(){
-    $args = array(
-        array(
-            'id' => 'georgia',
-            'name' => 'Georgia',
-            'font_family' => "Georgia"),
-        array(
-            'id' => 'helvetica',
-            'name' => 'Helvetica',
-            'font_family' => "Helvetica"),
-        array(
-            'id' => 'times_new_roman',
-            'name' => 'Times New Roman',
-            'font_family' => "Times New Roman"),
-        array(
-            'id' => 'arial',
-            'name' => 'Arial',
-            'font_family' => "Arial"),
-        array(
-            'id' => 'arial_narrow',
-            'name' => 'Arial Narrow',
-            'font_family' => "Arial Narrow"),
-        array(
-            'id' => 'impact',
-            'name' => 'Impact',
-            'font_family' => "Impact"),
-        array(
-            'id' => 'palatino',
-            'name' => 'Palatino',
-            'font_family' => "Palatino Linotype"),
-        array(
-            'id' => 'courier_new',
-            'name' => 'Courier New',
-            'font_family' => "Courier New"),
-        array(
-            'id' => 'century_gothic',
-            'name' => 'Century Gothic',
-            'font_family' => "Century Gothic"),
-        array(
-            'id' => 'lucida_sans_unicode',
-            'name' => 'Lucida Sans Unicode',
-            'font_family' => "Lucida Sans Unicode"),
-        array(
-            'id' => 'lucida_grande',
-            'name' => 'Lucida Grande',
-            'font_family' => "Lucida Grande")
-    );
-    
-    foreach($args as $arg):
-        upfw_register_theme_font($arg);
-    endforeach;
-}
-
-function upfw_deregister_theme_font($id){
+/* Deregister A Font */
+function upfw_deregister_font($id){
     global $up_fonts;
     if(is_array($up_fonts[$id])):
         unset($up_fonts[$id]);
@@ -74,30 +86,33 @@ function upfw_deregister_theme_font($id){
     endif;
 }
 
-/* Enqueue The Font */
-function upfw_enqueue_theme_fonts(){
-    global $up_fonts;
-    $contexts = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts');
-    if(is_array($contexts)):
-        $queued = FALSE;
-        $global = FALSE;
-        foreach($contexts as $context => $style):
-            if($context != 'global'):
-                if(function_exists('is_'.$context)):
-                    if(call_user_func('is_'.$context)):
-                        wp_enqueue_style('up-layout-'.$context, $up_fonts[$style['id']]['style']);
-                        $queued = TRUE;
-                    endif;
-                endif;
-            else:
-                $global = TRUE;
-            endif;
-        endforeach;
-        if(!$queued && $global)wp_enqueue_style('up-font-global', $up_fonts[$contexts['global']['id']]['style']);
-    endif;
+/* Register Universal Fonts */
+function upfw_universal_fonts(){
+    global $up_universal_fonts;
+    $up_universal_fonts = array(
+        'Georgia',
+        'Helvetica',
+        'Times New Roman',
+        'Arial',
+        'Arial Narrow',
+        'Impact',
+        'Palatino Linotype',
+        'Courier New',
+        'Century Gothic',
+        'Lucida Sans Unicode'
+    );
+    
+    foreach($up_universal_fonts as $font):
+        $arg = array(
+            'name' => $font,
+            'id' => strtolower(str_replace(' ', '_', $font)),
+            'font_family' => $font
+        );
+        upfw_register_font($arg);
+    endforeach;
 }
-add_action('wp_print_styles', 'upfw_enqueue_theme_fonts');
 
+/* Register Google Webfonts */
 function upfw_google_fonts(){
     global $upfw_google_fonts;
     $upfw_google_fonts = array(
@@ -255,11 +270,12 @@ function upfw_google_fonts(){
             'style' => 'http://fonts.googleapis.com/css?family='.str_replace(' ', '+', $font).$style,
             'font_family' => $font
         );
-        upfw_register_theme_font($args);
+        upfw_register_font($args);
         $font_list .= $font_list ? ', "'.$font.'"' : $font;
     endforeach;
 }
 
+/* Render Multiple Options */
 function upfw_multiple_typography($options){
     global $up_options;
     
@@ -279,12 +295,15 @@ function upfw_multiple_typography($options){
                 'desc' => __('Custom Selectors', 'upfw'),
                 'type' => 'typography',
                 'id' => preg_replace('/[^a-z\sA-Z\s0-9\s]/', '', strtolower(str_replace(' ', '_', $name))),
-                'selector' => $name
+                'selector' => $name,
+                'custom' => true
             );
+            $custom[preg_replace('/[^a-z\sA-Z\s0-9\s]/', '', strtolower(str_replace(' ', '_', $name)))] = true;
         endforeach;
     endif;
-    if(is_array($multiple)) $options = array_merge($options, $multiple);
     
+    if(is_array($multiple)) $options = array_merge($options, $multiple);
+    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts_queue', $custom);
     return $options;
 }
 
