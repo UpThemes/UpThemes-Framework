@@ -828,9 +828,6 @@ function upfw_typography($value,$attr){
 	if(!$option):
     	global $default_options;
     	$option = $value['value'];
-	    echo "<pre class='default'>";
-	    print_r($option);
-	    echo "</pre>";
     endif;
 
     $family  = $option['font'] ? $option['font'] : $option['family'][''];

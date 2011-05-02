@@ -610,7 +610,6 @@ function upfw_save_options(){
 			    endif;
 			endforeach;
 			//Add options array to wp_options table
-			print_r($post);
 			update_option('up_themes_'.UPTHEMES_SHORT_NAME, $post);
 		    endif;
 		
