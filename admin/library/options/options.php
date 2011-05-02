@@ -134,7 +134,7 @@ function upfw_select($value,$attr){
                     <fieldset class="data">
                         <div class="inner">
                             <select name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" <?php echo $attr; ?>>
-                                <option value=""><?php if($value['default_text']): echo $value['default_text']; else: echo "None"; endif;?></option>
+                                <option value="<?php echo $value['default_value']; ?>"><?php if($value['default_text']): echo $value['default_text']; else: echo "None"; endif;?></option>
                                 <?php
                                 if(is_array($value['options'])):
                                     $i = $value['options'];
@@ -825,9 +825,22 @@ function upfw_typography($value,$attr){
     global $up_options,$up_fonts,$wpdb;
 
     $option = $up_options->$value['id'];
-    $family  = $option['font'] ? $option['font'] : 'Arial';
-    $size  = $option['size'] ? $option['size']: '12px';
+	if(!$option):
+    	global $default_options;
+    	$option = $value['value'];
+	    echo "<pre class='default'>";
+	    print_r($option);
+	    echo "</pre>";
+    endif;
+
+    $family  = $option['font'] ? $option['font'] : $option['family'][''];
+    $fontsize  = $option['fontsize'] ? $option['fontsize']: '12px';
+    $fontstyle  = $option['fontstyle'] ? $option['fontstyle']: 'normal';
     $lineheight = $option['lineheight'] ? $option['lineheight'] : '16px';
+    $texttransform = $option['texttransform'] ? $option['texttransform'] : 'none';
+    $fontweight = $option['fontweight'] ? $option['fontweight'] : 'normal';
+    $textdecoration = $option['textdecoration'] ? $option['textdecoration'] : 'none';
+    $textshadow = $option['textshadow'] ? $option['textshadow'] : 'none';
     $letterspacing = $option['letterspacing'] ? $option['letterspacing'] : '0px';
     $show_selector = $value['show_selector'];
     $selector = $option['selector'] ? $option['selector'] : $value['selector'];
@@ -844,6 +857,7 @@ function upfw_typography($value,$attr){
         <fieldset class="data">
             <div class="inner">
                 <div class="type_fields">
+
                     <div class="field">
                         <?php if($show_selector):?>
                             <label class="font-label" for="<?php echo $value['id']; ?>_selector"><?php _e('CSS Selector','upfw'); ?></label>
@@ -852,73 +866,143 @@ function upfw_typography($value,$attr){
                             <input class="font-selector" type="hidden" id="<?php echo $value['id']; ?>_selector" name="<?php echo $value['id']; ?>[selector]" value="<?php echo $selector;?>">
                         <?php endif;?>
                     </div>
+                
+                	<fieldset>
+	                	
+	                    <div class="field">
+	                        <label class="font-label" for="<?php echo $value['id']; ?>_font"><?php _e('Font Family','upfw'); ?></label>
+	                        <?php if(is_array($fonts)): ksort($fonts);?>
+	                            <select id="<?php echo $value['id']; ?>_font" name="<?php echo $value['id']; ?>[font]">
+	                                <?php foreach($fonts as $font):
+	                                    $selected = ($font['id'] == strtolower($family)) ? 'selected="selected"' : ''; ?>
+	                                    <option title="<?php echo $font['style'];?>" id="<?php echo $font['font_family'];?>" value="<?php echo $font['id'];?>" <?php echo $selected;?>><?php echo $font['name'];?></option>
+	                                <?php endforeach;?>
+	                            </select>
+	                        
+	                            <?php /* Update WP Options */
+	                            $fonts_option = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts');
+	                            $custom_fonts_option = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts');
+	                            $new_font[$value['id']][$option['font']] = array(
+	                                'selector' => $option['selector'],
+	                                'lineheight' => $option['lineheight'],
+	                                'fontstyle' => $option['fontstyle'],
+	                                'fontweight' => $option['fontweight'],
+	                                'textshadow' => $option['textshadow'],
+	                                'textdecoration' => $option['textdecoration'],
+	                                'texttransform' => $option['texttransform'],
+	                                'letterspacing' => $option['letterspacing'],
+	                                'fontsize' => $option['fontsize'],
+	                                'id' => $value['id']
+	                            );
+	                            /* Check For Hardcoded Fonts */
+	                            if(!$value['custom']):
+	                                if(is_array($fonts_option)):
+	                                    $fonts_option = array_merge($fonts_option, $new_font);
+	                                    delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts');
+	                                    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts', $fonts_option);
+	                                else:
+	                                    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts', $new_font);
+	                                endif;
 
-                    <div class="field">
-                        <label class="font-label" for="<?php echo $value['id']; ?>_font"><?php _e('Font Family','upfw'); ?></label>
-                        <?php if(is_array($fonts)): ksort($fonts);?>
-                            <select id="<?php echo $value['id']; ?>_font" name="<?php echo $value['id']; ?>[font]">
-                                <?php foreach($fonts as $font):
-                                    if($option['font'])$selected = ($font['id'] == $option['font']) ? 'selected="selected"' : '';
-                                    if(!$option['font'])$selected = ($font['name'] == $value['default']) ? 'selected="selected"' : '';?>
-                                    <option title="<?php echo $font['style'];?>" id="<?php echo $font['font_family'];?>" value="<?php echo $font['id'];?>" <?php echo $selected;?>><?php echo $font['name'];?></option>
-                                <?php endforeach;?>
-                            </select>
-                        
-                            <?php /* Update WP Options */
-                            $fonts_option = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts');
-                            $custom_fonts_option = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts');
-                            $new_font[$value['id']][$option['font']] = array(
-                                'selector' => $option['selector'],
-                                'lineheight' => $option['lineheight'],
-                                'letterspacing' => $option['letterspacing'],
-                                'size' => $option['size'],
-                                'id' => $value['id']
-                            );
-                            /* Check For Hardcoded Fonts */
-                            if(!$value['custom']):
-                                if(is_array($fonts_option)):
-                                    $fonts_option = array_merge($fonts_option, $new_font);
-                                    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts', $fonts_option);
-                                else:
-                                    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts', $new_font);
-                                endif;
-                                
-                            /* Check For Dynamic User Fonts */
-                            else:
-                                if(is_array($custom_fonts_option)):
-                                    $custom_fonts_option = array_merge($custom_fonts_option, $new_font);
-                                    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts', $custom_fonts_option);
-                                else:
-                                    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts', $new_font);
-                                endif;
-                            endif;
-                        else:?>
-                            <p><?php _e('No fonts registered yet', 'upfw');?></p>
-                        <?php endif;?>
-                    </div>
-                    <div class="field">
-                        <label class="font-label" for="<?php echo $value['id']; ?>_fontsize"><?php _e('Font Size','upfw'); ?>: <span class="<?php echo $value['id']; ?>_font_size_preview"><?php echo $size;?></span></label>
-                        <div id="<?php echo $value['id'];?>-font-size" class="font-slider"></div>
-                        <input type="hidden" id="<?php echo $value['id']; ?>_fontsize" name="<?php echo $value['id']; ?>[size]" value="<?php echo $size;?>">
-                    </div>
-                    <div class="field">
-                        <label class="font-label" for="<?php echo $value['id']; ?>_lineheight"><?php _e('Line Height','upfw'); ?>: <span class="<?php echo $value['id']; ?>_line_height_preview"><?php echo $lineheight;?></span></label>
-                        <div id="<?php echo $value['id'];?>-line-height" class="font-slider"></div>
-                        <input type="hidden" id="<?php echo $value['id']; ?>_lineheight" name="<?php echo $value['id']; ?>[lineheight]" value="<?php echo $lineheight;?>">
-                    </div>
-                    
-                    <div class="field">
-                        <label class="font-label" for="<?php echo $value['id']; ?>_letterspacing"><?php _e('Letter Spacing','upfw'); ?>: <span class="<?php echo $value['id']; ?>_letter_spacing_preview"><?php echo $letterspacing;?></span></label>
-                        <div id="<?php echo $value['id'];?>-letter-spacing" class="font-slider"></div>
-                        <input type="hidden" id="<?php echo $value['id']; ?>_letterspacing" name="<?php echo $value['id']; ?>[letterspacing]" value="<?php echo $letterspacing;?>">
-                    </div>
+	                            /* Check For Dynamic User Fonts */
+	                            else:
+	                                if(is_array($custom_fonts_option)):
+	                                    $custom_fonts_option = array_merge($custom_fonts_option, $new_font);
+	                                    delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts');
+	                                    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts', $custom_fonts_option);
+	                                else:
+	                                    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts', $new_font);
+	                                endif;
+	                            endif;
+	                        else:?>
+	                            <p><?php _e('No fonts registered yet', 'upfw');?></p>
+	                        <?php endif;?>
+						</div>
+	
+						<div class="field">
+	                        <label class="font-label" for="<?php echo $value['id']; ?>_fontweight"><?php _e('Font Weight','upfw'); ?></label>
+	                        <select id="<?php echo $value['id']; ?>_fontweight" name="<?php echo $value['id']; ?>[fontweight]">
+	                            <option value="normal" <?php if($fontweight=='normal') echo "selected";?>><?php _e("Normal","upfw"); ?></option>
+	                            <option value="bold" <?php if($fontweight=='bold') echo "selected";?>><?php _e("Bold","upfw"); ?></option>
+	                        </select>
+	                        <kbd><?php _e("Please Note: Some fonts do not have additional weights. In many cases, the below preview will not accurately reflect font weight."); ?></kbd>
+						</div>
+						
+						<div class="field">
+	                        <label class="font-label" for="<?php echo $value['id']; ?>_textshadow"><?php _e('Text Shadow','upfw'); ?></label>
+	                        <select id="<?php echo $value['id']; ?>_textshadow" name="<?php echo $value['id']; ?>[textshadow]">
+	                            <option value="none"><?php _e("No Shadow","upfw"); ?></option>
+	                            <option value="3px 3px 0 rgba(0,0,0,0.1)" <?php if($boxshadow=='3px 3px 0 rgba(0,0,0,0.1)') echo "selected";?>><?php _e("Style #1","upfw"); ?></option>
+	                            <option value="1px 1px 4px rgba(0,0,0,0.3)" <?php if($boxshadow=='1px 1px 4px rgba(0,0,0,0.3)') echo "selected";?>><?php _e("Style #2","upfw"); ?></option>
+	                            <option value="0 1px 0 rgba(255,255,255,1)" <?php if($boxshadow=='0 1px 0 rgba(255,255,255,1)') echo "selected";?>><?php _e("Style #3","upfw"); ?></option>
+	                            <option value="2px -2px 0 rgba(0,0,0,0.2)" <?php if($boxshadow=='2px -2px 0 rgba(0,0,0,0.2)') echo "selected";?>><?php _e("Style #4","upfw"); ?></option>
+	                            <option value="-2px 2px 0 rgba(0,0,0,0.2)" <?php if($boxshadow=='-2px 2px 0 rgba(0,0,0,0.2)') echo "selected";?>><?php _e("Style #5","upfw"); ?></option>
+	                            <option value="3px 0 0 rgba(0,0,0,0.2)" <?php if($boxshadow=='3px 0 0 rgba(0,0,0,0.2)') echo "selected";?>><?php _e("Style #6","upfw"); ?></option>
+	                            <option value="0 2px 0 rgba(0,0,0,0.2)" <?php if($boxshadow=='0 2px 0 rgba(0,0,0,0.2)') echo "selected";?>><?php _e("Style #7","upfw"); ?></option>
+	                        </select>
+	                        <kbd><?php _e("Please Note: Text shadow is an advanced CSS property. Not all browsers will see it."); ?></kbd>
+						</div>
+
+					</fieldset>
+					
+					<fieldset>
+											
+						<div class="field">
+	                        <label class="font-label" for="<?php echo $value['id']; ?>_texttransform"><?php _e('Text Transform','upfw'); ?></label>
+	                        <select id="<?php echo $value['id']; ?>_texttransform" name="<?php echo $value['id']; ?>[texttransform]">
+	                            <option value="none"><?php _e("None","upfw"); ?></option>
+	                            <option value="uppercase" <?php if($texttransform=='uppercase') echo "selected";?>><?php _e("uppercase","upfw"); ?></option>
+	                            <option value="lowercase" <?php if($texttransform=='lowercase') echo "selected";?>><?php _e("lowercase","upfw"); ?></option>
+	                            <option value="capitalize" <?php if($texttransform=='capitalize') echo "selected";?>><?php _e("capitalize","upfw"); ?></option>
+	                        </select>
+						</div>
+						
+						<div class="field">
+	                        <label class="font-label" for="<?php echo $value['id']; ?>_fontstyle"><?php _e('Font Style','upfw'); ?></label>
+	                        <select id="<?php echo $value['id']; ?>_fontstyle" name="<?php echo $value['id']; ?>[fontstyle]">
+	                            <option value="normal"><?php _e("Normal","upfw"); ?></option>
+	                            <option value="italic" <?php if($fontstyle=='italic') echo "selected";?>><?php _e("Italic","upfw"); ?></option>
+	                            <option value="oblique" <?php if($fontstyle=='oblique') echo "selected";?>><?php _e("Oblique","upfw"); ?></option>
+	                        </select>
+						</div>
+						
+	                   <div class="field">
+	                        <label class="font-label" for="<?php echo $value['id']; ?>_textdecoration"><?php _e('Text Decoration','upfw'); ?></label>
+	                        <select id="<?php echo $value['id']; ?>_textdecoration" name="<?php echo $value['id']; ?>[textdecoration]">
+	                            <option value="none"><?php _e("None","upfw"); ?></option>
+	                            <option value="underline"<?php if($textdecoration=='underline') echo "selected";?>><?php _e("underline","upfw"); ?></option>
+	                            <option value="line-through"<?php if($textdecoration=='line-through') echo "selected";?>><?php _e("line-through","upfw"); ?></option>
+	                            <option value="overline" <?php if($textdecoration=='overline') echo "selected";?>><?php _e("overline","upfw"); ?></option>
+	                        </select>
+						</div>
+						
+	                    <div class="field">
+	                        <label class="font-label" for="<?php echo $value['id']; ?>_fontsize"><?php _e('Font Size','upfw'); ?>: <span class="<?php echo $value['id']; ?>_font_size_preview"><?php echo $fontsize;?></span></label>
+	                        <div id="<?php echo $value['id'];?>-font-size" class="font-slider"></div>
+	                        <input type="hidden" id="<?php echo $value['id']; ?>_fontsize" name="<?php echo $value['id']; ?>[fontsize]" value="<?php echo $fontsize;?>">
+	                    </div>
+	
+	                    <div class="field">
+	                        <label class="font-label" for="<?php echo $value['id']; ?>_lineheight"><?php _e('Line Height','upfw'); ?>: <span class="<?php echo $value['id']; ?>_line_height_preview"><?php echo $lineheight;?></span></label>
+	                        <div id="<?php echo $value['id'];?>-line-height" class="font-slider"></div>
+	                        <input type="hidden" id="<?php echo $value['id']; ?>_lineheight" name="<?php echo $value['id']; ?>[lineheight]" value="<?php echo $lineheight;?>">
+	                    </div>
+	                    
+	                    <div class="field">
+	                        <label class="font-label" for="<?php echo $value['id']; ?>_letterspacing"><?php _e('Letter Spacing','upfw'); ?>: <span class="<?php echo $value['id']; ?>_letter_spacing_preview"><?php echo $letterspacing;?></span></label>
+	                        <div id="<?php echo $value['id'];?>-letter-spacing" class="font-slider"></div>
+	                        <input type="hidden" id="<?php echo $value['id']; ?>_letterspacing" name="<?php echo $value['id']; ?>[letterspacing]" value="<?php echo $letterspacing;?>">
+	                    </div>
+
+					</fieldset>
+
                 </div>
             </div>
         </fieldset>
-        
+
         <div class="font-preview">
             <label class="font-preview-label"><?php _e('Preview', 'upfw');?></label>
-            <div id="font-preview" class="<?php echo $value['id']; ?>_type_preview" style="font-family:<?php echo $up_fonts['library'][$family]['font_family']; ?>; font-size: <?php echo $size; ?>; letter-spacing: <?php echo $letterspacing;?>; line-height:<?php echo $lineheight;?>  "><?php _e('AaBbCcDdEeFfGgHhIiJjKkLlMmNn', 'upfw');?><br /><?php _e('OoPpQqRrSsTtUuVvWwXxYyZz', 'upfw');?></div>
+            <div id="font-preview" class="<?php echo $value['id']; ?>_type_preview" style="font-family:<?php echo $up_fonts['library'][$family]['font_family']; ?>; font-size: <?php echo $fontsize; ?>; font-style: <?php echo $fontstyle; ?>; letter-spacing: <?php echo $letterspacing;?>; line-height:<?php echo $lineheight;?>; text-transform:<?php echo $texttransform;?>; text-decoration:<?php echo $textdecoration;?>; font-weight:<?php echo $fontweight;?>; text-shadow:<?php echo $textshadow; ?>; -moz-text-shadow:<?php echo $textshadow; ?>; -webkit-text-shadow:<?php echo $textshadow; ?>;  "><?php _e('Pack my box with five dozen liquor jugs.', 'upfw');?><br /><?php _e('The quick brown fox jumps over the lazy dog. ', 'upfw');?></div>
         </div>
         
         <script type="text/javascript">
@@ -927,7 +1011,7 @@ function upfw_typography($value,$attr){
                 /* Font Size Slider */
                 $( "#<?php echo $value['id'];?>-font-size" ).slider({
                         range: "min",
-                        value: <?php echo str_replace('px', '', $size);?>,
+                        value: <?php echo str_replace('px', '', $fontsize);?>,
                         min: 7,
                         max: 59,
                         slide: function( event, ui ) {
@@ -960,8 +1044,8 @@ function upfw_typography($value,$attr){
                 $( "#<?php echo $value['id'];?>-letter-spacing" ).slider({
                         range: "min",
                         value: <?php echo str_replace('px', '', $letterspacing);?>,
-                        min: 0,
-                        max: 15,
+                        min: -5,
+                        max: 20,
                         slide: function( event, ui ) {
                             $("#<?php echo $value['id']; ?>_letterspacing").val(ui.value+"px");
                             $(".<?php echo $value['id']; ?>_type_preview").css('letter-spacing',ui.value+"px");
@@ -983,6 +1067,38 @@ function upfw_typography($value,$attr){
                         $('head').append('<link class="<?php echo $value['id']; ?>-import-style" rel="stylesheet" type="text/css" href="'+stylesheet+'" />');
                     }
                     $(".<?php echo $value['id']; ?>_type_preview").css('font-family', selector);
+                });
+
+                /* Font Weight */
+                $("#<?php echo $value['id']; ?>_fontweight").live('change', function(e){
+                    var selector = $(this).find(':selected')[0].value;
+                    $(".<?php echo $value['id']; ?>_type_preview").css('font-weight', selector);
+                });
+
+                /* Font Style */
+                $("#<?php echo $value['id']; ?>_fontstyle").live('change', function(e){
+                    var selector = $(this).find(':selected')[0].value;
+                    $(".<?php echo $value['id']; ?>_type_preview").css('font-style', selector);
+                });
+
+                /* Text Shadow */
+                $("#<?php echo $value['id']; ?>_textshadow").live('change', function(e){
+                    var selector = $(this).find(':selected')[0].value;
+                    $(".<?php echo $value['id']; ?>_type_preview").css('text-shadow', selector);
+                    $(".<?php echo $value['id']; ?>_type_preview").css('-moz-text-shadow', selector);
+                    $(".<?php echo $value['id']; ?>_type_preview").css('-webkit-text-shadow', selector);
+                });
+
+                /* Text Decoration */
+                $("#<?php echo $value['id']; ?>_textdecoration").live('change', function(e){
+                    var selector = $(this).find(':selected')[0].value;
+                    $(".<?php echo $value['id']; ?>_type_preview").css('text-decoration', selector);
+                });
+
+                /* Text Transform */
+                $("#<?php echo $value['id']; ?>_texttransform").live('change', function(e){
+                    var selector = $(this).find(':selected')[0].value;
+                    $(".<?php echo $value['id']; ?>_type_preview").css('text-transform', selector);
                 });
                 
                 /* Queue Up Stylesheet */

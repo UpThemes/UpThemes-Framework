@@ -15,7 +15,7 @@ function upfw_typography_init(){
     global $up_fonts;
     ksort($up_fonts);
     
-    if($_['up_defaults']):
+    if($_REQUEST['up_defaults']):
         delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts');
         delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts_queue');
         delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts');
@@ -45,22 +45,34 @@ function upfw_enqueue_font_css(){
     
     /* Merge custom fonts into main font array */
     if(is_array($custom_fonts))$fonts = array_merge($fonts, $custom_fonts);
-    
+        
     if(is_array($fonts)):
         foreach($fonts as $option):
             foreach ($option as $font => $property):
                 $lineheight = $property['lineheight'];
-                $lineheight = $lineheight ? "line-height:$lineheight !important;" : '';
+                $lineheight = $lineheight ? "line-height:{$lineheight};" : '';
+                $textshadow = $property['textshadow'];
+                $textshadow_normal = $textshadow ? "text-shadow:{$textshadow};" : '';
+                $textshadow_moz = $textshadow ? "-moz-text-shadow:{$textshadow};" : '';
+                $textshadow_webkit = $textshadow ? "-webkit-text-shadow:{$textshadow};" : '';
+                $fontweight = $property['fontweight'];
+                $fontweight = $fontweight ? "font-weight:{$fontweight};" : '';
+                $fontstyle = $property['fontstyle'];
+                $fontstyle = $fontstyle ? "font-style:{$fontstyle};" : '';
+                $texttransform = $property['texttransform'];
+                $texttransform = $texttransform ? "text-transform:{$texttransform};" : '';
+                $textdecoration = $property['textdecoration'];
+                $textdecoration = $textdecoration ? "text-decoration:{$textdecoration};" : '';
                 $letterspacing = $property['letterspacing'];
-                $letterspacing = $letterspacing ? "letter-spacing:$letterspacing !important;" : '';
-                $size = $property['size'];
-                $size = $size ? "font-size:$size !important;" : '';
+                $letterspacing = $letterspacing ? "letter-spacing:{$letterspacing};" : '';
+                $fontsize = $property['fontsize'];
+                $fontsize = $fontsize ? "font-size:{$fontsize};" : '';
                 $selector = $property['selector'];
                 $font_family = $up_fonts[$font]['font_family'];
-                $font_family = $font_family ? "font-family:'$font_family' !important;" : '';
+                $font_family = $font_family ? "font-family:\"{$font_family}\";" : '';
                 $stylesheet = $up_fonts[$font]['style'];
                 if($stylesheet)wp_enqueue_style($font, $up_fonts[$font]['style']);
-                if($selector)$css .= $selector."{".$font_family.$size.$lineheight.$letterspacing."}\n";
+                if($selector)$css .= $selector."\n{\n  {$font_family}  {$size}\n  {$lineheight}\n  {$fontstyle}\n  {$letterspacing}\n  {$fontweight}\n  {$texttransform}\n  {$textdecoration}\n  {$textshadow_normal}\n  {$textshadow_moz}\n  {$textshadow_webkit}\n}\n\n";
             endforeach;
         endforeach;
     endif;
@@ -68,17 +80,25 @@ function upfw_enqueue_font_css(){
     global $up_fonts_css;
     $up_fonts_css = $css;
 }
-if(!is_admin())add_action('init', 'upfw_enqueue_font_css');
+add_action('init', 'upfw_enqueue_font_css');
 
 /* Print the font CSS */
-function upfw_print_fonts_css(){
-    global $up_fonts_css;?>
-    <style type="text/css">
-        <?php echo $up_fonts_css;?>
-    </style>
+add_action( 'wp_ajax_upfw_css', 'upfw_css' );
 
-<?php }
-if(!is_admin())add_action('wp_print_scripts', 'upfw_print_fonts_css', 10);
+function upfw_css(){
+    global $up_fonts_css;
+	header( 'Content-Type: text/css' );
+	echo $up_fonts_css;
+    exit;
+}
+
+if( !is_admin() ) add_action('wp_head','upfw_inject_theme_option_css',1);
+
+function upfw_inject_theme_option_css(){
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo admin_url('admin-ajax.php'); ?>?action=upfw_css" />
+<?php
+}
 
 /* Register A Font*/
 function upfw_register_font($args){

@@ -642,7 +642,9 @@
 
 #upthemes_framework fieldset a.clear{
 	display: inline-block;
-	margin-left: 10px;
+	margin-left: 0;
+	float: left;
+	margin-top: 4px;
 }
 
 #upthemes_framework	.thumbs{
@@ -754,31 +756,6 @@
 	position:relative;
 	top:5px;
 	right:5px;
-}
-
-#upthemes_framework li.typography .type_fields{
-	width: auto;
-	width: 250px;
-}
-
-#upthemes_framework li.typography .type_fields label{
-	font-size: 0.9em;
-}
-
-#upthemes_framework li.typography .type_fields select{
-	width: 250px;
-	float: none;
-	margin-bottom: 5px;
-}
-
-#upthemes_framework li.typography .type_preview{
-	padding: 20px 0;
-	width: 540px;
-	overflow: hidden;
-}
-
-#upthemes_framework li.typography select{
-	width: 140px;
 }
 
 /* @end */
@@ -901,6 +878,26 @@
 
 /* @group Typography Engine Options */
 
+#upthemes_framework li.typography .type_fields label{
+	font-size: 0.9em;
+}
+
+#upthemes_framework li.typography .type_fields select{
+	width: 250px;
+	float: none;
+	margin-bottom: 5px;
+}
+
+#upthemes_framework li.typography .type_preview{
+	padding: 20px 0;
+	width: 540px;
+	overflow: hidden;
+}
+
+#upthemes_framework li.typography select{
+	width: 140px;
+}
+
 #upthemes_framework #font-preview{
 	display: block; 
 	width: auto; 
@@ -939,6 +936,18 @@
 #upthemes_framework .font-label{
 	display:block;
 	margin:0 0 5px;
+}
+
+#upthemes_framework .typography fieldset.title,
+#upthemes_framework .typography fieldset.data{
+	width: 100%;
+	max-width: 100%;
+}
+
+#upthemes_framework .typography fieldset fieldset{
+	width: 50%;
+	max-width: 50%;
+	float: left;
 }
 
 /* @end */
