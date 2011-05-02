@@ -20,7 +20,8 @@ $options = array (
 );
 
 /* Add Multple Selector Support */
-$options = upfw_multiple_typography($options);
+if(function_exists('upfw_multiple_typography'))
+    $options = upfw_multiple_typography($options);
 
 
 /* ------------ Do not edit below this line ----------- */

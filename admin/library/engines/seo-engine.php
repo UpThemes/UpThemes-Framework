@@ -1,5 +1,16 @@
 <?php
 
+function up_seo_init(){
+    /* Content Type, Description, Robots, Keywords */
+    echo up_content_type();
+    echo up_robots();
+    echo up_description();
+    echo up_keywords();
+}
+if(!defined('DISABLE_UP_SEO'))
+    add_action('up_seo', 'up_seo_init');
+
+
 /* Check for SEO Plugins */
 function up_seo_third_parties(){
     define('UP_SEO_THIRD_PARTY', false);
@@ -43,6 +54,20 @@ function up_seo_default_options(){
                             "type" => "text"
             ),
             
+            array(	   "name" => __('Homepage Title Layout','upfw'),
+                            "desc" => __("Choose your desired title layout for the home page.",'upfw'),
+                            "id" => "seo_home_title_layout",
+                            "type" => "select",
+                            "default_text" => __('Default', 'upfw'),
+                            "options" => array(
+                                __('Blog Title | Description', 'upfw')=> '%BLOG% %DESC%',
+                                __('Blog Title', 'upfw')=> '%BLOG%',
+                                __('Description', 'upfw')=> '%DESC%',
+                                __('Homepage Title', 'upfw')=> '%TITLE%',
+                                __('Homepage Title | Description', 'upfw')=> '%TITLE% %DESC%'
+                            )
+            ),
+            
             array(	"name" => __('Homepage Meta Keywords','upfw'),
                             "desc" => __("Enter keywords or phrases separated by commas (ex. shoes, cars, dogs, world domination).",'upfw'),
                             "id" => "seo_homepage_keywords",
@@ -70,17 +95,7 @@ function up_seo_default_options(){
                             "type" => "textarea"
             ),
 
-            array(	"name" => __('Homepage Title Layout','upfw'),
-                            "desc" => __("Choose your desired title layout for the home page.",'upfw'),
-                            "id" => "seo_home_title_layout",
-                            "type" => "select",
-                            "default_text" => __('Default', 'upfw'),
-                            "options" => array(
-                                __('Blog Title | Description', 'upfw')=> '%BLOG% %DESC%',
-                                __('Blog Title', 'upfw')=> '%BLOG%',
-                                __('Description', 'upfw')=> '%DESC%'
-                            )
-            ),
+
             
             array(	"name" => __('Page Title Layout','upfw'),
                             "desc" => __("Choose your desired title layout for pages.",'upfw'),
@@ -162,7 +177,7 @@ function up_seo_default_options(){
                             )
             ),
             array(	"name" => __('Indexing','upfw'),
-                            "desc" => __("Select which archives are indexed by search engines",'upfw'),
+                            "desc" => __("Select which contexts are not indexed by search engines",'upfw'),
                             "id" => "seo_index",
                             "value" => "",
                             "type" => "checkbox",
@@ -171,7 +186,10 @@ function up_seo_default_options(){
                                 __('Search', 'upfw')=> 'search',
                                 __('Author', 'upfw')=> 'author',
                                 __('Date', 'upfw')=> 'date',
-                                __('Tag', 'upfw')=> 'tag'
+                                __('Tag', 'upfw')=> 'tag',
+                                __('Pages', 'upfw')=> 'page',
+                                __('Posts', 'upfw')=> 'post',
+                                __('Home', 'upfw')=> 'home'
                             )
             )
 
@@ -184,7 +202,6 @@ function up_privacy_check(){
     // Under SETTIGNS > PRIVACY in the WordPress backend
     if (get_option('blog_public') == 0 )return true;
 }
-
 
 function up_content_type(){
     return "\n".'<meta http-equiv="Content-Type" content="'. get_bloginfo('html_type') .'; charset='. get_bloginfo('charset') .'" />' . "\n";
@@ -203,6 +220,9 @@ function up_robots(){
     elseif ( is_search() && $context && in_array('search', $context) ) { $index = 'noindex'; }  
     elseif ( is_author() && $context && in_array('author', $context)) { $index = 'noindex'; }  
     elseif ( is_date() && $context && in_array('date', $context)) { $index = 'noindex'; }
+    elseif ( is_page() && $context && in_array('page', $context)) { $index = 'noindex'; }
+    elseif ( is_single() && $context && in_array('post', $context)) { $index = 'noindex'; }
+    elseif ( (is_home() || is_front_page()) && $context && in_array('home', $context)) { $index = 'noindex'; }
     
     /* Global Settings */
     if($up_options->seo_follow)$follow = 'follow';
@@ -215,6 +235,17 @@ function up_robots(){
     return '<meta name="robots" content="'. $index .', '. $follow .'" />' . "\n";
 }
 
+function up_is_front_page(){
+	global $wp_query;
+	if (get_query_var('name') || !is_page())return;
+	$page_on_front = get_option('page_on_front');
+	if( is_page($page_on_front) ):
+            $wp_query->is_front_page = true;
+            return;
+	endif;
+} 
+add_action( 'parse_query', 'up_is_front_page', 100, 1 );
+
 function up_description(){
     global $post, $up_options;
     
@@ -224,7 +255,7 @@ function up_description(){
     
     /* Description */
     $description = '';
-    $home_desc = $up_options->seo_home_desc ? $up_options->seo_home_desc : get_bloginfo('description');
+    $home_desc = $up_options->seo_homepage_description ? $up_options->seo_homepage_description : get_bloginfo('description');
     $singular_desc = $up_options->seo_singular_description ? $up_options->seo_singular_description : substr(preg_replace('/'.$pattern.'/s', '$1$6', $post->post_content), 0, 160);
     $customfield_desc = get_post_meta($post->ID,'_up_seo_description',true);
     
@@ -241,6 +272,7 @@ function up_description(){
 }
 
 function up_keywords(){
+	
     /* Keywords */
     if(up_privacy_check())return;
     if(up_seo_third_parties())return;
@@ -315,9 +347,10 @@ function up_keywords(){
 function up_title(){
 
 	global $post, $up_options;
+        $separator = $up_options->seo_separator ? $up_options->seo_separator : '|';
         
         /* Check for SEO Plugins */
-	if(UP_SEO_THIRD_PARTY == 'yes' || $up_options->seo_disable) { return get_bloginfo('name').' '.wp_title($up_options->seo_separator, false); }
+	if(UP_SEO_THIRD_PARTY == 'yes' || $up_options->seo_disable) { return get_bloginfo('name').wp_title($separator, false); }
         
         /* SEO Settings and Default Settings */
 	$disable = $up_options->seo_disable;
@@ -330,7 +363,6 @@ function up_title(){
         /* If Not Disabled */
 	if(!$disable){
             /* Set Layout Context */
-            if(is_home() || is_front_page()) $layout = $home_layout;
             if(is_single()) $layout = $single_layout;
             if(is_page()) $layout = $page_layout;
             if(is_archive()) $layout = $archive_layout;
@@ -338,6 +370,7 @@ function up_title(){
             if(is_tax()) $layout = $archive_layout;
             if(is_search()) $layout = $search_layout;
             if(is_404()) $layout = $home_layout;
+            if(is_home() || is_front_page()) $layout = $home_layout;
             
             /* Override Title with Custom Field */
             $custom_title = get_post_meta($post->ID,'_up_seo_title',true);
@@ -351,22 +384,28 @@ function up_title(){
 
 function up_seo_title_layout($layout = "%ARCHIVE% %TITLE% %BLOG% %DESC%"){
     global $up_options, $post, $wp_query;
-
+    
     $sep = $up_options->seo_separator ? ' '.$up_options->seo_separator.' ' : ' | ';
     $paged = get_query_var('paged') ? __('Page ', 'upfw').get_query_var('paged') : '';
     $search = get_query_var('s') ? __('Search Results For ', 'upfw').get_query_var('s') : '';
     $title = get_the_title();
+    $home_title = (is_front_page() || is_home() && $up_options->seo_homepage_title) ? $up_options->seo_homepage_title : '';
+    $home_description = (is_front_page() || is_home()) ? $up_options->seo_homepage_description : '';
+    
     $customfield = get_post_meta(get_the_ID(), '_up_seo_title', true); 
     
     /* Insert Separators */
     $layout = preg_replace('/ /', $sep, $layout);
+    
+    /* Home Page Title */
+    if($home_title)$layout = preg_replace('/%TITLE%/', $home_title, $layout);
     
     /* Insert Blog Title */
     $layout = preg_replace('/%BLOG%/', get_bloginfo('name'), $layout);
     
     /* Insert Blog Description */
     $layout = preg_replace('/%DESC%/', get_bloginfo('description'), $layout);
-    
+        
     /* Insert Page/Post Title */
     if($title)$layout = preg_replace('/%TITLE%/', $title, $layout);
     
