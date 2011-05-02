@@ -159,6 +159,9 @@ add_action('upfw_admin_init','upfw_set_uploads_dir',2);
 *************************************/
 function upfw_engines_init(){
 
+	require_once('library/options/options.php');
+	require_once('library/widgets/dashboard.php');
+	
 	if( !defined('DISABLE_LAYOUT_ENGINE') )
 		require_once('library/engines/layout-engine.php');
 	
@@ -171,8 +174,6 @@ function upfw_engines_init(){
 	if( !defined('DISABLE_SEO_ENGINE') )
 		require_once('library/engines/seo-engine.php');
 
-	require_once('library/options/options.php');
-	require_once('library/widgets/dashboard.php');
 	
 	if(function_exists('upfw_dbwidget_setup'))
             add_action('wp_dashboard_setup', 'upfw_dbwidget_setup' );
