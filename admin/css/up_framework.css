@@ -500,6 +500,11 @@
 	position: relative;
 }
 
+#upthemes_framework fieldset.title{
+	width: 45%;
+	margin-right: 5%;
+}
+
 /* @end */
 
 /* @group Colorpicker Styles */
@@ -948,6 +953,14 @@
 	width: 50%;
 	max-width: 50%;
 	float: left;
+}
+
+#upthemes_framework .save_typekit_key{
+	display: inline-block;
+	width: auto;
+	clear: both;
+	margin-top: 8px;
+	margin-left: 22px;
 }
 
 /* @end */

@@ -499,6 +499,10 @@ function render_options($options){
             case 'typography': upfw_typography($value,$attr);
             break;
             
+            //Render Typekit Selector
+            case 'typekit': upfw_typekit($value,$attr);
+            break;
+            
             //Render Style Selector
             case 'styles': upfw_style($value,$attr);
             break;

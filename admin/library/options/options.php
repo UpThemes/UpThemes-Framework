@@ -450,7 +450,7 @@ function upfw_image($value,$attr){
                                 </div>
 
                                 <!-- Hidden Input -->
-                                <input type="hidden" name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" name="<?php echo $value['id']; ?>" value="<?php if($up_options->$value['id']): echo $up_options->$value['id']; else: echo $value['url']; endif;?>" />
+                                <input type="hidden" name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" name="<?php echo $value['id']; ?>" value="<?php if($up_options->$value['id']): echo $up_options->$value['id']; endif;?>" />
 
                                 <!-- Upload Status Input -->
                                 <div class="status hide" id="<?php echo $value['id']; ?>status"></div>
@@ -928,14 +928,14 @@ function upfw_typography($value,$attr){
 						<div class="field">
 	                        <label class="font-label" for="<?php echo $value['id']; ?>_textshadow"><?php _e('Text Shadow','upfw'); ?></label>
 	                        <select id="<?php echo $value['id']; ?>_textshadow" name="<?php echo $value['id']; ?>[textshadow]">
-	                            <option value="none"><?php _e("No Shadow","upfw"); ?></option>
-	                            <option value="3px 3px 0 rgba(0,0,0,0.1)" <?php if($boxshadow=='3px 3px 0 rgba(0,0,0,0.1)') echo "selected";?>><?php _e("Style #1","upfw"); ?></option>
-	                            <option value="1px 1px 4px rgba(0,0,0,0.3)" <?php if($boxshadow=='1px 1px 4px rgba(0,0,0,0.3)') echo "selected";?>><?php _e("Style #2","upfw"); ?></option>
-	                            <option value="0 1px 0 rgba(255,255,255,1)" <?php if($boxshadow=='0 1px 0 rgba(255,255,255,1)') echo "selected";?>><?php _e("Style #3","upfw"); ?></option>
-	                            <option value="2px -2px 0 rgba(0,0,0,0.2)" <?php if($boxshadow=='2px -2px 0 rgba(0,0,0,0.2)') echo "selected";?>><?php _e("Style #4","upfw"); ?></option>
-	                            <option value="-2px 2px 0 rgba(0,0,0,0.2)" <?php if($boxshadow=='-2px 2px 0 rgba(0,0,0,0.2)') echo "selected";?>><?php _e("Style #5","upfw"); ?></option>
-	                            <option value="3px 0 0 rgba(0,0,0,0.2)" <?php if($boxshadow=='3px 0 0 rgba(0,0,0,0.2)') echo "selected";?>><?php _e("Style #6","upfw"); ?></option>
-	                            <option value="0 2px 0 rgba(0,0,0,0.2)" <?php if($boxshadow=='0 2px 0 rgba(0,0,0,0.2)') echo "selected";?>><?php _e("Style #7","upfw"); ?></option>
+	                            <option value="none" <?php if($textshadow=='none') echo "selected";?>><?php _e("No Shadow","upfw"); ?></option>
+	                            <option value="3px 3px 0 rgba(0,0,0,0.1)" <?php if($textshadow=='3px 3px 0 rgba(0,0,0,0.1)') echo "selected";?>><?php _e("Style #1","upfw"); ?></option>
+	                            <option value="1px 1px 4px rgba(0,0,0,0.3)" <?php if($textshadow=='1px 1px 4px rgba(0,0,0,0.3)') echo "selected";?>><?php _e("Style #2","upfw"); ?></option>
+	                            <option value="0 1px 0 rgba(255,255,255,1)" <?php if($textshadow=='0 1px 0 rgba(255,255,255,1)') echo "selected";?>><?php _e("Style #3","upfw"); ?></option>
+	                            <option value="2px -2px 0 rgba(0,0,0,0.2)" <?php if($textshadow=='2px -2px 0 rgba(0,0,0,0.2)') echo "selected";?>><?php _e("Style #4","upfw"); ?></option>
+	                            <option value="-2px 2px 0 rgba(0,0,0,0.2)" <?php if($textshadow=='-2px 2px 0 rgba(0,0,0,0.2)') echo "selected";?>><?php _e("Style #5","upfw"); ?></option>
+	                            <option value="3px 0 0 rgba(0,0,0,0.2)" <?php if($textshadow=='3px 0 0 rgba(0,0,0,0.2)') echo "selected";?>><?php _e("Style #6","upfw"); ?></option>
+	                            <option value="0 2px 0 rgba(0,0,0,0.2)" <?php if($textshadow=='0 2px 0 rgba(0,0,0,0.2)') echo "selected";?>><?php _e("Style #7","upfw"); ?></option>
 	                        </select>
 	                        <kbd><?php _e("Please Note: Text shadow is an advanced CSS property. Not all browsers will see it."); ?></kbd>
 						</div>
@@ -1225,5 +1225,55 @@ function upfw_layouts($value,$attr){
                     <div class="clear"></div>
                 </li>
                 
+<?php
+}
+
+function upfw_typekit($value,$attr){
+    global $up_options,$wpdb;
+?>
+
+                <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
+                    <fieldset class="title">
+                        <div class="inner">
+                            <label for="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></label>
+                            <?php if($value['desc']): ?><kbd><?php echo $value['desc']; ?></kbd><?php endif;?>
+                        </div>
+                    </fieldset>
+                    
+                    <fieldset class="data">
+                        <div class="inner">
+                            <input type="text" name="<?php echo $value['id']; ?>" value="<?php if($up_options->$value['id']): echo $up_options->$value['id']; else: echo $value['value']; endif;?>" id="<?php echo $value['id']; ?>" <?php echo $attr; ?> />
+                            <button class="save_typekit_key"><?php _e("Save API Key","upfw"); ?></button>
+                        </div>
+                    </fieldset>
+                    <div class="clear"></div>
+                </li>
+
+				<script type="text/javascript">
+				
+				var typekit = {
+				
+					init : function(){
+						
+						this.key = "<?php echo $up_options->$value['id']; ?>";
+						this.posturl = "https://typekit.com/api/v1/json/";
+
+						this.familiesurl = this.posturl+'/'+this.kit+'/families/?token='+this.key;
+											
+						this.kitsurl = this.posturl+'kits/?token='+this.key;
+						this.librariesurl = this.posturl+'libraries/?token='+this.key;
+												
+						jQuery.getJSON(this.kitsurl,function(data){
+							console.log(data);
+						});
+						
+					}
+				}
+				
+				jQuery(document).ready(function(e){								
+					$typekit = new typekit.init();
+				});
+
+				</script>
 <?php
 }
