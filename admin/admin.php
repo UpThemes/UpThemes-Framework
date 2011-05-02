@@ -498,11 +498,7 @@ function render_options($options){
             //Render Typography Selector
             case 'typography': upfw_typography($value,$attr);
             break;
-            
-            //Render Typekit Selector
-            case 'typekit': upfw_typekit($value,$attr);
-            break;
-            
+
             //Render Style Selector
             case 'styles': upfw_style($value,$attr);
             break;
@@ -552,7 +548,7 @@ function upfw_save_options(){
 		endif;
 		
 		//Restore Defaults
-		
+
 		if(isset($_POST['up_defaults'])):
 		    $current = get_option('up_themes_'.UPTHEMES_SHORT_NAME);
 		    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_backup', $current);
