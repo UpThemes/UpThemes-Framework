@@ -15,7 +15,7 @@ function upfw_typography_init(){
     global $up_fonts;
     ksort($up_fonts);
     
-    if($_['up_defaults']):
+    if($_POST['up_defaults']):
         delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts');
         delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts_queue');
         delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts');
