@@ -7,7 +7,7 @@ http://yoast.com
 
 function upfw_fetch_rss_items( $num ){
 	include_once(ABSPATH . WPINC . '/feed.php');
-	$rss = fetch_feed('http://upthemes.com/category/blog/feed/');
+	$rss = fetch_feed('http://upthemes.com/feed/');
 	
 	// Bail if feed doesn't work
 	if ( is_wp_error($rss) )
@@ -47,26 +47,23 @@ function upfw_db_widget(){
 	$rss_items = upfw_fetch_rss_items( 3 );
 	
 	echo '<div class="rss-widget">';
-	echo '<a href="http://upthemes.com/" title="Go to UpThemes.com"><img src="'.WPSEO_URL.'images/yoast-logo-rss.png" class="alignright" alt="UpThemes"/></a>';			
 	echo '<ul>';
 
 	if ( !$rss_items ) {
-	    echo '<li class="yoast">no news items, feed might be broken...</li>';
+	    echo '<li class="nothing">no news items, feed might be broken...</li>';
 	} else {
 	    foreach ( $rss_items as $item ) {
 			echo '<li class="yoast">';
 			echo '<a class="rsswidget" href="'.esc_url( $item->get_permalink(), $protocolls=null, 'display' ).'">'. esc_html( $item->get_title() ) .'</a>';
 			echo ' <span class="rss-date">'. $item->get_date('F j, Y') .'</span>';
-			echo '<div class="rssSummary">'. esc_html( $this->text_limit( strip_tags( $item->get_description() ), 150 ) ).'</div>';
+			echo '<div class="rssSummary">'. esc_html( strip_tags( $item->get_description() ) ).'</div>';
 			echo '</li>';
 	    }
 	}						
 
 	echo '</ul>';
 	echo '<br class="clear"/><div style="margin-top:10px;border-top: 1px solid #ddd; padding-top: 10px; text-align:center;">';
-	echo '<a href="'.$this->feed.'"><img src="'.get_bloginfo('wpurl').'/wp-includes/images/rss.png" alt=""/> Subscribe with RSS</a>';
-	echo ' &nbsp; &nbsp; &nbsp; ';
-	echo '<a href="http://upthemes.com/wordpress-newsletter/"><img src="'.WPSEO_URL.'images/email_sub.png" alt=""/> Subscribe by email</a>';
+	echo '<a href="http://upthemes.com/feed/"><img src="'.get_bloginfo('wpurl').'/wp-includes/images/rss.png" alt=""/> Subscribe with RSS</a>';
 	echo '<form class="alignright" method="post"><input type="hidden" name="upfw_removedbwidget" value="true"/><input title="Remove this widget from all users dashboards" class="button" type="submit" value="X"/></form>';
 	echo '</div>';
 	echo '</div>';
@@ -79,5 +76,5 @@ function upfw_dbwidget_setup(){
 
 	$options = get_option('upfw_dbwidget');
 	if ( !isset($options['removedbwidget'.$network]) || !$options['removedbwidget'.$network] )
-		wp_add_dashboard_widget( 'upfw_db_widget' , 'The Latest From UpThemes' , array(&$this, 'upfw_db_widget') );
+		wp_add_dashboard_widget( 'upfw_db_widget' , 'The Latest From UpThemes' , 'upfw_db_widget' );
 }
