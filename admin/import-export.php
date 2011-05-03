@@ -27,7 +27,7 @@ endif;
 
 //Create Export Options
 
-$export = array (
+$options = array (
     array(  "name" => __("Theme Export Code","upfw"),
             "desc" => __("Copy and paste this code to somewhere safe.","upfw"),
             "id" => "up_export",
@@ -36,54 +36,49 @@ $export = array (
             "attr" => array("rows" => "12", "class" => "click-copy")
     )
 );
-render_options($export);
 
 //Create Download Link
 
 if($encoded_check):
-    $export = array (
+    $options[] = 
         array(  "name" => __("Download Theme Export Code","upfw"),
                 "desc" => __("Download and save this file somewhere safe.","upfw"),
                 "id" => "export_file",
                 "type" => "button",
                 "value" => __("Download File","upfw"),
                 "attr" => array("ONCLICK" => "window.location.href='" . THEME_DIR . '/admin/export-options.php?f=upthemes_'.UPTHEMES_SHORT_NAME.'_'.date('mdy').'&e='.$encoded."'")
-        ) 
-    );
-    render_options($export);
+        );
 endif;
 
 
 //Create import options
 
-$import = array (
+$options[] =
     array(  "name" => __("Import Theme Options","upfw"),
             "desc" => __("Paste your options code here.","upfw"),
             "id" => "up_import_code",
             "type" => "textarea",
             "value" => '',
             "attr" => array("rows" => "12", "class" => "up_import_code")
-            
-    ),
+    );
         
+$options[] =
     array(  "name" => "",
             "desc" => __("Notice: This overwrites your current options.","upfw"),
             "id" => "up_import",
             "type" => "submit",
             "value" => __("Import Options Code","upfw")
-    )
-);
-render_options($import);
+    );
+
 
 //Create Restore Defaults Option
-$import = array (
+$options[] = 
     array(  "name" => __("Restore Theme Defaults","upfw"),
             "desc" => __("Refresh all options to original defaults.","upfw"),
             "id" => "up_defaults",
             "type" => "submit",
-            "value" => __("Restore Defaults","upfw")
-    ));
-render_options($import);
+            "value" => __("Restore Defaults","upfw"));
+render_options($options);
 ?>
 
 </form>
