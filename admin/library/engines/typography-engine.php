@@ -72,7 +72,7 @@ function upfw_enqueue_font_css(){
                 $font_family = $font_family ? "font-family:\"{$font_family}\";" : '';
                 $stylesheet = $up_fonts[$font]['style'];
                 if($stylesheet)wp_enqueue_style($font, $up_fonts[$font]['style']);
-                if($selector)$css .= $selector."\n{\n  {$font_family}  {$fontsize}\n  {$lineheight}\n  {$fontstyle}\n  {$letterspacing}\n  {$fontweight}\n  {$texttransform}\n  {$textdecoration}\n  {$textshadow_normal}\n  {$textshadow_moz}\n  {$textshadow_webkit}\n}\n\n";
+                if($selector)$css .= $selector."\n{\n  {$font_family}\n  {$fontsize}\n  {$lineheight}\n  {$fontstyle}\n  {$letterspacing}\n  {$fontweight}\n  {$texttransform}\n  {$textdecoration}\n  {$textshadow_normal}\n  {$textshadow_moz}\n  {$textshadow_webkit}\n}\n\n";
             endforeach;
         endforeach;
     endif;
