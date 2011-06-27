@@ -685,7 +685,7 @@ function upfw_admin_header(){
 ** Open admin header
 *************************************/
 function upfw_admin_header_open(){ ?>
-		<div id="up_header" class="polish"><?php
+	<div id="up_header" class="polish"><?php
 }
 
 add_action('upfw_admin_header','upfw_admin_header_open',1);
@@ -694,8 +694,8 @@ add_action('upfw_admin_header','upfw_admin_header_open',1);
 ** Set admin header title
 *************************************/
 function upfw_admin_header_title(){ ?>
-			<div id="icon-upfw" class="icon32 icon32-upfw"></div>
-            <h2><?php _e("Theme Options","upfw"); ?></h2> <?php
+	<div id="icon-upfw" class="icon32 icon32-upfw"></div>
+	<h2><?php _e("Theme Options","upfw"); ?></h2> <?php
 }
 
 add_action('upfw_admin_header','upfw_admin_header_title',100);
@@ -704,9 +704,9 @@ add_action('upfw_admin_header','upfw_admin_header_title',100);
 ** Create admin header links
 *************************************/
 function upfw_admin_header_links(){ ?>
-			<ul id="up_topnav">
-				<?php do_action('upfw_admin_header_links'); ?>
-			</ul><!-- /#up_topnav --><?php
+	<ul id="up_topnav">
+		<?php do_action('upfw_admin_header_links'); ?>
+	</ul><!-- /#up_topnav --><?php
 }
 
 add_action('upfw_admin_header','upfw_admin_header_links',50);
@@ -729,9 +729,9 @@ add_action('upfw_admin_header','upfw_admin_header_close',500);
 *************************************/
 function upfw_default_header_links(){ ?>
 
-				<li class="support"><a href="http://upthemes.com/forum/"><?php _e("Support","upfw"); ?></a></li>
-				<li class="documentation"><a href="<?php echo get_admin_url(); ?>admin.php?page=upthemes-docs"><?php _e("Theme Documentation","upfw"); ?></a></li>
-				<li class="buy-themes"><a href="<?php echo get_admin_url(); ?>admin.php?page=upthemes-buy"><?php _e("Buy Themes","upfw"); ?></a></li> <?php	
+	<li class="support"><a href="http://upthemes.com/forum/"><?php _e("Support","upfw"); ?></a></li>
+	<li class="documentation"><a href="<?php echo get_admin_url(); ?>admin.php?page=upthemes-docs"><?php _e("Theme Documentation","upfw"); ?></a></li>
+	<li class="buy-themes"><a href="<?php echo get_admin_url(); ?>admin.php?page=upthemes-buy"><?php _e("Buy Themes","upfw"); ?></a></li> <?php	
 
 }
 

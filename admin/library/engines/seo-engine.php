@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * The following SEO module is in-part based based on the Woo Themes Framework (http://www.woothemes.com/2010/06/new-wooframework-gets-seo-love/)
+ * Copyright WooThemes - released under the GPL license.
+*/
+
+
+
 function up_seo_init(){
     /* Content Type, Description, Robots, Keywords */
     echo up_content_type();
