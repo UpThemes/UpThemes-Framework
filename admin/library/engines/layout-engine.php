@@ -14,23 +14,23 @@ function default_theme_layouts(){
         array(
             'id' => 'left_column',
             'name' => 'Left Column',
-            'style' => get_bloginfo("template_directory")."/library/layouts/left-column.css",
-            'image' => get_bloginfo("template_directory")."/library/layouts/left-column.jpg"),
+            'style' => get_bloginfo("template_directory")."/layouts/left-column.css",
+            'image' => get_bloginfo("template_directory")."/layouts/left-column.jpg"),
         array(
             'id' => 'left_column_grid',
             'name' => 'Left Column w/ Grid',
-            'style' => get_bloginfo("template_directory")."/library/layouts/left-column-grid.css",
-            'image' => get_bloginfo("template_directory")."/library/layouts/left-column-grid.jpg"),
+            'style' => get_bloginfo("template_directory")."/layouts/left-column-grid.css",
+            'image' => get_bloginfo("template_directory")."/layouts/left-column-grid.jpg"),
         array(
             'id' => 'right_column',
             'name' => 'Right Column',
-            'style' => get_bloginfo("template_directory")."/library/layouts/right-column.css",
-            'image' => get_bloginfo("template_directory")."/library/layouts/right-column.jpg"),
+            'style' => get_bloginfo("template_directory")."/layouts/right-column.css",
+            'image' => get_bloginfo("template_directory")."/layouts/right-column.jpg"),
         array(
             'id' => 'right_column_grid',
             'name' => 'Right Column w/ Grid',
-            'style' => get_bloginfo("template_directory")."/library/layouts/right-column-grid.css",
-            'image' => get_bloginfo("template_directory")."/library/layouts/right-column-grid.jpg")
+            'style' => get_bloginfo("template_directory")."/layouts/right-column-grid.css",
+            'image' => get_bloginfo("template_directory")."/layouts/right-column-grid.jpg")
     );
     
     foreach($args as $arg):
