@@ -84,6 +84,7 @@ add_action('init', 'upfw_enqueue_font_css');
 
 /* Print the font CSS */
 add_action( 'wp_ajax_upfw_css', 'upfw_css' );
+add_action( 'wp_ajax_nopriv_upfw_css', 'upfw_css' );
 
 function upfw_css(){
     global $up_fonts_css;
@@ -95,6 +96,7 @@ function upfw_css(){
 if( !is_admin() ) add_action('wp_head','upfw_inject_theme_option_css',1);
 
 function upfw_inject_theme_option_css(){
+
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo admin_url('admin-ajax.php'); ?>?action=upfw_css" />
 <?php
