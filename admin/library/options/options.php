@@ -830,7 +830,7 @@ function upfw_typography($value,$attr){
     	$option = $value['value'];
     endif;
 
-    $family  = $option['font'] ? $option['font'] : $option['family'][''];
+    $family  = $option ? $option : $option['family'];
     $fontsize  = $option['fontsize'] ? $option['fontsize']: '12px';
     $fontstyle  = $option['fontstyle'] ? $option['fontstyle']: 'normal';
     $lineheight = $option['lineheight'] ? $option['lineheight'] : '16px';
@@ -1065,7 +1065,34 @@ function upfw_typography($value,$attr){
                     }
                     $(".<?php echo $value['id']; ?>_type_preview").css('font-family', selector);
                 });
-
+                
+                $("#<?php echo $value['id']; ?>_font").live('change',function(e){
+                
+                	family = $(this).val();
+                	
+                	$.getJSON(ajaxurl+"?action=get_font_weight_options&font="+family, function(data){
+	                	
+						if(data.success && data.html)
+							$("#<?php echo $value['id']; ?>_fontweight").html(data.html);
+                	
+                	});
+                
+					
+                });
+                
+                /* Font Weight Change */
+                $("#<?php echo $value['id']; ?>_fontweight").live('change', function(e){
+                    var stylesheet = $("#<?php echo $value['id']; ?>_font").find(':selected')[0].title;
+                	stylesheet = stylesheet+':'+$(this).val();
+                    var selector = $("#<?php echo $value['id']; ?>_font").find(':selected')[0].id;
+                    var link = $('.<?php echo $value['id']; ?>-import-style');
+                    if(link){
+                        link.attr('href', stylesheet);
+                    }else{
+                        $('head').append('<link class="<?php echo $value['id']; ?>-import-style" rel="stylesheet" type="text/css" href="'+stylesheet+'" />');
+                    }
+                    $(".<?php echo $value['id']; ?>_type_preview").css('font-family', selector);
+                });                
                 /* Font Weight */
                 $("#<?php echo $value['id']; ?>_fontweight").live('change', function(e){
                     var selector = $(this).find(':selected')[0].value;
