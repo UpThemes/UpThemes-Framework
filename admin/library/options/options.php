@@ -1203,7 +1203,7 @@ function upfw_style($value,$attr){
 }
 
 function upfw_layouts($value,$attr){
-    global $up_options,$wpdb;
+    global $up_options,$wpdb, $up_layouts; 
 ?>
 
                 <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
@@ -1229,23 +1229,21 @@ function upfw_layouts($value,$attr){
                             <input type="hidden" id="layout-<?php echo $value['id'];?>" name="<?php echo $value['id'];?>" value="<?php echo $up_options->$value['id'];?>" />
                             <div class="up-layout-container">
                                 <?php global $up_layouts;
-                                delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_layouts');
+                                //delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_layouts');
 
                                 if( $up_layouts ):
-
                                 foreach($up_layouts as $up_layout):
-                                    global $up_options;
                                     $selected = ($up_options->$value['id'] == $up_layout['style']) ? ' up-layout-active' : '';
                                     if($selected):
                                         //Add layout to enqueue_theme_layout()
                                         $context = $value['context'] ? $value['context'] : 'global';
-                                        $layouts = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_layout');
+                                        $layouts = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_layouts');
                                         $layout[$context] = array('id' => $up_layout['id']);
                                         if(is_array($layouts)):
                                             $layouts = array_merge($layouts, $layout);
                                             update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_layouts', $layouts);
                                         else:
-                                            update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_layouts', $layout);
+                                            add_option('up_themes_'.UPTHEMES_SHORT_NAME.'_layouts', $layout);
                                         endif;
                                     endif;?>
                                     <a class="up-layout up-layout-<?php echo $value['id'].$selected;?>" href="<?php echo $up_layout['style'];?>" rel="<?php echo $up_layout['style'];?>"><span><em><?php echo $up_layout['name'];?></em></span><img src="<?php echo $up_layout['image'];?>" alt="<?php echo $up_layout['name'];?>" id="<?php echo $up_layout['id'];?>" /></a>
@@ -1260,4 +1258,4 @@ function upfw_layouts($value,$attr){
                 </li>
                 
 <?php
-}
+} ?>
