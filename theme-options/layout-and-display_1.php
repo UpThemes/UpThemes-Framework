@@ -67,27 +67,8 @@ $options = array (
         "id" => "layout_tag",
         "type" => "layouts",
         "context" => "tag",
-        "value" => get_bloginfo('template_directory').'/library/layouts/right-column.css'),
+        "value" => get_bloginfo('template_directory').'/library/layouts/right-column.css')
         
-	array(  "name" => "Post Container",
-            "desc" => "Do you want posts to be contained within a box or naked?",
-            "id" => "post_container",
-            "type" => "select",
-            "default_text" => "Contained",
-            "value" => false,
-            "options" => array(
-            	"Naked" => true
-            )),
-
-	array(  "name" => "Widget Container",
-            "desc" => "Do you want widgets to be contained within a box or naked?",
-            "id" => "widget_container",
-            "type" => "select",
-            "default_text" => "Contained",
-            "value" => false,
-            "options" => array(
-            	"Naked" => true
-            )),
 
 );
 
