@@ -57,6 +57,7 @@ function upfw_enqueue_font_css(){
                 $textshadow_webkit = $textshadow ? "-webkit-text-shadow:{$textshadow};" : '';
                 $fontweight = $property['fontweight'];
                 $fontweight = $fontweight ? "font-weight:{$fontweight};" : '';
+				$fontweight_stylesheet = ':'.$property['fontweight'];
                 $fontstyle = $property['fontstyle'];
                 $fontstyle = $fontstyle ? "font-style:{$fontstyle};" : '';
                 $texttransform = $property['texttransform'];
@@ -70,8 +71,8 @@ function upfw_enqueue_font_css(){
                 $selector = $property['selector'];
                 $font_family = $up_fonts[$font]['font_family'];
                 $font_family = $font_family ? "font-family:\"{$font_family}\";" : '';
-                $stylesheet = $up_fonts[$font]['style'];
-                if($stylesheet)wp_enqueue_style($font, $up_fonts[$font]['style']);
+                $stylesheet = $up_fonts[$font]['style'].$fontweight_stylesheet;
+                if($stylesheet)wp_enqueue_style($font, $stylesheet);
                 if($selector)$css .= $selector."\n{\n  {$font_family}\n  {$fontsize}\n  {$lineheight}\n  {$fontstyle}\n  {$letterspacing}\n  {$fontweight}\n  {$texttransform}\n  {$textdecoration}\n  {$textshadow_normal}\n  {$textshadow_moz}\n  {$textshadow_webkit}\n}\n\n";
             endforeach;
         endforeach;
