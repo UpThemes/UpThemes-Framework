@@ -2,8 +2,8 @@
 function register_theme_layout($args){
     global $up_layouts;
     extract($args);
-    $context = $context ? $context : 'global';
     if($id && $name && $style && $image):
+        if(!$context)$args['context'] = 'global';
         $up_layouts[$id] = $args;
         return true;
     endif;
@@ -14,23 +14,23 @@ function default_theme_layouts(){
         array(
             'id' => 'left_column',
             'name' => 'Left Column',
-            'style' => get_bloginfo("template_directory")."/layouts/left-column.css",
-            'image' => get_bloginfo("template_directory")."/layouts/left-column.jpg"),
+            'style' => get_bloginfo("template_directory")."/library/layouts/left-column.css",
+            'image' => get_bloginfo("template_directory")."/library/layouts/left-column.jpg"),
         array(
             'id' => 'left_column_grid',
             'name' => 'Left Column w/ Grid',
-            'style' => get_bloginfo("template_directory")."/layouts/left-column-grid.css",
-            'image' => get_bloginfo("template_directory")."/layouts/left-column-grid.jpg"),
+            'style' => get_bloginfo("template_directory")."/library/layouts/left-column-grid.css",
+            'image' => get_bloginfo("template_directory")."/library/layouts/left-column-grid.jpg"),
         array(
             'id' => 'right_column',
             'name' => 'Right Column',
-            'style' => get_bloginfo("template_directory")."/layouts/right-column.css",
-            'image' => get_bloginfo("template_directory")."/layouts/right-column.jpg"),
+            'style' => get_bloginfo("template_directory")."/library/layouts/right-column.css",
+            'image' => get_bloginfo("template_directory")."/library/layouts/right-column.jpg"),
         array(
             'id' => 'right_column_grid',
             'name' => 'Right Column w/ Grid',
-            'style' => get_bloginfo("template_directory")."/layouts/right-column-grid.css",
-            'image' => get_bloginfo("template_directory")."/layouts/right-column-grid.jpg")
+            'style' => get_bloginfo("template_directory")."/library/layouts/right-column-grid.css",
+            'image' => get_bloginfo("template_directory")."/library/layouts/right-column-grid.jpg")
     );
     
     foreach($args as $arg):
@@ -47,7 +47,7 @@ function deregister_theme_layout($id){
 }
 
 /* Enqueue The Layout */
-function enqueue_theme_layout(){ 
+function enqueue_theme_layout(){
     global $up_layouts;
     $contexts = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_layouts');
     if(is_array($contexts)):
@@ -57,8 +57,6 @@ function enqueue_theme_layout(){
             if($context != 'global'):
                 if(function_exists('is_'.$context)):
                     if(call_user_func('is_'.$context)):
-                        if($context == 'archive') $archive == true;
-                        if($context == 'category' || $context == 'tag') $archive_override = true;
                         wp_enqueue_style('up-layout-'.$context, $up_layouts[$layout['id']]['style']);
                         $queued = TRUE;
                     endif;
@@ -67,7 +65,6 @@ function enqueue_theme_layout(){
                 $global = TRUE;
             endif;
         endforeach;
-        if($archive_override) wp_dequeue_style('up-layout-archive');
         if(!$queued && $global)wp_enqueue_style('up-layout-global', $up_layouts[$contexts['global']['id']]['style']);
     endif;
 }
