@@ -830,7 +830,7 @@ function upfw_typography($value,$attr){
     	$option = $value['value'];
     endif;
 
-    $family  = $option ? $option : $option['family'];
+    $family  = $option['font'] ? $option['font'] : $value['default'];
     $fontsize  = $option['fontsize'] ? $option['fontsize']: '12px';
     $fontstyle  = $option['fontstyle'] ? $option['fontstyle']: 'normal';
     $lineheight = $option['lineheight'] ? $option['lineheight'] : '16px';
