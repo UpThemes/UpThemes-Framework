@@ -47,7 +47,7 @@ function deregister_theme_layout($id){
 }
 
 /* Enqueue The Layout */
-function enqueue_theme_layout(){
+function enqueue_theme_layout(){ 
     global $up_layouts;
     $contexts = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_layouts');
     if(is_array($contexts)):
