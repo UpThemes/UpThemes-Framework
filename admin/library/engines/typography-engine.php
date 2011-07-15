@@ -272,7 +272,7 @@ function upfw_google_fonts(){
 										   'Normal 400' => '400',
 										   'Bold 700' => '700',
 										   'Ultra-Bold 900' => '900') ),
-		'League Script',
+		'League Script' => array('weights' => array('Normal 400' => '400') ),
 		'Lekton' => array('weights' => array('Normal 400' => '400',
 										     'Bold 700' => '700') ),
 		'Limelight',
@@ -425,8 +425,9 @@ function upfw_google_fonts(){
 	            'weights' => $font_weights,
 	        );
 	        upfw_register_font($args);
-	        //print_r($font);
+
 	        $font_list .= $font_list ? ', "'.$font.'"' : $font;
+			$font_weights = '';
 
         endif;
     endforeach;
@@ -470,9 +471,9 @@ function get_font_weights($font){
 
 	$font = $_REQUEST['font'];
 
-	$font = $up_fonts[$font];
-	
-	$font_weights = array('normal' => 'Normal', 'bold' => 'Bold');
+	$font = $up_fonts[$font];	
+	$font_weights = array('Normal' => 'normal');
+	// Need to make sure each font has bold....this breaks most fonts that don't have weights assigned - $font_weights = array('Normal' => 'normal', 'Bold' => 'Bold');
 
 	if( $font['weights'] )
 		$font_weights = $font['weights'];
