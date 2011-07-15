@@ -917,10 +917,17 @@ function upfw_typography($value,$attr){
 						</div>
 	
 						<div class="field">
-	                        <label class="font-label" for="<?php echo $value['id']; ?>_fontweight"><?php _e('Font Weight','upfw'); ?></label>
+                            <label class="font-label" for="<?php echo $value['id']; ?>_fontweight"><?php _e('Font Weight','upfw'); ?></label>
 	                        <select id="<?php echo $value['id']; ?>_fontweight" name="<?php echo $value['id']; ?>[fontweight]">
-	                            <option value="normal" <?php if($fontweight=='normal') echo "selected";?>><?php _e("Normal","upfw"); ?></option>
-	                            <option value="bold" <?php if($fontweight=='bold') echo "selected";?>><?php _e("Bold","upfw"); ?></option>
+                                <?php $weights = $fonts[$family]['weights'];
+                                if(!$weights):?>
+                                    <option value="normal" <?php if($fontweight=='normal') echo "selected";?>><?php _e("Normal","upfw"); ?></option>
+                                    <!--<option value="bold" <?php //if($fontweight=='bold') echo "selected";?>><?php //_e("Bold","upfw"); ?></option>-->
+                                <?php elseif(is_array($weights)): ?>
+                                    <?php foreach($weights as $name => $weight):?>
+                                        <option value="<?php echo $weight;?>" <?php if($fontweight==$weight) echo "selected";?>><?php echo $name;?></option>
+                                    <?php endforeach;?>
+                                <?php endif;?>
 	                        </select>
 	                        <kbd><?php _e("Please Note: Some fonts do not have additional weights. In many cases, the below preview will not accurately reflect font weight."); ?></kbd>
 						</div>
