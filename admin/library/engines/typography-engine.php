@@ -302,7 +302,7 @@ function upfw_google_fonts(){
 		'Muli' => array('weights' => array('Book 300' => '300',
 										   'Normal 400' => '400') ),
 		'Neucha',
-		'Neuton' => array('weights' => array('Normal 400' => '400'),
+		'Neuton' => array('weights' => array('Normal 400' => '400')),
 		'News Cycle',
 		'Nobile' => array('weights' => array('Normal 400' => '400',
 											 'Bold 700' => '700') ),
@@ -403,7 +403,7 @@ function upfw_google_fonts(){
 														'Normal 400' => '400',
 														'Bold 700' => '700') ),
 		'Zeyada'
-    ));
+    );
     $font_list = '';
     foreach($upfw_google_fonts as $key => $font):
         
