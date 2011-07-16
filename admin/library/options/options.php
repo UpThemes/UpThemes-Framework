@@ -931,7 +931,7 @@ function upfw_typography($value,$attr){
 	                        </select>
 	                        <kbd><?php _e("Please Note: Some fonts do not have additional weights. In many cases, the below preview will not accurately reflect font weight."); ?></kbd>
 						</div>
-						
+					
 						<div class="field">
 	                        <label class="font-label" for="<?php echo $value['id']; ?>_textshadow"><?php _e('Text Shadow','upfw'); ?></label>
 	                        <select id="<?php echo $value['id']; ?>_textshadow" name="<?php echo $value['id']; ?>[textshadow]">
@@ -1062,26 +1062,26 @@ function upfw_typography($value,$attr){
 
                 /* Font Family */
                 $("#<?php echo $value['id']; ?>_font").live('change', function(e){
-                    var stylesheet = $(this).find(':selected')[0].title;
-                    var selector = $(this).find(':selected')[0].id;
-                    var link = $('.<?php echo $value['id']; ?>-import-style');
-                    if(link){
-                        link.attr('href', stylesheet);
-                    }else{
-                        $('head').append('<link class="<?php echo $value['id']; ?>-import-style" rel="stylesheet" type="text/css" href="'+stylesheet+'" />');
-                    }
-                    $(".<?php echo $value['id']; ?>_type_preview").css('font-family', selector);
-                });
-                
-                $("#<?php echo $value['id']; ?>_font").live('change',function(e){
-                
-                	family = $(this).val();
+                	
+                	_$this = $(this);
+                	family = _$this.val();
                 	
                 	$.getJSON(ajaxurl+"?action=get_font_weight_options&font="+family, function(data){
 	                	
-						if(data.success && data.html)
+						if(data.success && data.html){
 							$("#<?php echo $value['id']; ?>_fontweight").html(data.html);
-                	
+
+		                    var stylesheet = _$this.find(':selected')[0].title;
+		                    var selector = _$this.find(':selected')[0].id;
+		                    var link = $('.<?php echo $value['id']; ?>-import-style');
+		                    if(link){
+		                        link.attr('href', stylesheet+':'+$("#<?php echo $value['id']; ?>_fontweight").val());
+		                    }else{
+		                        $('head').append('<link class="<?php echo $value['id']; ?>-import-style" rel="stylesheet" type="text/css" href="'+stylesheet+'" />');
+		                    }
+		                    $(".<?php echo $value['id']; ?>_type_preview").css('font-family', selector);
+                		}
+
                 	});
                 
 					
@@ -1090,7 +1090,7 @@ function upfw_typography($value,$attr){
                 /* Font Weight Change */
                 $("#<?php echo $value['id']; ?>_fontweight").live('change', function(e){
                     var stylesheet = $("#<?php echo $value['id']; ?>_font").find(':selected')[0].title;
-                	stylesheet = stylesheet+':'+$(this).val();
+                    stylesheet = stylesheet+':'+$(this).val();
                     var selector = $("#<?php echo $value['id']; ?>_font").find(':selected')[0].id;
                     var link = $('.<?php echo $value['id']; ?>-import-style');
                     if(link){
@@ -1100,6 +1100,7 @@ function upfw_typography($value,$attr){
                     }
                     $(".<?php echo $value['id']; ?>_type_preview").css('font-family', selector);
                 });                
+
                 /* Font Weight */
                 $("#<?php echo $value['id']; ?>_fontweight").live('change', function(e){
                     var selector = $(this).find(':selected')[0].value;
