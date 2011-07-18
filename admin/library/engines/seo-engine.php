@@ -1,12 +1,5 @@
 <?php
 
-/**
- * The following SEO module is in-part based based on the Woo Themes Framework (http://www.woothemes.com/2010/06/new-wooframework-gets-seo-love/)
- * Copyright WooThemes - released under the GPL license.
-*/
-
-
-
 function up_seo_init(){
     /* Content Type, Description, Robots, Keywords */
     echo up_content_type();
@@ -539,7 +532,7 @@ function up_seo_post_meta_display() {
         
           
         <!-- End Customization -->
-        <?php /* XSS Protection */ wp_nonce_field('���h�mꧣr�m�w�rk','up_seo_options'); ?>
+        <?php /* XSS Protection */ wp_nonce_field('µ˛ÜhÍmÍß£rÂmÍwˆrk','up_seo_options'); ?>
         
       </div>
       <!-- End Form Styles -->
@@ -555,7 +548,7 @@ function up_seo_meta_save( $post_id ) {
     if ( !current_user_can( 'edit_post', $post_id )) return $post_id;
     
     /* XSS Protection */
-    if (empty($_POST['meta']) || !wp_verify_nonce($_POST['up_seo_options'],'���h�mꧣr�m�w�rk')) return;
+    if (empty($_POST['meta']) || !wp_verify_nonce($_POST['up_seo_options'],'µ˛ÜhÍmÍß£rÂmÍwˆrk')) return;
     
     /* POSTed Options */
     $options = $_POST['meta'];
