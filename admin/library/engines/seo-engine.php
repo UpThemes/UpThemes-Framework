@@ -481,8 +481,8 @@ function up_seo_meta_box() {
     
     if(!$up_options->seo_hide_custom_fields):
         if( function_exists( 'add_meta_box' ) ) {
-            add_meta_box( 'new-post-meta-boxes', __('UpThemes SEO Options'), 'up_seo_post_meta_display', 'post', 'normal', 'high' );
-            add_meta_box( 'new-post-meta-boxes', __('UpThemes SEO Options'), 'up_seo_post_meta_display', 'page', 'normal', 'high' );
+            add_meta_box( 'new-post-meta-boxes', __('UpThemes SEO Options'), 'up_seo_post_meta_display', 'post', 'normal', 'core' );
+            add_meta_box( 'new-post-meta-boxes', __('UpThemes SEO Options'), 'up_seo_post_meta_display', 'page', 'normal', 'core' );
         }
     endif;
 }
@@ -539,7 +539,7 @@ function up_seo_post_meta_display() {
         
           
         <!-- End Customization -->
-        <?php /* XSS Protection */ wp_nonce_field('µþ†hêmê§£råmêwörk','up_seo_options'); ?>
+        <?php /* XSS Protection */ wp_nonce_field('ï¿½ï¿½ï¿½hï¿½mê§£rï¿½mï¿½wï¿½rk','up_seo_options'); ?>
         
       </div>
       <!-- End Form Styles -->
@@ -555,7 +555,7 @@ function up_seo_meta_save( $post_id ) {
     if ( !current_user_can( 'edit_post', $post_id )) return $post_id;
     
     /* XSS Protection */
-    if (empty($_POST['meta']) || !wp_verify_nonce($_POST['up_seo_options'],'µþ†hêmê§£råmêwörk')) return;
+    if (empty($_POST['meta']) || !wp_verify_nonce($_POST['up_seo_options'],'ï¿½ï¿½ï¿½hï¿½mê§£rï¿½mï¿½wï¿½rk')) return;
     
     /* POSTed Options */
     $options = $_POST['meta'];
