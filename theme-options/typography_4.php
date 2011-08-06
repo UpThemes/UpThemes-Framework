@@ -12,7 +12,7 @@ $options = array (
     
     array(
         "name" => "Widget Titles",
-        "desc" => "Select the font and style for product titles.",
+        "desc" => "Select the font and style for widget titles.",
         "id" => "widget_title",
         "selector" => "h3.widgettitle",
         "type" => "typography",
