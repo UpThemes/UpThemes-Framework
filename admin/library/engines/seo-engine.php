@@ -346,7 +346,7 @@ function up_keywords(){
 /* Title Function */
 function up_title(){
 
-	global $post, $up_options;
+	global $post, $up_options, $wp_query;
         $separator = $up_options->seo_separator ? $up_options->seo_separator : '|';
         
         /* Check for SEO Plugins */
@@ -355,59 +355,73 @@ function up_title(){
         /* SEO Settings and Default Settings */
 	$disable = $up_options->seo_disable;
 	$home_layout = $up_options->seo_home_title_layout ? $up_options->seo_home_title_layout : "%BLOG% %DESC%";
-        $page_layout = $up_options->seo_page_title_layout ? $up_options->seo_page_title_layout : "%TITLE% %BLOG% %DESC%";
+    $page_layout = $up_options->seo_page_title_layout ? $up_options->seo_page_title_layout : "%TITLE% %BLOG% %DESC%";
 	$single_layout = $up_options->seo_single_title_layout ? $up_options->seo_single_title_layout : "%TITLE% %BLOG% %DESC%";
 	$archive_layout = $up_options->seo_archive_title_layout ? $up_options->seo_archive_title_layout : "%ARCHIVE% %TITLE% %DESC%";
-        $search_layout = $up_options->seo_search_title_layout ? $up_options->seo_search_title_layout : "%SEARCH% %TITLE% %DESC%";
+    $search_layout = $up_options->seo_search_title_layout ? $up_options->seo_search_title_layout : "%SEARCH% %TITLE% %DESC%";
         
-        /* If Not Disabled */
+    
+    /* If Not Disabled */
 	if(!$disable){
-            /* Set Layout Context */
-            if(is_single()) $layout = $single_layout;
-            if(is_page()) $layout = $page_layout;
-            if(is_archive()) $layout = $archive_layout;
-            if(is_category()) $layout = $archive_layout;
-            if(is_tax()) $layout = $archive_layout;
-            if(is_search()) $layout = $search_layout;
-            if(is_404()) $layout = $home_layout;
-            if(is_home() || is_front_page()) $layout = $home_layout;
-            
-            /* Override Title with Custom Field */
-            $custom_title = get_post_meta($post->ID,'_up_seo_title',true);
-            if($custom_title) $layout = preg_replace('/%TITLE%/', '%CUSTOMFIELD%', $layout);
-            
-            $title = up_seo_title_layout($layout);
-            return $title;
+        /* Set Layout Context */
+        if(is_single()) $layout = $single_layout;
+        if(is_page()) $layout = $page_layout;
+        if(is_archive()) $layout = $archive_layout;
+        if(is_category()) $layout = $archive_layout;
+        if(is_tax()) $layout = $archive_layout;
+        if(is_search()) $layout = $search_layout;
+        if(is_404()) $layout = $home_layout;
+        if(is_home() || is_front_page()) $layout = $home_layout;
+        if(get_post_type() && !is_singular()) $layout = $page_layout;
+        
+        /* Override Title with Custom Field */
+        $custom_title = get_post_meta($post->ID,'_up_seo_title',true);
+        if($custom_title && !is_home() && !is_front_page()) $layout = preg_replace('/%TITLE%/', '%CUSTOMFIELD%', $layout);
+        
+        $title = up_seo_title_layout($layout);
+        return $title;
 	}
 }
 
 
 function up_seo_title_layout($layout = "%ARCHIVE% %TITLE% %BLOG% %DESC%"){
     global $up_options, $post, $wp_query;
-    
+
     $sep = $up_options->seo_separator ? ' '.$up_options->seo_separator.' ' : ' | ';
     $paged = get_query_var('paged') ? __('Page ', 'upfw').get_query_var('paged') : '';
     $search = get_query_var('s') ? __('Search Results For ', 'upfw').get_query_var('s') : '';
-    $title = get_the_title();
+    $title = $post->post_title;
     $home_title = (is_front_page() || is_home() && $up_options->seo_homepage_title) ? $up_options->seo_homepage_title : '';
     $home_description = (is_front_page() || is_home()) ? $up_options->seo_homepage_description : '';
     
-    $customfield = get_post_meta(get_the_ID(), '_up_seo_title', true); 
+    $customfield = get_post_meta(get_the_ID(), '_up_seo_title', true);
     
     /* Insert Separators */
     $layout = preg_replace('/ /', $sep, $layout);
     
     /* Home Page Title */
     if($home_title)$layout = preg_replace('/%TITLE%/', $home_title, $layout);
-    
+   
     /* Insert Blog Title */
     $layout = preg_replace('/%BLOG%/', get_bloginfo('name'), $layout);
+    
+    /* Post Type Archive */
+    $post_type = get_post_type();
+    
+    if($post_type):
+        $post_type = get_post_type_object($post_type);
+        $labels = $post_type->labels;
+        $name = $labels->name;
+        $post_type = $name;
+    endif;
+
+    if($post_type && !is_singular()) $layout = preg_replace('/%TITLE%/', $post_type, $layout);
     
     /* Insert Blog Description */
     $layout = preg_replace('/%DESC%/', get_bloginfo('description'), $layout);
         
     /* Insert Page/Post Title */
-    if($title)$layout = preg_replace('/%TITLE%/', $title, $layout);
+    if($title && is_singular())$layout = preg_replace('/%TITLE%/', $title, $layout);
     
     /* Insert Custom Page/Post Title */
     if($customfield)$layout = preg_replace('/%CUSTOMFIELD%/', $customfield, $layout);
@@ -425,7 +439,7 @@ function up_seo_title_layout($layout = "%ARCHIVE% %TITLE% %BLOG% %DESC%"){
     if(function_exists('is_tag')):
         if(is_tag)$layout = preg_replace('/%ARCHIVE%/', single_tag_title('', false), $layout);
     endif;
-    
+
     /* Insert Author Archives */
     if(is_author()) $layout = preg_replace('/%ARCHIVE%/', __('Author Archives'), $layout);
     
@@ -458,7 +472,7 @@ function up_seo_title_layout($layout = "%ARCHIVE% %TITLE% %BLOG% %DESC%"){
         $post_type = ucwords(str_replace('post-format-', '', get_query_var('post_format')));
         $layout = preg_replace('/%ARCHIVE%/', $post_type, $layout);
     endif;
-    
+
     /* Remove Double Separators */
     $layout = preg_replace("/ *$sep /", " ", $layout);
     
