@@ -831,9 +831,9 @@ function upfw_typography($value,$attr){
     endif;
 
     $family  = $option['font'] ? $option['font'] : $value['default'];
-    $fontsize  = $option['fontsize'] ? $option['fontsize']: '12px';
+    $fontsize  = $option['fontsize'] ? $option['fontsize']: $value['fontsize'];
     $fontstyle  = $option['fontstyle'] ? $option['fontstyle']: 'normal';
-    $lineheight = $option['lineheight'] ? $option['lineheight'] : '16px';
+    $lineheight = $option['lineheight'] ? $option['lineheight'] : $value['lineheight'];
     $texttransform = $option['texttransform'] ? $option['texttransform'] : 'none';
     $fontweight = $option['fontweight'] ? $option['fontweight'] : 'normal';
     $textdecoration = $option['textdecoration'] ? $option['textdecoration'] : 'none';
@@ -877,6 +877,8 @@ function upfw_typography($value,$attr){
 	                            </select>
 	                        
 	                            <?php /* Update WP Options */
+                                //delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts');
+                                //delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts');
 	                            $fonts_option = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts');
 	                            $custom_fonts_option = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts');
 	                            $new_font[$value['id']][$option['font']] = array(
@@ -1074,8 +1076,13 @@ function upfw_typography($value,$attr){
 		                    var stylesheet = _$this.find(':selected')[0].title;
 		                    var selector = _$this.find(':selected')[0].id;
 		                    var link = $('.<?php echo $value['id']; ?>-import-style');
-		                    if(link){
-		                        link.attr('href', stylesheet+':'+$("#<?php echo $value['id']; ?>_fontweight").val());
+		                    if(stylesheet){
+                                if(/css/i.test(stylesheet)){
+                                    link.attr('href', stylesheet);
+                                }
+                                else{
+                                    link.attr('href', stylesheet+':'+$("#<?php echo $value['id']; ?>_fontweight").val());
+                                }
 		                    }else{
 		                        $('head').append('<link class="<?php echo $value['id']; ?>-import-style" rel="stylesheet" type="text/css" href="'+stylesheet+'" />');
 		                    }
