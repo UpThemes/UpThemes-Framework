@@ -142,4 +142,33 @@ jQuery(document).ready(function($){
 			zIndex : '0'
 		})
 	});
+	
+	// Awesomeness for Typography previews
+
+	$('.type-typography').toggleClass('compact');
+	$('.type-typography').prepend('<span class="toggle">edit</span>');
+
+	$(document).ready(function(e){
+
+		$('.type-typography').each(function($i){
+			
+			$(this).find('.toggle').css('top',$(this).find('.compact_font_preview').height() );
+			$(this).append('<div class="compact_font_preview"><span class="selector">'+$(this).find('.font-selector').val()+'</span><span class="type_title">'+$(this).find('.title label').text()+'</span></div>');
+			$(this).find(".compact_font_preview").attr('style',$(this).find("#font-preview").attr('style'));
+			
+		});
+		
+		$('.compact_font_preview,.toggle').click(function(e){ 
+			$(this).parents('.typography').toggleClass('compact');
+			$(this).parents('.feature-set').find('.typography');
+			$(this).parents('.typography').find(".compact_font_preview").attr('style',$(this).find("#font-preview").attr('style'));
+			if( $(this).parents('.typography').className() == 'compact' )
+				$(this).parents('.typography').find(".toggle").html('close');
+			else
+				$(this).parents('.typography').find(".toggle").html('edit');
+				
+		});
+	
+	});
+
 })

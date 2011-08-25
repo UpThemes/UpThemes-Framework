@@ -888,6 +888,10 @@
 
 /* @group Typography Engine Options */
 
+#upthemes_framework li.typography{
+	position: relative;
+}
+
 #upthemes_framework li.typography .type_fields label{
 	font-size: 0.9em;
 }
@@ -906,6 +910,41 @@
 
 #upthemes_framework li.typography select{
 	width: 140px;
+}
+
+#upthemes_framework li.compact{ border: none !important; margin: 0 0 10px 0 !important; padding: 0 !important; }
+
+#upthemes_framework li.compact *{ display: none; }
+#upthemes_framework li .compact_font_preview{ display: none; }
+
+#upthemes_framework li.compact:hover .selector,
+#upthemes_framework li.compact .type_title{ display: block; }
+#upthemes_framework li.compact:hover .type_title{ display: none; }
+
+#upthemes_framework li .toggle{ display: none; position: absolute; top: 36%; right: 18px; }
+#upthemes_framework li.compact:hover .toggle,
+#upthemes_framework li .toggle{ display: inline; }
+#upthemes_framework li .toggle{ top: 18px; }
+#upthemes_framework li.compact .compact_font_preview{ 
+	display: block !important; 
+	border: 1px solid #ccc;
+	cursor: pointer;
+	border-radius: 6px; 
+	-moz-border-radius: 6px; 
+	-webkit-border-radius: 6px; 
+	padding: 15px; 
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 1em !important;
+	white-space: nowrap;
+	background: rgb(255,255,255); /* Old browsers */
+	background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(243,243,243,1) 50%, rgba(237,237,237,1) 51%, rgba(255,255,255,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(50%,rgba(243,243,243,1)), color-stop(51%,rgba(237,237,237,1)), color-stop(100%,rgba(255,255,255,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(243,243,243,1) 50%,rgba(237,237,237,1) 51%,rgba(255,255,255,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(243,243,243,1) 50%,rgba(237,237,237,1) 51%,rgba(255,255,255,1) 100%); /* Opera11.10+ */
+	background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(243,243,243,1) 50%,rgba(237,237,237,1) 51%,rgba(255,255,255,1) 100%); /* IE10+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+	background: linear-gradient(top, rgba(255,255,255,1) 0%,rgba(243,243,243,1) 50%,rgba(237,237,237,1) 51%,rgba(255,255,255,1) 100%); /* W3C */
 }
 
 #upthemes_framework #font-preview{

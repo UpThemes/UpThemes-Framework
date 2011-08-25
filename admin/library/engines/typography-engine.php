@@ -57,7 +57,7 @@ function upfw_enqueue_font_css(){
                 $textshadow_webkit = $textshadow ? "-webkit-text-shadow:{$textshadow};" : '';
                 $fontweight = $property['fontweight'];
                 $fontweight = $fontweight ? "font-weight:{$fontweight};" : '';
-				$fontweight_stylesheet = ':'.$property['fontweight'];
+				$fontweight_stylesheet = !defined('DISABLE_GOOGLE_FONTS') ? ':'.$property['fontweight'] : '';
                 $fontstyle = $property['fontstyle'];
                 $fontstyle = $fontstyle ? "font-style:{$fontstyle};" : '';
                 $texttransform = $property['texttransform'];
@@ -71,9 +71,18 @@ function upfw_enqueue_font_css(){
                 $selector = $property['selector'];
                 $font_family = $up_fonts[$font]['font_family'];
                 $font_family = $font_family ? "font-family:\"{$font_family}\";" : '';
-                $stylesheet = $up_fonts[$font]['style'].$fontweight_stylesheet;
-                if($stylesheet)wp_enqueue_style($font, $stylesheet);
+                
+                $stylesheet = $up_fonts[$font]['style'];
+                
+                preg_match(".css", $stylesheet, $matches);
+
+                if( $matches )
+	                $stylesheet = $stylesheet.$fontweight_stylesheet;
+	                
+                if( $stylesheet ) wp_enqueue_style($font, $stylesheet,null,null);
+                
                 if($selector)$css .= $selector."\n{\n  {$font_family}\n  {$fontsize}\n  {$lineheight}\n  {$fontstyle}\n  {$letterspacing}\n  {$fontweight}\n  {$texttransform}\n  {$textdecoration}\n  {$textshadow_normal}\n  {$textshadow_moz}\n  {$textshadow_webkit}\n}\n\n";
+                
             endforeach;
         endforeach;
     endif;
@@ -84,8 +93,8 @@ function upfw_enqueue_font_css(){
 add_action('init', 'upfw_enqueue_font_css');
 
 /* Print the font CSS */
-add_action( 'wp_ajax_upfw_css', 'upfw_css' );
-add_action( 'wp_ajax_nopriv_upfw_css', 'upfw_css' );
+add_action( 'wp_ajax_upfw_css', 'upfw_css',1 );
+add_action( 'wp_ajax_nopriv_upfw_css', 'upfw_css',1 );
 
 function upfw_css(){
     global $up_fonts_css;
@@ -94,7 +103,7 @@ function upfw_css(){
     exit;
 }
 
-if( !is_admin() ) add_action('wp_head','upfw_inject_theme_option_css',1);
+if( !is_admin() ) add_action('wp_head','upfw_inject_theme_option_css',900);
 
 function upfw_inject_theme_option_css(){
 
