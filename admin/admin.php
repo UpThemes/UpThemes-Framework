@@ -51,10 +51,10 @@ function upfw_generate_theme_data(){
 
 	if( file_exists(TEMPLATEPATH.'/admin/admin.php') ):
 		define( 'THEME_PATH' , TEMPLATEPATH );
-		define( 'THEME_DIR' , get_bloginfo("template_directory") );
+		define( 'THEME_DIR' , get_template_directory_uri() );
 	elseif( file_exists(STYLESHEETPATH.'/admin/admin.php') ):
 		define( 'THEME_PATH' , STYLESHEETPATH );
-		define( 'THEME_DIR' , get_bloginfo("stylesheet_directory") );
+		define( 'THEME_DIR' , get_stylesheet_directory_uri() );
 	endif;
 	
 	// Detect child theme info
@@ -133,7 +133,7 @@ function upfw_set_uploads_dir(){
 				add_action( 'admin_notices', 'upfw_permissions_error', 1, 1 );
 			else{
 				$oldumask = umask(0);
-				@mkdir($base_upload_dir, 0777);
+				@mkdir($base_upload_dir, 0775);
 				umask($oldumask);
 				
 				if( is_writeable( $base_upload_dir ) )
