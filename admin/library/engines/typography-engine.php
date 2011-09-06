@@ -74,7 +74,7 @@ function upfw_enqueue_font_css(){
                 
                 $stylesheet = $up_fonts[$font]['style'];
                 
-                preg_match("/.css/i", $stylesheet, $matches);
+                preg_match("/\.css/i", $stylesheet, $matches);
 
                 if( $matches )
 	                $stylesheet = $stylesheet.$fontweight_stylesheet;
