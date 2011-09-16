@@ -832,13 +832,17 @@ function upfw_typography($value,$attr){
 
     $family  = $option['font'] ? $option['font'] : $value['default'];
     $fontsize  = $option['fontsize'] ? $option['fontsize']: $value['fontsize'];
+    if( empty($fontsize) ) $fontsize = '16px';
     $fontstyle  = $option['fontstyle'] ? $option['fontstyle']: 'normal';
     $lineheight = $option['lineheight'] ? $option['lineheight'] : $value['lineheight'];
+    if( empty($lineheight) ) $fontsize = '21px';
     $texttransform = $option['texttransform'] ? $option['texttransform'] : 'none';
     $fontweight = $option['fontweight'] ? $option['fontweight'] : 'normal';
+    $fontweight_faux = $option['fontweight_faux'] ? $option['fontweight_faux'] : $value['fontweight'];
+    if( empty($fontweight_faux) ) $fontweight_faux = '21px';
     $textdecoration = $option['textdecoration'] ? $option['textdecoration'] : 'none';
     $textshadow = $option['textshadow'] ? $option['textshadow'] : 'none';
-    $letterspacing = $option['letterspacing'] ? $option['letterspacing'] : '0px';
+    $letterspacing = $option['letterspacing'] ? $option['letterspacing'] : '0';
     $show_selector = $value['show_selector'];
     $selector = $option['selector'] ? $option['selector'] : $value['selector'];
     $fonts = $up_fonts; ?>
@@ -919,7 +923,7 @@ function upfw_typography($value,$attr){
 						</div>
 	
 						<div class="field">
-                            <label class="font-label" for="<?php echo $value['id']; ?>_fontweight"><?php _e('Font Weight','upfw'); ?></label>
+                            <label class="font-label" for="<?php echo $value['id']; ?>_fontweight"><?php _e('Google Webfont Weight','upfw'); ?></label>
 	                        <select id="<?php echo $value['id']; ?>_fontweight" name="<?php echo $value['id']; ?>[fontweight]">
                                 <?php $weights = $fonts[$family]['weights'];
                                 if(!$weights):?>
@@ -930,6 +934,16 @@ function upfw_typography($value,$attr){
                                         <option value="<?php echo $weight;?>" <?php if($fontweight==$weight) echo "selected";?>><?php echo $name;?></option>
                                     <?php endforeach;?>
                                 <?php endif;?>
+	                        </select>
+	                        <kbd><?php _e("The Google Web Font API allows you to load specific font/weight combinations. This option allows you to select specific font weight files to load."); ?></kbd>
+						</div>
+
+						<div class="field">
+                            <label class="font-label" for="<?php echo $value['id']; ?>_fontweight_faux"><?php _e('Font Weight','upfw'); ?></label>
+	                        <select id="<?php echo $value['id']; ?>_fontweight_faux" name="<?php echo $value['id']; ?>[fontweight_faux]">
+
+                                <option value="normal" <?php if($fontweight_faux=='normal') echo "selected";?>><?php _e("Normal","upfw"); ?></option>
+                                <option value="bold" <?php if($fontweight_faux=='bold') echo "selected";?>><?php _e("Bold","upfw"); ?></option>
 	                        </select>
 	                        <kbd><?php _e("Please Note: Some fonts do not have additional weights. In many cases, the below preview will not accurately reflect font weight."); ?></kbd>
 						</div>
@@ -1008,7 +1022,7 @@ function upfw_typography($value,$attr){
 
         <div class="font-preview">
             <label class="font-preview-label"><?php _e('Preview', 'upfw');?></label>
-            <div id="font-preview" class="<?php echo $value['id']; ?>_type_preview" style="font-family:<?php echo $up_fonts['library'][$family]['font_family']; ?>; font-size: <?php echo $fontsize; ?>; font-style: <?php echo $fontstyle; ?>; letter-spacing: <?php echo $letterspacing;?>; line-height:<?php echo $lineheight;?>; text-transform:<?php echo $texttransform;?>; text-decoration:<?php echo $textdecoration;?>; font-weight:<?php echo $fontweight;?>; text-shadow:<?php echo $textshadow; ?>; -moz-text-shadow:<?php echo $textshadow; ?>; -webkit-text-shadow:<?php echo $textshadow; ?>;  "><?php _e('Pack my box with five dozen liquor jugs.', 'upfw');?><br /><?php _e('The quick brown fox jumps over the lazy dog. ', 'upfw');?></div>
+            <div id="font-preview" class="<?php echo $value['id']; ?>_type_preview" style="font-family:<?php echo $up_fonts['library'][$family]['font_family']; ?>; font-size: <?php echo $fontsize; ?>; font-style: <?php echo $fontstyle; ?>; letter-spacing: <?php echo $letterspacing;?>; line-height:<?php echo $lineheight;?>; text-transform:<?php echo $texttransform;?>; text-decoration:<?php echo $textdecoration;?>; font-weight:<?php echo $fontweight_faux;?>; text-shadow:<?php echo $textshadow; ?>; -moz-text-shadow:<?php echo $textshadow; ?>; -webkit-text-shadow:<?php echo $textshadow; ?>;  "><?php _e('Pack my box with five dozen liquor jugs.', 'upfw');?><br /><?php _e('The quick brown fox jumps over the lazy dog. ', 'upfw');?></div>
         </div>
         
         <script type="text/javascript">
@@ -1109,7 +1123,7 @@ function upfw_typography($value,$attr){
                 });                
 
                 /* Font Weight */
-                $("#<?php echo $value['id']; ?>_fontweight").live('change', function(e){
+                $("#<?php echo $value['id']; ?>_fontweight_faux").live('change', function(e){
                     var selector = $(this).find(':selected')[0].value;
                     $(".<?php echo $value['id']; ?>_type_preview").css('font-weight', selector);
                 });

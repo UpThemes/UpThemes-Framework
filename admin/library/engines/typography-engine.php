@@ -55,7 +55,7 @@ function upfw_enqueue_font_css(){
                 $textshadow_normal = $textshadow ? "text-shadow:{$textshadow};" : '';
                 $textshadow_moz = $textshadow ? "-moz-text-shadow:{$textshadow};" : '';
                 $textshadow_webkit = $textshadow ? "-webkit-text-shadow:{$textshadow};" : '';
-                $fontweight = $property['fontweight'];
+                $fontweight = $property['fontweight_faux'];
                 $fontweight = $fontweight ? "font-weight:{$fontweight};" : '';
 				$fontweight_stylesheet = !defined('DISABLE_GOOGLE_FONTS') ? ':'.$property['fontweight'] : '';
                 $fontstyle = $property['fontstyle'];
