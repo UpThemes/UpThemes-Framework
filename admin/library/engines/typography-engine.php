@@ -457,22 +457,23 @@ function upfw_multiple_typography($options){
         'default_text' => __('Add New Selector Group', 'upfw'))
     );
     
-    if(is_array($up_options->upfw_user_selectors)):
-        foreach($up_options->upfw_user_selectors as $name):
+	$custom = array();
+    if( isset( $up_options->upfw_user_selectors ) ) :		
+        foreach( $up_options->upfw_user_selectors as $name ):
             $multiple[] = array(
                 'name' => $name,
-                'desc' => __('Custom Selectors', 'upfw'),
+                'desc' => __( 'Custom Selectors', 'upfw' ),
                 'type' => 'typography',
-                'id' => preg_replace('/[^a-z\sA-Z\s0-9\s]/', '', strtolower(str_replace(' ', '_', $name))),
+                'id' => preg_replace( '/[^a-z\sA-Z\s0-9\s]/', '', strtolower( str_replace( ' ', '_', $name ) ) ),
                 'selector' => $name,
                 'custom' => true
             );
-            $custom[preg_replace('/[^a-z\sA-Z\s0-9\s]/', '', strtolower(str_replace(' ', '_', $name)))] = true;
+            $custom[preg_replace( '/[^a-z\sA-Z\s0-9\s]/', '', strtolower( str_replace( ' ', '_', $name ) ) )] = true;
         endforeach;
     endif;
     
-    if(is_array($multiple)) $options = array_merge($options, $multiple);
-    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts_queue', $custom);
+    if ( is_array( $multiple ) ) $options = array_merge( $options, $multiple );
+    update_option( 'up_themes_' . UPTHEMES_SHORT_NAME . '_custom_fonts_queue', $custom );
     return $options;
 }
 

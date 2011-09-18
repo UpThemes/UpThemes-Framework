@@ -7,21 +7,21 @@ function up_seo_init(){
     echo up_description();
     echo up_keywords();
 }
-if(!defined('DISABLE_UP_SEO'))
+if( ! defined( 'DISABLE_UP_SEO' ) )
     add_action('up_seo', 'up_seo_init');
 
 
 /* Check for SEO Plugins */
 function up_seo_third_parties(){
-    define('UP_SEO_THIRD_PARTY', false);
-    if(class_exists('All_in_One_SEO_Pack') || class_exists('Headspace_Plugin'))return true;
+	if ( ! defined( 'UP_SEO_THIRD_PARTY' ) ) define( 'UP_SEO_THIRD_PARTY', false );
+    if( class_exists( 'All_in_One_SEO_Pack' ) || class_exists( 'Headspace_Plugin' ) ) return true;
 }
-add_action('init', 'up_seo_third_parties');
+add_action( 'init', 'up_seo_third_parties' );
 
 /* Theme Options */
-function up_seo_default_options(){
+function up_seo_default_options() {
     
-    if(up_seo_third_parties())echo "<kbd>".__('We detected that a third-party SEO plugin has been activated. UpThemes SEO has been automatically disabled to avoid any conflict.', 'upfw')."</kbd>";
+    if ( up_seo_third_parties() )echo "<kbd>".__('We detected that a third-party SEO plugin has been activated. UpThemes SEO has been automatically disabled to avoid any conflict.', 'upfw')."</kbd>";
     
     $options = array (
         
@@ -350,7 +350,7 @@ function up_title(){
         $separator = $up_options->seo_separator ? $up_options->seo_separator : '|';
         
         /* Check for SEO Plugins */
-	if(UP_SEO_THIRD_PARTY == 'yes' || $up_options->seo_disable) { return get_bloginfo('name').wp_title($separator, false); }
+	if ( true == UP_SEO_THIRD_PARTY || $up_options->seo_disable) { return get_bloginfo('name').wp_title($separator, false); }
         
         /* SEO Settings and Default Settings */
 	$disable = $up_options->seo_disable;

@@ -14,7 +14,7 @@ function upfw_text_field($value,$attr){
                     
                     <fieldset class="data">
                         <div class="inner">
-                            <input type="text" name="<?php echo $value['id']; ?>" value="<?php if($up_options->$value['id']): echo $up_options->$value['id']; else: echo $value['value']; endif;?>" id="<?php echo $value['id']; ?>" <?php echo $attr; ?> />
+                            <input type="text" name="<?php echo $value['id']; ?>" value="<?php if( isset( $up_options->$value['id'] ) ): echo $up_options->$value['id']; else: echo $value['value']; endif;?>" id="<?php echo $value['id']; ?>" <?php echo $attr; ?> />
                         </div>
                     </fieldset>
                     <div class="clear"></div>
@@ -58,7 +58,7 @@ function upfw_text_list($value,$attr){
                                 <?php $add_text = $value['default_text'] ? $value['default_text'] : __('Add New Field', 'upfw');?>
                                 <p class="add_text_list"><a href="#"><?php echo $add_text;?></a></p>
                                 <?php
-                                if($up_options->$value['id']):
+                                if( isset( $up_options->$value['id'] ) ) :
                                     if(is_array($up_options->$value['id'])):
                                         foreach($up_options->$value['id'] as $text):?>
                                             <div class="entry">
@@ -69,7 +69,7 @@ function upfw_text_list($value,$attr){
                                         <?php endforeach;
                                     endif;
                                 else:
-                                    if($value['value']):
+                                    if( isset( $value['value'] ) ) :
                                         if(preg_match('/,/', $value['value'])):
                                             $list = explode(', ', $value['value']);
                                             foreach($list as $text):?>
@@ -110,7 +110,7 @@ function upfw_textarea($value,$attr){
                     
                     <fieldset class="data">
                         <div class="inner">
-                            <textarea name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" <?php echo $attr; ?>><?php if($up_options->$value['id']): echo $up_options->$value['id']; else: echo $value['value']; endif;?></textarea>
+                            <textarea name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" <?php echo $attr; ?>><?php if ( isset( $up_options->$value['id'] ) ) : echo $up_options->$value['id']; else: echo $value['value']; endif; ?></textarea>
                         </div>
                     </fieldset>
                     <div class="clear"></div>
@@ -248,7 +248,7 @@ function upfw_checkbox($value,$attr){
                                     //This gets the latest options
                                     $up_options_db = get_option('up_themes_'.UPTHEMES_SHORT_NAME);
                                     foreach($i as $k => $v):
-                                        if($up_options_db[$value['id']]):
+                                        if( isset( $up_options_db[$value['id']] ) ) :
                                             if(is_array($up_options->$value['id'])):
                                                 foreach($up_options->$value['id'] as $std):
                                                     if($v == $std):
@@ -293,7 +293,7 @@ function upfw_color($value,$attr){
                         <div class="inner">
                             <span class="colorPickerWrapper">
                                 <a href="#" class="clear"><img src="<?php echo THEME_DIR; ?>/admin/images/upfw_ico_delete.png" alt="Delete Text Field" /></a>
-                                <input type="text" class="popup-colorpicker" id="<?php echo $value['id']; ?>" name="<?php echo $value['id']; ?>" value="<?php if($up_options->$value['id']): echo $up_options->$value['id']; else: echo $value['value']; endif;?>" <?php echo $attr; ?> />
+                                <input type="text" class="popup-colorpicker" id="<?php echo $value['id']; ?>" name="<?php echo $value['id']; ?>" value="<?php if( isset( $up_options->$value['id'] ) ) : echo $up_options->$value['id']; else: echo $value['value']; endif;?>" <?php echo $attr; ?> />
                                 <div class="popup-guy">
                                     <div class="popup-guy-inside">
                                         <div id="<?php echo $value['id']; ?>picker" class="color-picker"></div>
@@ -830,21 +830,21 @@ function upfw_typography($value,$attr){
     	$option = $value['value'];
     endif;
 
-    $family  = $option['font'] ? $option['font'] : $value['default'];
-    $fontsize  = $option['fontsize'] ? $option['fontsize']: $value['fontsize'];
-    if( empty($fontsize) ) $fontsize = '16px';
-    $fontstyle  = $option['fontstyle'] ? $option['fontstyle']: 'normal';
-    $lineheight = $option['lineheight'] ? $option['lineheight'] : $value['lineheight'];
-    if( empty($lineheight) ) $fontsize = '21px';
-    $texttransform = $option['texttransform'] ? $option['texttransform'] : 'none';
-    $fontweight = $option['fontweight'] ? $option['fontweight'] : 'normal';
-    $fontweight_faux = $option['fontweight_faux'] ? $option['fontweight_faux'] : $value['fontweight'];
-    if( empty($fontweight_faux) ) $fontweight_faux = '21px';
-    $textdecoration = $option['textdecoration'] ? $option['textdecoration'] : 'none';
-    $textshadow = $option['textshadow'] ? $option['textshadow'] : 'none';
-    $letterspacing = $option['letterspacing'] ? $option['letterspacing'] : '0';
-    $show_selector = $value['show_selector'];
-    $selector = $option['selector'] ? $option['selector'] : $value['selector'];
+    $family  = isset( $option['font'] ) ? $option['font'] : $value['default'];
+    $fontsize  = isset( $option['fontsize'] ) ? $option['fontsize']: $value['fontsize'];
+    if( empty( $fontsize ) ) $fontsize = '16px';
+    $fontstyle  = isset( $option['fontstyle'] ) ? $option['fontstyle']: 'normal';
+    $lineheight = isset( $option['lineheight'] ) ? $option['lineheight'] : $value['lineheight'];
+    if( empty( $lineheight ) ) $fontsize = '21px';
+    $texttransform = isset( $option['texttransform'] ) ? $option['texttransform'] : 'none';
+    $fontweight = isset( $option['fontweight'] ) ? $option['fontweight'] : 'normal';
+    $fontweight_faux = isset( $option['fontweight_faux'] ) ? $option['fontweight_faux'] : $fontweight;
+    if( empty( $fontweight_faux ) ) $fontweight_faux = '21px';
+    $textdecoration = isset( $option['textdecoration'] ) ? $option['textdecoration'] : 'none';
+    $textshadow = isset( $option['textshadow'] ) ? $option['textshadow'] : 'none';
+    $letterspacing = isset( $option['letterspacing'] ) ? $option['letterspacing'] : '0';
+    $show_selector = isset( $value['show_selector'] ) ? $value['show_selector'] : false;
+    $selector = isset( $option['selector'] ) ? $option['selector'] : $value['selector'];
     $fonts = $up_fonts; ?>
                     
     <li class="type-<?php echo $value['type'];?> typography" id="<?php echo $value['id']; ?> container-<?php echo $value['id']; ?>">
@@ -1258,7 +1258,7 @@ function upfw_layouts($value,$attr){
                                     $selected = ($up_options->$value['id'] == $up_layout['style']) ? ' up-layout-active' : '';
                                     if($selected):
                                         //Add layout to enqueue_theme_layout()
-                                        $context = $value['context'] ? $value['context'] : 'global';
+                                        $context = isset( $value['context'] ) ? $value['context'] : 'global';
                                         $layouts = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_layouts');
                                         $layout[$context] = array('id' => $up_layout['id']);
                                         if(is_array($layouts)):
