@@ -490,12 +490,14 @@ function find_defaults($options){
 ** Render theme options
 *************************************/
 function render_options($options){
+
+	global $attr;
+	$attr = '';
     
     foreach ($options as $value) {
         //Check if there are additional attributes
-        if(is_array($value['attr'])):
+        if ( isset( $value['attr'] ) && is_array( $value['attr'] ) ):
             $i = $value['attr'];
-            global $attr;
             //Convert array into a string
             foreach($i as $k => $v):
                 $attr .= $k.'="'.$v.'" ';
