@@ -400,7 +400,7 @@ add_action('upfw_admin_init','upfw_create_options_tabs',50);
 *************************************/
 function upfw_set_defaults(){
 
-	if( !get_option('up_themes_'.UPTHEMES_SHORT_NAME) && $_GET['page']!="upthemes" ):
+	if( ! get_option( 'up_themes_'.UPTHEMES_SHORT_NAME) && ( ! isset( $_GET['page'] ) || 'upthemes' != $_GET['page'] ) ) :
 	
 		//Redirect to options page where defaults will automatically be set
 		header('Location: '.get_bloginfo('url').'/wp-admin/admin.php?page=upthemes');
