@@ -1,8 +1,8 @@
 <?php
-function register_theme_layout($args){
+function register_theme_layout( $args ){
     global $up_layouts;
-    extract($args);
-    $context = $context ? $context : 'global';
+    extract( $args );
+    $context = isset( $context ) ? $context : 'global';
     if($id && $name && $style && $image):
         $up_layouts[$id] = $args;
         return true;
