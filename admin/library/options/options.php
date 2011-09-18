@@ -136,21 +136,13 @@ function upfw_select($value,$attr){
                             <select name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" <?php echo $attr; ?>>
                                 <option value="<?php echo $value['default_value']; ?>"><?php if($value['default_text']): echo $value['default_text']; else: echo "None"; endif;?></option>
                                 <?php
-                                if(is_array($value['options'])):
+                                if ( isset( $value['options'] ) ) :
                                     $i = $value['options'];
-                                    foreach($i as $k => $v):
-                                        if($up_options->$value['id']):
-                                            if($up_options->$value['id'] == $v):
-                                                $selected = ' selected = "selected"';
-                                            endif;
-                                        else:
-                                            if($value['value'] == $v):
-                                                $selected = ' selected = "selected"';
-                                            endif;
-                                        endif;?>
-                                        <option value="<?php echo $v?>"<?php echo $selected?>><?php echo $k?></option>
-                                        <?php $selected = '';?>
-                                    <?php endforeach;
+                                    foreach( $i as $k => $v ) : 
+										?>
+                                        <option value="<?php echo $v; ?>" <?php selected( ( isset( $vlaue['value'] ) && $v == $vlaue['value'] ) || ( isset( $up_options->$value['id'] ) && $v == $up_options->$value['id'] ) ); ?>><?php echo $k; ?></option>
+										<?php 
+									endforeach;
                                 endif;
                                 ?>
                             </select>

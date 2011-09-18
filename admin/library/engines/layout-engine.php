@@ -57,8 +57,8 @@ function enqueue_theme_layout(){
             if($context != 'global'):
                 if(function_exists('is_'.$context)):
                     if(call_user_func('is_'.$context)):
-                        if($context == 'archive') $archive == true;
-                        if($context == 'category' || $context == 'tag') $archive_override = true;
+                        if ( $context == 'archive' ) $archive = true;
+                        if ($context == 'category' || $context == 'tag') $archive_override = true;
                         wp_enqueue_style('up-layout-'.$context, $up_layouts[$layout['id']]['style']);
                         $queued = TRUE;
                     endif;
