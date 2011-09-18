@@ -375,8 +375,8 @@ function up_title(){
         if(get_post_type() && !is_singular()) $layout = $page_layout;
         
         /* Override Title with Custom Field */
-        $custom_title = get_post_meta($post->ID,'_up_seo_title',true);
-        if($custom_title && !is_home() && !is_front_page()) $layout = preg_replace('/%TITLE%/', '%CUSTOMFIELD%', $layout);
+        $custom_title = ( isset( $post ) ? get_post_meta( $post->ID, '_up_seo_title', true ) : false );
+        if( $custom_title && ! is_home() && ! is_front_page() ) $layout = preg_replace( '/%TITLE%/', '%CUSTOMFIELD%', $layout );
         
         $title = up_seo_title_layout($layout);
         return $title;
@@ -384,17 +384,17 @@ function up_title(){
 }
 
 
-function up_seo_title_layout($layout = "%ARCHIVE% %TITLE% %BLOG% %DESC%"){
+function up_seo_title_layout( $layout = "%ARCHIVE% %TITLE% %BLOG% %DESC%" ){
     global $up_options, $post, $wp_query;
 
     $sep = $up_options->seo_separator ? ' '.$up_options->seo_separator.' ' : ' | ';
     $paged = get_query_var('paged') ? __('Page ', 'upfw').get_query_var('paged') : '';
     $search = get_query_var('s') ? __('Search Results For ', 'upfw').get_query_var('s') : '';
-    $title = $post->post_title;
-    $home_title = (is_front_page() || is_home() && $up_options->seo_homepage_title) ? $up_options->seo_homepage_title : '';
-    $home_description = (is_front_page() || is_home()) ? $up_options->seo_homepage_description : '';
+    $title = ( isset( $post ) ? $post->post_title : '' );
+    $home_title = ( is_front_page() || is_home() && isset( $up_options->seo_homepage_title ) ) ? $up_options->seo_homepage_title : '';
+    $home_description = ( is_front_page() || is_home() ) ? $up_options->seo_homepage_description : '';
     
-    $customfield = get_post_meta(get_the_ID(), '_up_seo_title', true);
+    $customfield = ( isset( $post ) ? get_post_meta(get_the_ID(), '_up_seo_title', true) : false );
     
     /* Insert Separators */
     $layout = preg_replace('/ /', $sep, $layout);
