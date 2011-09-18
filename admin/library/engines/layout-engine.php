@@ -67,7 +67,7 @@ function enqueue_theme_layout(){
                 $global = TRUE;
             endif;
         endforeach;
-        if($archive_override) wp_dequeue_style('up-layout-archive');
+        if ( isset( $archive_override ) && true == $archive_override ) wp_dequeue_style('up-layout-archive');
         if(!$queued && $global)wp_enqueue_style('up-layout-global', $up_layouts[$contexts['global']['id']]['style']);
     endif;
 }
