@@ -415,36 +415,36 @@ function up_seo_title_layout($layout = "%ARCHIVE% %TITLE% %BLOG% %DESC%"){
         $post_type = $name;
     endif;
 
-    if($post_type && !is_singular()) $layout = preg_replace('/%TITLE%/', $post_type, $layout);
+    if( $post_type && ! is_singular() ) $layout = preg_replace( '/%TITLE%/', $post_type, $layout );
     
     /* Insert Blog Description */
-    $layout = preg_replace('/%DESC%/', get_bloginfo('description'), $layout);
+    $layout = preg_replace( '/%DESC%/', get_bloginfo( 'description' ), $layout );
         
     /* Insert Page/Post Title */
-    if($title && is_singular())$layout = preg_replace('/%TITLE%/', $title, $layout);
+    if ( $title && is_singular( ) ) $layout = preg_replace('/%TITLE%/', $title, $layout );
     
     /* Insert Custom Page/Post Title */
-    if($customfield)$layout = preg_replace('/%CUSTOMFIELD%/', $customfield, $layout);
+    if ( $customfield ) $layout = preg_replace('/%CUSTOMFIELD%/', $customfield, $layout );
     
     /* Insert Paged Results */
-    if($paged):$layout = preg_replace('/%PAGED%/', $paged, $layout); else: $layout = preg_replace('/%PAGED%/', '', $layout);endif;
+    if ( $paged ) : $layout = preg_replace('/%PAGED%/', $paged, $layout ); else : $layout = preg_replace( '/%PAGED%/', '', $layout ); endif;
     
     /* Insert Search Results */
-    if($search)$layout = preg_replace('/%SEARCH%/', $search, $layout);
+    if ( $search ) $layout = preg_replace('/%SEARCH%/', $search, $layout );
     
     /* Insert Category Title */
-    if(is_category())$layout = preg_replace('/%ARCHIVE%/', single_cat_title('', false), $layout);
+    if ( is_category() ) $layout = preg_replace('/%ARCHIVE%/', single_cat_title( '', false ), $layout );
     
     /* Insert Tag Title */
-    if(function_exists('is_tag')):
-        if(is_tag)$layout = preg_replace('/%ARCHIVE%/', single_tag_title('', false), $layout);
+    if (function_exists( 'is_tag' ) ) :
+        if( is_tag() ) $layout = preg_replace('/%ARCHIVE%/', single_tag_title( '', false ), $layout );
     endif;
 
     /* Insert Author Archives */
-    if(is_author()) $layout = preg_replace('/%ARCHIVE%/', __('Author Archives'), $layout);
+    if( is_author() ) $layout = preg_replace( '/%ARCHIVE%/', __( 'Author Archives' ), $layout );
     
     /* Insert Taxonomy Name and Term */
-    if(is_tax()):
+    if( is_tax() ) :
         if ( function_exists('get_taxonomies') ) :
             $taxonomy_obj = $wp_query->get_queried_object();
             if(!empty($taxonomy_obj->name)) :
