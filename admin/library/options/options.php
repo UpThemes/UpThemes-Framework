@@ -163,7 +163,7 @@ function upfw_select($value,$attr){
 }
 
 function upfw_multiple($value,$attr){
-    global $up_options,$wpdb;
+    global $up_options;
 ?>
 
                 <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
@@ -260,7 +260,7 @@ function upfw_checkbox($value,$attr){
                                             $selected = '';
                                         endif;?>
                                         <div class="checkbox">
-                                            <input type="checkbox" <?php echo $selected;?> value="<?php echo $v;?>" name="<?php echo $value['id']; ?>[]" id="<?php echo $value['id']; ?>">
+                                            <input type="checkbox" <?php echo $selected;?> value="<?php echo $v;?>" name="<?php echo $value['id']; ?>[]" id="<?php echo $value['id']; ?> <?php echo $attr;?>">
                                             <label><?php echo $k;?></label>
                                         </div>
                                         
@@ -832,17 +832,25 @@ function upfw_typography($value,$attr){
 
     $family  = $option['font'] ? $option['font'] : $value['default'];
     $fontsize  = $option['fontsize'] ? $option['fontsize']: $value['fontsize'];
-    $fontstyle  = $option['fontstyle'] ? $option['fontstyle']: 'normal';
+    $fontsize = $fontsize ? $fontsize : '12px';
+    $fontstyle  = $option['fontstyle'] ? $option['fontstyle']: $value['fontstyle'];
+    $fontstyle = $fontstyle ? $fontstyle : 'normal';
     $lineheight = $option['lineheight'] ? $option['lineheight'] : $value['lineheight'];
-    $texttransform = $option['texttransform'] ? $option['texttransform'] : 'none';
-    $fontweight = $option['fontweight'] ? $option['fontweight'] : 'normal';
-    $textdecoration = $option['textdecoration'] ? $option['textdecoration'] : 'none';
-    $textshadow = $option['textshadow'] ? $option['textshadow'] : 'none';
-    $letterspacing = $option['letterspacing'] ? $option['letterspacing'] : '0px';
+    $lineheight = $lineheight ? $lineheight : '18px';
+    $texttransform = $option['texttransform'] ? $option['texttransform'] : $value['texttransform'];
+    $texttransform = $texttransform ? $texttransform : 'none';
+    $fontweight = $option['fontweight'] ? $option['fontweight'] : $value['fontweight'];
+    $fontweight = $fontweight ? $fontweight : 'normal';
+    $textdecoration = $option['textdecoration'] ? $option['textdecoration'] : $value['textdecoration'];
+    $textdecoration = $textdecoration ? $textdecoration : 'none';
+    $textshadow = $option['textshadow'] ? $option['textshadow'] : $value['textshadow'];
+    $textshadow = $textshadow ? $textshadow : 'none';
+    $letterspacing = $option['letterspacing'] ? $option['letterspacing'] : $value['letterspacing'];
+    $letterspacing = $letterspacing ? $letterspacing : '0px';
     $show_selector = $value['show_selector'];
     $selector = $option['selector'] ? $option['selector'] : $value['selector'];
     $fonts = $up_fonts; ?>
-                    
+    
     <li class="type-<?php echo $value['type'];?> typography" id="<?php echo $value['id']; ?> container-<?php echo $value['id']; ?>">
         <fieldset class="title">
             <div class="inner">
@@ -853,6 +861,7 @@ function upfw_typography($value,$attr){
         
         <fieldset class="data">
             <div class="inner">
+                <?php if($selector):?>
                 <div class="type_fields">
 
                     <div class="field">
@@ -1001,11 +1010,13 @@ function upfw_typography($value,$attr){
 	                    </div>
 
 					</fieldset>
-
+                <?php else:?>
+                    <p>Please add a selector to your typography option array. Example: 'selector' => 'h1 a'</p>
+                <?php endif;?>
                 </div>
             </div>
         </fieldset>
-
+        <?php if($selector):?>
         <div class="font-preview">
             <label class="font-preview-label"><?php _e('Preview', 'upfw');?></label>
             <div id="font-preview" class="<?php echo $value['id']; ?>_type_preview" style="font-family:<?php echo $up_fonts['library'][$family]['font_family']; ?>; font-size: <?php echo $fontsize; ?>; font-style: <?php echo $fontstyle; ?>; letter-spacing: <?php echo $letterspacing;?>; line-height:<?php echo $lineheight;?>; text-transform:<?php echo $texttransform;?>; text-decoration:<?php echo $textdecoration;?>; font-weight:<?php echo $fontweight;?>; text-shadow:<?php echo $textshadow; ?>; -moz-text-shadow:<?php echo $textshadow; ?>; -webkit-text-shadow:<?php echo $textshadow; ?>;  "><?php _e('Pack my box with five dozen liquor jugs.', 'upfw');?><br /><?php _e('The quick brown fox jumps over the lazy dog. ', 'upfw');?></div>
@@ -1147,6 +1158,7 @@ function upfw_typography($value,$attr){
                 $(".<?php echo $value['id']; ?>_type_preview").css('font-family', $("#<?php echo $value['id']; ?>_font").find(':selected')[0].id);
             });
         </script>
+        <?php endif;?>
         <div class="clear"></div>
     </li>
 
@@ -1185,7 +1197,6 @@ function upfw_style($value,$attr){
                                                 global $up_options;
                                                 $selected = ($up_options->$value['id'] == $up_style['style']) ? ' up-style-active' : '';
                                                 if($selected):
-                                                    //Add layout to enqueue_theme_layout()
                                                     $context = $value['context'] ? $value['context'] : 'global';
                                                     $styles = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_styles');
                                                     $style[$context] = array('id' => $up_style['id']);
@@ -1237,13 +1248,10 @@ function upfw_layouts($value,$attr){
                             <input type="hidden" id="layout-<?php echo $value['id'];?>" name="<?php echo $value['id'];?>" value="<?php echo $up_options->$value['id'];?>" />
                             <div class="up-layout-container">
                                 <?php global $up_layouts;
-                                //delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_layouts');
-
                                 if( $up_layouts ):
                                 foreach($up_layouts as $up_layout):
                                     $selected = ($up_options->$value['id'] == $up_layout['style']) ? ' up-layout-active' : '';
                                     if($selected):
-                                        //Add layout to enqueue_theme_layout()
                                         $context = $value['context'] ? $value['context'] : 'global';
                                         $layouts = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_layouts');
                                         $layout[$context] = array('id' => $up_layout['id']);
