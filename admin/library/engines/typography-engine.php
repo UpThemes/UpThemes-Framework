@@ -15,7 +15,7 @@ function upfw_typography_init(){
     global $up_fonts;
     ksort($up_fonts);
     
-    if($_REQUEST['up_defaults']):
+    if( isset( $_REQUEST['up_defaults'] ) ):
         delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts');
         delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_fonts_queue');
         delete_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts');
@@ -46,42 +46,43 @@ function upfw_enqueue_font_css(){
     /* Merge custom fonts into main font array */
     if(is_array($custom_fonts))$fonts = array_merge($fonts, $custom_fonts);
         
-    if(is_array($fonts)):
+    if( is_array( $fonts ) ) :
+		$css = '';
         foreach($fonts as $option):
-            foreach ($option as $font => $property):
-                $lineheight = $property['lineheight'];
+            foreach ( $option as $font => $property ):
+                $lineheight = ( isset( $property['lineheight'] ) ? $property['lineheight'] : false );
                 $lineheight = $lineheight ? "line-height:{$lineheight};" : '';
-                $textshadow = $property['textshadow'];
+                $textshadow = ( isset( $property['textshadow'] ) ? $property['textshadow'] : false );
                 $textshadow_normal = $textshadow ? "text-shadow:{$textshadow};" : '';
                 $textshadow_moz = $textshadow ? "-moz-text-shadow:{$textshadow};" : '';
                 $textshadow_webkit = $textshadow ? "-webkit-text-shadow:{$textshadow};" : '';
-                $fontweight = $property['fontweight'];
+                $fontweight = ( isset( $property['fontweight_faux'] ) ? $property['fontweight_faux'] : false );
                 $fontweight = $fontweight ? "font-weight:{$fontweight};" : '';
 				$fontweight_stylesheet = !defined('DISABLE_GOOGLE_FONTS') ? ':'.$property['fontweight'] : '';
-                $fontstyle = $property['fontstyle'];
+                $fontstyle = ( isset( $property['fontstyle'] ) ? $property['fontstyle'] : false );
                 $fontstyle = $fontstyle ? "font-style:{$fontstyle};" : '';
-                $texttransform = $property['texttransform'];
+                $texttransform = ( isset( $property['texttransform'] ) ? $property['texttransform'] : false );
                 $texttransform = $texttransform ? "text-transform:{$texttransform};" : '';
-                $textdecoration = $property['textdecoration'];
+                $textdecoration = ( isset( $property['textdecoration'] ) ? $property['textdecoration'] : false );
                 $textdecoration = $textdecoration ? "text-decoration:{$textdecoration};" : '';
-                $letterspacing = $property['letterspacing'];
+                $letterspacing = ( isset( $property['letterspacing'] ) ? $property['letterspacing'] : false );
                 $letterspacing = $letterspacing ? "letter-spacing:{$letterspacing};" : '';
-                $fontsize = $property['fontsize'];
+                $fontsize = ( isset( $property['fontsize'] ) ? $property['fontsize'] : false );
                 $fontsize = $fontsize ? "font-size:{$fontsize};" : '';
-                $selector = $property['selector'];
-                $font_family = $up_fonts[$font]['font_family'];
+                $selector = ( isset( $property['selector'] ) ? $property['selector'] : false );
+                $font_family = ( isset( $up_fonts[$font]['font_family'] ) ? $up_fonts[$font]['font_family'] : false );
                 $font_family = $font_family ? "font-family:\"{$font_family}\";" : '';
                 
                 $stylesheet = $up_fonts[$font]['style'];
                 
-                preg_match("/.css/i", $stylesheet, $matches);
+                preg_match("/\.css/i", $stylesheet, $matches);
 
                 if( $matches )
 	                $stylesheet = $stylesheet.$fontweight_stylesheet;
 	                
-                if( $stylesheet ) wp_enqueue_style($font, $stylesheet,null,null);
+                if( $stylesheet ) wp_enqueue_style( $font, $stylesheet, null, null );
                 
-                if($selector)$css .= $selector."\n{\n  {$font_family}\n  {$fontsize}\n  {$lineheight}\n  {$fontstyle}\n  {$letterspacing}\n  {$fontweight}\n  {$texttransform}\n  {$textdecoration}\n  {$textshadow_normal}\n  {$textshadow_moz}\n  {$textshadow_webkit}\n}\n\n";
+                if( $selector ) $css .= $selector."\n{\n  {$font_family}\n  {$fontsize}\n  {$lineheight}\n  {$fontstyle}\n  {$letterspacing}\n  {$fontweight}\n  {$texttransform}\n  {$textdecoration}\n  {$textshadow_normal}\n  {$textshadow_moz}\n  {$textshadow_webkit}\n}\n\n";
                 
             endforeach;
         endforeach;
@@ -456,22 +457,23 @@ function upfw_multiple_typography($options){
         'default_text' => __('Add New Selector Group', 'upfw'))
     );
     
-    if(is_array($up_options->upfw_user_selectors)):
-        foreach($up_options->upfw_user_selectors as $name):
+	$custom = array();
+    if( isset( $up_options->upfw_user_selectors ) ) :		
+        foreach( $up_options->upfw_user_selectors as $name ):
             $multiple[] = array(
                 'name' => $name,
-                'desc' => __('Custom Selectors', 'upfw'),
+                'desc' => __( 'Custom Selectors', 'upfw' ),
                 'type' => 'typography',
-                'id' => preg_replace('/[^a-z\sA-Z\s0-9\s]/', '', strtolower(str_replace(' ', '_', $name))),
+                'id' => preg_replace( '/[^a-z\sA-Z\s0-9\s]/', '', strtolower( str_replace( ' ', '_', $name ) ) ),
                 'selector' => $name,
                 'custom' => true
             );
-            $custom[preg_replace('/[^a-z\sA-Z\s0-9\s]/', '', strtolower(str_replace(' ', '_', $name)))] = true;
+            $custom[preg_replace( '/[^a-z\sA-Z\s0-9\s]/', '', strtolower( str_replace( ' ', '_', $name ) ) )] = true;
         endforeach;
     endif;
     
-    if(is_array($multiple)) $options = array_merge($options, $multiple);
-    update_option('up_themes_'.UPTHEMES_SHORT_NAME.'_custom_fonts_queue', $custom);
+    if ( is_array( $multiple ) ) $options = array_merge( $options, $multiple );
+    update_option( 'up_themes_' . UPTHEMES_SHORT_NAME . '_custom_fonts_queue', $custom );
     return $options;
 }
 

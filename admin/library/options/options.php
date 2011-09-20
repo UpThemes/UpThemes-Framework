@@ -14,7 +14,7 @@ function upfw_text_field($value,$attr){
                     
                     <fieldset class="data">
                         <div class="inner">
-                            <input type="text" name="<?php echo $value['id']; ?>" value="<?php if($up_options->$value['id']): echo $up_options->$value['id']; else: echo $value['value']; endif;?>" id="<?php echo $value['id']; ?>" <?php echo $attr; ?> />
+                            <input type="text" name="<?php echo $value['id']; ?>" value="<?php if( isset( $up_options->$value['id'] ) ): echo $up_options->$value['id']; else: echo $value['value']; endif;?>" id="<?php echo $value['id']; ?>" <?php echo $attr; ?> />
                         </div>
                     </fieldset>
                     <div class="clear"></div>
@@ -58,7 +58,7 @@ function upfw_text_list($value,$attr){
                                 <?php $add_text = $value['default_text'] ? $value['default_text'] : __('Add New Field', 'upfw');?>
                                 <p class="add_text_list"><a href="#"><?php echo $add_text;?></a></p>
                                 <?php
-                                if($up_options->$value['id']):
+                                if( isset( $up_options->$value['id'] ) ) :
                                     if(is_array($up_options->$value['id'])):
                                         foreach($up_options->$value['id'] as $text):?>
                                             <div class="entry">
@@ -69,7 +69,7 @@ function upfw_text_list($value,$attr){
                                         <?php endforeach;
                                     endif;
                                 else:
-                                    if($value['value']):
+                                    if( isset( $value['value'] ) ) :
                                         if(preg_match('/,/', $value['value'])):
                                             $list = explode(', ', $value['value']);
                                             foreach($list as $text):?>
@@ -110,7 +110,7 @@ function upfw_textarea($value,$attr){
                     
                     <fieldset class="data">
                         <div class="inner">
-                            <textarea name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" <?php echo $attr; ?>><?php if($up_options->$value['id']): echo $up_options->$value['id']; else: echo $value['value']; endif;?></textarea>
+                            <textarea name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" <?php echo $attr; ?>><?php if ( isset( $up_options->$value['id'] ) ) : echo $up_options->$value['id']; else: echo $value['value']; endif; ?></textarea>
                         </div>
                     </fieldset>
                     <div class="clear"></div>
@@ -136,21 +136,13 @@ function upfw_select($value,$attr){
                             <select name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" <?php echo $attr; ?>>
                                 <option value="<?php echo $value['default_value']; ?>"><?php if($value['default_text']): echo $value['default_text']; else: echo "None"; endif;?></option>
                                 <?php
-                                if(is_array($value['options'])):
+                                if ( isset( $value['options'] ) ) :
                                     $i = $value['options'];
-                                    foreach($i as $k => $v):
-                                        if($up_options->$value['id']):
-                                            if($up_options->$value['id'] == $v):
-                                                $selected = ' selected = "selected"';
-                                            endif;
-                                        else:
-                                            if($value['value'] == $v):
-                                                $selected = ' selected = "selected"';
-                                            endif;
-                                        endif;?>
-                                        <option value="<?php echo $v?>"<?php echo $selected?>><?php echo $k?></option>
-                                        <?php $selected = '';?>
-                                    <?php endforeach;
+                                    foreach( $i as $k => $v ) : 
+										?>
+                                        <option value="<?php echo $v; ?>" <?php selected( ( isset( $vlaue['value'] ) && $v == $vlaue['value'] ) || ( isset( $up_options->$value['id'] ) && $v == $up_options->$value['id'] ) ); ?>><?php echo $k; ?></option>
+										<?php 
+									endforeach;
                                 endif;
                                 ?>
                             </select>
@@ -248,7 +240,7 @@ function upfw_checkbox($value,$attr){
                                     //This gets the latest options
                                     $up_options_db = get_option('up_themes_'.UPTHEMES_SHORT_NAME);
                                     foreach($i as $k => $v):
-                                        if($up_options_db[$value['id']]):
+                                        if( isset( $up_options_db[$value['id']] ) ) :
                                             if(is_array($up_options->$value['id'])):
                                                 foreach($up_options->$value['id'] as $std):
                                                     if($v == $std):
@@ -293,7 +285,7 @@ function upfw_color($value,$attr){
                         <div class="inner">
                             <span class="colorPickerWrapper">
                                 <a href="#" class="clear"><img src="<?php echo THEME_DIR; ?>/admin/images/upfw_ico_delete.png" alt="Delete Text Field" /></a>
-                                <input type="text" class="popup-colorpicker" id="<?php echo $value['id']; ?>" name="<?php echo $value['id']; ?>" value="<?php if($up_options->$value['id']): echo $up_options->$value['id']; else: echo $value['value']; endif;?>" <?php echo $attr; ?> />
+                                <input type="text" class="popup-colorpicker" id="<?php echo $value['id']; ?>" name="<?php echo $value['id']; ?>" value="<?php if( isset( $up_options->$value['id'] ) ) : echo $up_options->$value['id']; else: echo $value['value']; endif;?>" <?php echo $attr; ?> />
                                 <div class="popup-guy">
                                     <div class="popup-guy-inside">
                                         <div id="<?php echo $value['id']; ?>picker" class="color-picker"></div>
@@ -928,7 +920,7 @@ function upfw_typography($value,$attr){
 						</div>
 	
 						<div class="field">
-                            <label class="font-label" for="<?php echo $value['id']; ?>_fontweight"><?php _e('Font Weight','upfw'); ?></label>
+                            <label class="font-label" for="<?php echo $value['id']; ?>_fontweight"><?php _e('Google Webfont Weight','upfw'); ?></label>
 	                        <select id="<?php echo $value['id']; ?>_fontweight" name="<?php echo $value['id']; ?>[fontweight]">
                                 <?php $weights = $fonts[$family]['weights'];
                                 if(!$weights):?>
@@ -939,6 +931,16 @@ function upfw_typography($value,$attr){
                                         <option value="<?php echo $weight;?>" <?php if($fontweight==$weight) echo "selected";?>><?php echo $name;?></option>
                                     <?php endforeach;?>
                                 <?php endif;?>
+	                        </select>
+	                        <kbd><?php _e("The Google Web Font API allows you to load specific font/weight combinations. This option allows you to select specific font weight files to load."); ?></kbd>
+						</div>
+
+						<div class="field">
+                            <label class="font-label" for="<?php echo $value['id']; ?>_fontweight_faux"><?php _e('Font Weight','upfw'); ?></label>
+	                        <select id="<?php echo $value['id']; ?>_fontweight_faux" name="<?php echo $value['id']; ?>[fontweight_faux]">
+
+                                <option value="normal" <?php if($fontweight_faux=='normal') echo "selected";?>><?php _e("Normal","upfw"); ?></option>
+                                <option value="bold" <?php if($fontweight_faux=='bold') echo "selected";?>><?php _e("Bold","upfw"); ?></option>
 	                        </select>
 	                        <kbd><?php _e("Please Note: Some fonts do not have additional weights. In many cases, the below preview will not accurately reflect font weight."); ?></kbd>
 						</div>
@@ -1019,7 +1021,7 @@ function upfw_typography($value,$attr){
         <?php if($selector):?>
         <div class="font-preview">
             <label class="font-preview-label"><?php _e('Preview', 'upfw');?></label>
-            <div id="font-preview" class="<?php echo $value['id']; ?>_type_preview" style="font-family:<?php echo $up_fonts['library'][$family]['font_family']; ?>; font-size: <?php echo $fontsize; ?>; font-style: <?php echo $fontstyle; ?>; letter-spacing: <?php echo $letterspacing;?>; line-height:<?php echo $lineheight;?>; text-transform:<?php echo $texttransform;?>; text-decoration:<?php echo $textdecoration;?>; font-weight:<?php echo $fontweight;?>; text-shadow:<?php echo $textshadow; ?>; -moz-text-shadow:<?php echo $textshadow; ?>; -webkit-text-shadow:<?php echo $textshadow; ?>;  "><?php _e('Pack my box with five dozen liquor jugs.', 'upfw');?><br /><?php _e('The quick brown fox jumps over the lazy dog. ', 'upfw');?></div>
+            <div id="font-preview" class="<?php echo $value['id']; ?>_type_preview" style="font-family:<?php echo $up_fonts['library'][$family]['font_family']; ?>; font-size: <?php echo $fontsize; ?>; font-style: <?php echo $fontstyle; ?>; letter-spacing: <?php echo $letterspacing;?>; line-height:<?php echo $lineheight;?>; text-transform:<?php echo $texttransform;?>; text-decoration:<?php echo $textdecoration;?>; font-weight:<?php echo $fontweight_faux;?>; text-shadow:<?php echo $textshadow; ?>; -moz-text-shadow:<?php echo $textshadow; ?>; -webkit-text-shadow:<?php echo $textshadow; ?>;  "><?php _e('Pack my box with five dozen liquor jugs.', 'upfw');?><br /><?php _e('The quick brown fox jumps over the lazy dog. ', 'upfw');?></div>
         </div>
         
         <script type="text/javascript">
@@ -1120,7 +1122,7 @@ function upfw_typography($value,$attr){
                 });                
 
                 /* Font Weight */
-                $("#<?php echo $value['id']; ?>_fontweight").live('change', function(e){
+                $("#<?php echo $value['id']; ?>_fontweight_faux").live('change', function(e){
                     var selector = $(this).find(':selected')[0].value;
                     $(".<?php echo $value['id']; ?>_type_preview").css('font-weight', selector);
                 });
@@ -1252,7 +1254,7 @@ function upfw_layouts($value,$attr){
                                 foreach($up_layouts as $up_layout):
                                     $selected = ($up_options->$value['id'] == $up_layout['style']) ? ' up-layout-active' : '';
                                     if($selected):
-                                        $context = $value['context'] ? $value['context'] : 'global';
+                                        $context = isset( $value['context'] ) ? $value['context'] : 'global';
                                         $layouts = get_option('up_themes_'.UPTHEMES_SHORT_NAME.'_layouts');
                                         $layout[$context] = array('id' => $up_layout['id']);
                                         if(is_array($layouts)):

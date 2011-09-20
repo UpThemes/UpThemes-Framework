@@ -51,10 +51,10 @@ function upfw_generate_theme_data(){
 
 	if( file_exists(TEMPLATEPATH.'/admin/admin.php') ):
 		define( 'THEME_PATH' , TEMPLATEPATH );
-		define( 'THEME_DIR' , get_bloginfo("template_directory") );
+		define( 'THEME_DIR' , get_template_directory_uri() );
 	elseif( file_exists(STYLESHEETPATH.'/admin/admin.php') ):
 		define( 'THEME_PATH' , STYLESHEETPATH );
-		define( 'THEME_DIR' , get_bloginfo("stylesheet_directory") );
+		define( 'THEME_DIR' , get_stylesheet_directory_uri() );
 	endif;
 	
 	// Detect child theme info
@@ -133,7 +133,7 @@ function upfw_set_uploads_dir(){
 				add_action( 'admin_notices', 'upfw_permissions_error', 1, 1 );
 			else{
 				$oldumask = umask(0);
-				@mkdir($base_upload_dir, 0777);
+				@mkdir($base_upload_dir, 0775);
 				umask($oldumask);
 				
 				if( is_writeable( $base_upload_dir ) )
@@ -282,6 +282,69 @@ function show_gallery_images(){
 
 }
 
+/**
+ * Get current template context
+ * 
+ * Returns a string containing the context of the
+ * current page template. This string is useful for several
+ * purposes, including applying an ID to the HTML
+ * body tag, and adding a contextual $name to calls
+ * to get_header(), get_footer(), get_sidebar(), 
+ * and get_template_part_file(), in order to 
+ * facilitate Child Themes overriding default Theme
+ * template part files.
+ * 
+ * @param	none
+ * @return	string	current page template context
+ */
+function upfw_get_template_context() {
+
+	$context = 'index';
+	
+	if ( is_front_page() ) {
+		// Front Page
+		$context = 'front-page';
+	} else if ( is_date() ) {
+		// Date Archive Index
+		$context = 'date';
+	} else if ( is_author() ) {
+		// Author Archive Index
+		$context = 'author';
+	} else if ( is_category() ) {
+		// Category Archive Index
+		$context = 'category';
+	} else if ( is_tag() ) {
+		// Tag Archive Index
+		$context = 'tag';
+	} else if ( is_tax() ) {
+		// Taxonomy Archive Index
+		$context = 'taxonomy';
+	} else if ( is_archive() ) {
+		// Archive Index
+		$context = 'archive';
+	} else if ( is_search() ) {
+		// Search Results Page
+		$context = 'search';
+	} else if ( is_404() ) {
+		// Error 404 Page
+		$context = '404';
+	} else if ( is_attachment() ) {
+		// Attachment Page
+		$context = 'attachment';
+	} else if ( is_single() ) {
+		// Single Blog Post
+		$context = 'single';
+	} else if ( is_page() ) {
+		// Static Page
+		$context = 'page';
+	} else if ( is_home() ) {
+		// Blog Posts Index
+		$context = 'home';
+	}
+	
+	return $context;
+}
+
 add_action('wp_ajax_show_gallery_images','show_gallery_images');
 
 /******
@@ -337,7 +400,7 @@ add_action('upfw_admin_init','upfw_create_options_tabs',50);
 *************************************/
 function upfw_set_defaults(){
 
-	if( !get_option('up_themes_'.UPTHEMES_SHORT_NAME) && $_GET['page']!="upthemes" ):
+	if( ! get_option( 'up_themes_'.UPTHEMES_SHORT_NAME) && ( ! isset( $_GET['page'] ) || 'upthemes' != $_GET['page'] ) ) :
 	
 		//Redirect to options page where defaults will automatically be set
 		header('Location: '.get_bloginfo('url').'/wp-admin/admin.php?page=upthemes');
@@ -431,6 +494,8 @@ function render_options($options){
 	//Check if theme options set
 	global $default_check;
 	global $default_options;
+	global $attr;
+	$attr = '';
 
 	if(!$default_check):
 		foreach($options as $option):
@@ -451,9 +516,8 @@ function render_options($options){
     
     foreach ($options as $value) {
         //Check if there are additional attributes
-        if(is_array($value['attr'])):
+        if ( isset( $value['attr'] ) && is_array( $value['attr'] ) ):
             $i = $value['attr'];
-            global $attr;
             //Convert array into a string
             foreach($i as $k => $v):
                 $attr .= $k.'="'.$v.'" ';

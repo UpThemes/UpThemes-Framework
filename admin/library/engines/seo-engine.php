@@ -7,21 +7,21 @@ function up_seo_init(){
     echo up_description();
     echo up_keywords();
 }
-if(!defined('DISABLE_UP_SEO'))
+if( ! defined( 'DISABLE_UP_SEO' ) )
     add_action('up_seo', 'up_seo_init');
 
 
 /* Check for SEO Plugins */
 function up_seo_third_parties(){
-    define('UP_SEO_THIRD_PARTY', false);
-    if(class_exists('All_in_One_SEO_Pack') || class_exists('Headspace_Plugin'))return true;
+	if ( ! defined( 'UP_SEO_THIRD_PARTY' ) ) define( 'UP_SEO_THIRD_PARTY', false );
+    if( class_exists( 'All_in_One_SEO_Pack' ) || class_exists( 'Headspace_Plugin' ) ) return true;
 }
-add_action('init', 'up_seo_third_parties');
+add_action( 'init', 'up_seo_third_parties' );
 
 /* Theme Options */
-function up_seo_default_options(){
+function up_seo_default_options() {
     
-    if(up_seo_third_parties())echo "<kbd>".__('We detected that a third-party SEO plugin has been activated. UpThemes SEO has been automatically disabled to avoid any conflict.', 'upfw')."</kbd>";
+    if ( up_seo_third_parties() )echo "<kbd>".__('We detected that a third-party SEO plugin has been activated. UpThemes SEO has been automatically disabled to avoid any conflict.', 'upfw')."</kbd>";
     
     $options = array (
         
@@ -350,7 +350,7 @@ function up_title(){
         $separator = $up_options->seo_separator ? $up_options->seo_separator : '|';
         
         /* Check for SEO Plugins */
-	if(UP_SEO_THIRD_PARTY == 'yes' || $up_options->seo_disable) { return get_bloginfo('name').wp_title($separator, false); }
+	if ( true == UP_SEO_THIRD_PARTY || $up_options->seo_disable) { return get_bloginfo('name').wp_title($separator, false); }
         
         /* SEO Settings and Default Settings */
 	$disable = $up_options->seo_disable;
@@ -375,8 +375,8 @@ function up_title(){
         if(get_post_type() && !is_singular()) $layout = $page_layout;
         
         /* Override Title with Custom Field */
-        $custom_title = get_post_meta($post->ID,'_up_seo_title',true);
-        if($custom_title && !is_home() && !is_front_page()) $layout = preg_replace('/%TITLE%/', '%CUSTOMFIELD%', $layout);
+        $custom_title = ( isset( $post ) ? get_post_meta( $post->ID, '_up_seo_title', true ) : false );
+        if( $custom_title && ! is_home() && ! is_front_page() ) $layout = preg_replace( '/%TITLE%/', '%CUSTOMFIELD%', $layout );
         
         $title = up_seo_title_layout($layout);
         return $title;
@@ -384,17 +384,17 @@ function up_title(){
 }
 
 
-function up_seo_title_layout($layout = "%ARCHIVE% %TITLE% %BLOG% %DESC%"){
+function up_seo_title_layout( $layout = "%ARCHIVE% %TITLE% %BLOG% %DESC%" ){
     global $up_options, $post, $wp_query;
 
     $sep = $up_options->seo_separator ? ' '.$up_options->seo_separator.' ' : ' | ';
     $paged = get_query_var('paged') ? __('Page ', 'upfw').get_query_var('paged') : '';
     $search = get_query_var('s') ? __('Search Results For ', 'upfw').get_query_var('s') : '';
-    $title = $post->post_title;
-    $home_title = (is_front_page() || is_home() && $up_options->seo_homepage_title) ? $up_options->seo_homepage_title : '';
-    $home_description = (is_front_page() || is_home()) ? $up_options->seo_homepage_description : '';
+    $title = ( isset( $post ) ? $post->post_title : '' );
+    $home_title = ( is_front_page() || is_home() && isset( $up_options->seo_homepage_title ) ) ? $up_options->seo_homepage_title : '';
+    $home_description = ( is_front_page() || is_home() ) ? $up_options->seo_homepage_description : '';
     
-    $customfield = get_post_meta(get_the_ID(), '_up_seo_title', true);
+    $customfield = ( isset( $post ) ? get_post_meta(get_the_ID(), '_up_seo_title', true) : false );
     
     /* Insert Separators */
     $layout = preg_replace('/ /', $sep, $layout);
@@ -415,36 +415,36 @@ function up_seo_title_layout($layout = "%ARCHIVE% %TITLE% %BLOG% %DESC%"){
         $post_type = $name;
     endif;
 
-    if($post_type && !is_singular()) $layout = preg_replace('/%TITLE%/', $post_type, $layout);
+    if( $post_type && ! is_singular() ) $layout = preg_replace( '/%TITLE%/', $post_type, $layout );
     
     /* Insert Blog Description */
-    $layout = preg_replace('/%DESC%/', get_bloginfo('description'), $layout);
+    $layout = preg_replace( '/%DESC%/', get_bloginfo( 'description' ), $layout );
         
     /* Insert Page/Post Title */
-    if($title && is_singular())$layout = preg_replace('/%TITLE%/', $title, $layout);
+    if ( $title && is_singular( ) ) $layout = preg_replace('/%TITLE%/', $title, $layout );
     
     /* Insert Custom Page/Post Title */
-    if($customfield)$layout = preg_replace('/%CUSTOMFIELD%/', $customfield, $layout);
+    if ( $customfield ) $layout = preg_replace('/%CUSTOMFIELD%/', $customfield, $layout );
     
     /* Insert Paged Results */
-    if($paged):$layout = preg_replace('/%PAGED%/', $paged, $layout); else: $layout = preg_replace('/%PAGED%/', '', $layout);endif;
+    if ( $paged ) : $layout = preg_replace('/%PAGED%/', $paged, $layout ); else : $layout = preg_replace( '/%PAGED%/', '', $layout ); endif;
     
     /* Insert Search Results */
-    if($search)$layout = preg_replace('/%SEARCH%/', $search, $layout);
+    if ( $search ) $layout = preg_replace('/%SEARCH%/', $search, $layout );
     
     /* Insert Category Title */
-    if(is_category())$layout = preg_replace('/%ARCHIVE%/', single_cat_title('', false), $layout);
+    if ( is_category() ) $layout = preg_replace('/%ARCHIVE%/', single_cat_title( '', false ), $layout );
     
     /* Insert Tag Title */
-    if(function_exists('is_tag')):
-        if(is_tag)$layout = preg_replace('/%ARCHIVE%/', single_tag_title('', false), $layout);
+    if (function_exists( 'is_tag' ) ) :
+        if( is_tag() ) $layout = preg_replace('/%ARCHIVE%/', single_tag_title( '', false ), $layout );
     endif;
 
     /* Insert Author Archives */
-    if(is_author()) $layout = preg_replace('/%ARCHIVE%/', __('Author Archives'), $layout);
+    if( is_author() ) $layout = preg_replace( '/%ARCHIVE%/', __( 'Author Archives' ), $layout );
     
     /* Insert Taxonomy Name and Term */
-    if(is_tax()):
+    if( is_tax() ) :
         if ( function_exists('get_taxonomies') ) :
             $taxonomy_obj = $wp_query->get_queried_object();
             if(!empty($taxonomy_obj->name)) :
