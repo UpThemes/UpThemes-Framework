@@ -843,7 +843,7 @@ function upfw_typography($value,$attr){
     $selector = $option['selector'] ? $option['selector'] : $value['selector'];
     $fonts = $up_fonts; ?>
     
-    <li class="type-<?php echo $value['type'];?> typography" id="<?php echo $value['id']; ?> container-<?php echo $value['id']; ?>">
+    <li class="type-<?php echo $value['type'];?> typography" id="container-<?php echo $value['id']; ?>">
         <fieldset class="title">
             <div class="inner">
                 <label><?php echo $value['name']; ?></label>
