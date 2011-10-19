@@ -1021,7 +1021,7 @@ function upfw_typography($value,$attr){
         <?php if($selector):?>
         <div class="font-preview">
             <label class="font-preview-label"><?php _e('Preview', 'upfw');?></label>
-            <div id="font-preview" class="<?php echo $value['id']; ?>_type_preview" style="font-family:<?php echo $up_fonts['library'][$family]['font_family']; ?>; font-size: <?php echo $fontsize; ?>; font-style: <?php echo $fontstyle; ?>; letter-spacing: <?php echo $letterspacing;?>; line-height:<?php echo $lineheight;?>; text-transform:<?php echo $texttransform;?>; text-decoration:<?php echo $textdecoration;?>; font-weight:<?php echo $fontweight_faux;?>; text-shadow:<?php echo $textshadow; ?>; -moz-text-shadow:<?php echo $textshadow; ?>; -webkit-text-shadow:<?php echo $textshadow; ?>;  "><?php _e('Pack my box with five dozen liquor jugs.', 'upfw');?><br /><?php _e('The quick brown fox jumps over the lazy dog. ', 'upfw');?></div>
+            <div id="font-preview" class="<?php echo $value['id']; ?>_type_preview" style="font-family:<?php echo $fonts[$family]['font_family']; ?>; font-size: <?php echo $fontsize; ?>; font-style: <?php echo $fontstyle; ?>; letter-spacing: <?php echo $letterspacing;?>; line-height:<?php echo $lineheight;?>; text-transform:<?php echo $texttransform;?>; text-decoration:<?php echo $textdecoration;?>; font-weight:<?php echo $fontweight_faux;?>; text-shadow:<?php echo $textshadow; ?>; -moz-text-shadow:<?php echo $textshadow; ?>; -webkit-text-shadow:<?php echo $textshadow; ?>;  "><?php _e('Pack my box with five dozen liquor jugs.', 'upfw');?><br /><?php _e('The quick brown fox jumps over the lazy dog. ', 'upfw');?></div>
         </div>
         
         <script type="text/javascript">
