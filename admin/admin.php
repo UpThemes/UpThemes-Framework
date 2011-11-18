@@ -3,6 +3,7 @@
 /******
 ** UpThemes Framework Version
 *************************************/
+/****** No more deprecated stuff by MaisDesign.it */
 define('UPTHEMES_VER', '2.0');
 
 /******
