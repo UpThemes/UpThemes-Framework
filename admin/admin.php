@@ -457,22 +457,22 @@ function upfw_upthemes_admin() {
 
 	$theme_options_icon = apply_filters('theme_options_icon',THEME_DIR.'/admin/images/upfw_ico_up_16x16.png');
 
-    add_menu_page($name, $name, '10', 'upthemes', 'upthemes_admin_home', $theme_options_icon, 59);
+    add_menu_page($name, $name, 'edit_theme_options', 'upthemes', 'upthemes_admin_home', $theme_options_icon, 59);
   
 	//Create tabbed pages from array
 	global $up_tabs;
 	if( is_array( $up_tabs ) ):
 		foreach ($up_tabs as $tab):
 			foreach($tab as $title => $shortname):
-				add_submenu_page('upthemes', $title, $title, '10', 'upthemes#/'.$shortname, 'upthemes_admin_'.$shortname);
+				add_submenu_page('upthemes', $title, $title, 'edit_theme_options', 'upthemes#/'.$shortname, 'upthemes_admin_'.$shortname);
 			endforeach;
 		endforeach;
 	endif;
 
 	//Static subpages
-	add_submenu_page('upthemes', __('Import/Export','upfw'), __('Import/Export','upfw'), '10', 'upthemes#/import-export', 'upthemes_admin_import_export');
-	add_submenu_page('upthemes', __('Documentation','upfw'), __('Documentation','upfw'), '10', 'upthemes-docs', 'upthemes_admin_docs');
-	add_submenu_page('upthemes', __('Buy Themes','upfw'), __('Buy Themes','upfw'), '10', 'upthemes-buy', 'upthemes_admin_buy');
+	add_submenu_page('upthemes', __('Import/Export','upfw'), __('Import/Export','upfw'), 'edit_theme_options', 'upthemes#/import-export', 'upthemes_admin_import_export');
+	add_submenu_page('upthemes', __('Documentation','upfw'), __('Documentation','upfw'), 'edit_theme_options', 'upthemes-docs', 'upthemes_admin_docs');
+	add_submenu_page('upthemes', __('Buy Themes','upfw'), __('Buy Themes','upfw'), 'edit_theme_options', 'upthemes-buy', 'upthemes_admin_buy');
 
 }
 
