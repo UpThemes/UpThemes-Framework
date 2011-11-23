@@ -3,7 +3,7 @@
 /******
 ** UpThemes Framework Version
 *************************************/
-define('UPTHEMES_VER', '2.0.1');
+define('UPTHEMES_VER', '2.0.2');
 
 /******
 ** Theme init hook
@@ -241,8 +241,8 @@ function upfw_queue_scripts_styles(){
     wp_enqueue_script('jquery-ui-core');
     wp_enqueue_script('jquery-ui-widget');
     wp_enqueue_script('jquery-ui-mouse');
-    wp_enqueue_script('jquery-ui-slider', get_bloginfo('template_directory').'/admin/js/jquery.ui.slider.js', array('jquery-ui-core', 'jquery-ui-widget', 'jquery-ui-mouse'));
-    wp_enqueue_style('up-slider', get_bloginfo('template_directory').'/admin/css/ui-themes/smoothness/style.css');
+    wp_enqueue_script('jquery-ui-slider', get_template_directory_uri().'/admin/js/jquery.ui.slider.js', array('jquery-ui-core', 'jquery-ui-widget', 'jquery-ui-mouse'));
+    wp_enqueue_style('up-slider', get_template_directory_uri().'/admin/css/ui-themes/smoothness/style.css');
 
 }
 
