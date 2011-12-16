@@ -23,6 +23,32 @@ function upfw_text_field($value,$attr){
 <?php
 }
 
+function upfw_tinymce($value,$attr){
+    global $md_options,$wpdb;
+?>
+
+                <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
+                    <fieldset class="title">
+                        <div class="inner">
+                            <label for="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></label>
+                            <?php if($value['desc']): ?><kbd><?php echo $value['desc']; ?></kbd><?php endif;?>
+                        </div>
+                    </fieldset>
+                    
+                    <fieldset class="data">
+                        <div class="inner">
+						<?php 
+							$content ='';
+							$editor_id = $value['id'];
+							wp_editor( $content, $editor_id, $settings = array() ); ?>
+                        </div>
+                    </fieldset>
+                    <div class="clear"></div>
+                </li>
+                
+<?php
+}
+
 function upfw_text_list($value,$attr){
     global $up_options,$wpdb;
 ?>
