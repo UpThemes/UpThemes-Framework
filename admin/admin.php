@@ -527,6 +527,10 @@ function render_options($options){
         //Determine the type of input field
         switch ( $value['type'] ) {
             
+            //Render TinyMCE options
+            case 'tinymce': upfw_tinymce($value,$attr);
+            break;
+            
             //Render Text Input
             case 'text': upfw_text_field($value,$attr);
             break;
