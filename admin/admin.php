@@ -3,7 +3,7 @@
 /******
 ** UpThemes Framework Version
 *************************************/
-define('UPTHEMES_VER', '2.0.2');
+define('UPTHEMES_VER', '2.0');
 
 /******
 ** Theme init hook
@@ -241,8 +241,8 @@ function upfw_queue_scripts_styles(){
     wp_enqueue_script('jquery-ui-core');
     wp_enqueue_script('jquery-ui-widget');
     wp_enqueue_script('jquery-ui-mouse');
-    wp_enqueue_script('jquery-ui-slider', get_template_directory_uri().'/admin/js/jquery.ui.slider.js', array('jquery-ui-core', 'jquery-ui-widget', 'jquery-ui-mouse'));
-    wp_enqueue_style('up-slider', get_template_directory_uri().'/admin/css/ui-themes/smoothness/style.css');
+    wp_enqueue_script('jquery-ui-slider', get_bloginfo('template_directory').'/admin/js/jquery.ui.slider.js', array('jquery-ui-core', 'jquery-ui-widget', 'jquery-ui-mouse'));
+    wp_enqueue_style('up-slider', get_bloginfo('template_directory').'/admin/css/ui-themes/smoothness/style.css');
 
 }
 
@@ -457,26 +457,51 @@ function upfw_upthemes_admin() {
 
 	$theme_options_icon = apply_filters('theme_options_icon',THEME_DIR.'/admin/images/upfw_ico_up_16x16.png');
 
-    add_menu_page($name, $name, 'edit_theme_options', 'upthemes', 'upthemes_admin_home', $theme_options_icon, 59);
-  
-	//Create tabbed pages from array
+	// Add settings page
+	global $upfw_settings_page;
+    $upfw_settings_page = add_menu_page($name, $name, '10', 'upthemes', 'upthemes_admin_home', $theme_options_icon, 59);
+	
+	// Load contextual help
+	add_action( 'load-' . $upfw_settings_page, 'upfw_contextual_help' );
+	
+	// Create tabbed pages from array
 	global $up_tabs;
 	if( is_array( $up_tabs ) ):
 		foreach ($up_tabs as $tab):
 			foreach($tab as $title => $shortname):
-				add_submenu_page('upthemes', $title, $title, 'edit_theme_options', 'upthemes#/'.$shortname, 'upthemes_admin_'.$shortname);
+				add_submenu_page('upthemes', $title, $title, '10', 'upthemes#/'.$shortname, 'upthemes_admin_'.$shortname);
 			endforeach;
 		endforeach;
 	endif;
 
 	//Static subpages
-	add_submenu_page('upthemes', __('Import/Export','upfw'), __('Import/Export','upfw'), 'edit_theme_options', 'upthemes#/import-export', 'upthemes_admin_import_export');
-	add_submenu_page('upthemes', __('Documentation','upfw'), __('Documentation','upfw'), 'edit_theme_options', 'upthemes-docs', 'upthemes_admin_docs');
-	add_submenu_page('upthemes', __('Buy Themes','upfw'), __('Buy Themes','upfw'), 'edit_theme_options', 'upthemes-buy', 'upthemes_admin_buy');
+	add_submenu_page('upthemes', __('Import/Export','upfw'), __('Import/Export','upfw'), '10', 'upthemes#/import-export', 'upthemes_admin_import_export');
+	add_submenu_page('upthemes', __('Documentation','upfw'), __('Documentation','upfw'), '10', 'upthemes-docs', 'upthemes_admin_docs');
+	add_submenu_page('upthemes', __('Buy Themes','upfw'), __('Buy Themes','upfw'), '10', 'upthemes-buy', 'upthemes_admin_buy');
 
 }
 
 add_action('admin_menu', 'upfw_upthemes_admin',2);
+
+
+/******
+** Contextual Help
+*************************************/
+function upfw_contextual_help() {
+	// Globalize settings page
+	global $upfw_settings_page;
+	// Test for current page
+	$screen = get_current_screen();
+	if ( $screen->id != $upfw_settings_page ) {
+		return;
+	}
+	// Add Readme contextual help tab
+	$screen->add_help_tab( array(
+		'id'      => 'upfw-help-readme',
+		'title'   => __( 'Readme', 'upfw' ),
+		'content' => file_get_contents( get_template_directory() . '/readme.html' ),
+	) );
+}
 
 /******
 ** Find default options
@@ -491,28 +516,8 @@ function find_defaults($options){
 *************************************/
 function render_options($options){
 
-	//Check if theme options set
-	global $default_check;
-	global $default_options;
 	global $attr;
 	$attr = '';
-
-	if(!$default_check):
-		foreach($options as $option):
-			if($option['type'] != 'image'):
-				$default_options[$option['id']] = $option['value'];
-			else:
-				$default_options[$option['id']] = $option['url'];
-			endif;
-		endforeach;
-		$update_option = get_option('up_themes_'.UPTHEMES_SHORT_NAME);
-		if(is_array($update_option)):
-			$update_option = array_merge($update_option, $default_options);
-			update_option('up_themes_'.UPTHEMES_SHORT_NAME, $update_option);
-		else:
-			update_option('up_themes_'.UPTHEMES_SHORT_NAME, $default_options);
-		endif;
-	endif;
     
     foreach ($options as $value) {
         //Check if there are additional attributes
