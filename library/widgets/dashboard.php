@@ -53,7 +53,7 @@ function upfw_db_widget(){
 	    echo '<li class="nothing">no news items, feed might be broken...</li>';
 	} else {
 	    foreach ( $rss_items as $item ) {
-			echo '<li class="yoast">';
+			echo '<li class="upfw">';
 			echo '<a class="rsswidget" href="'.esc_url( $item->get_permalink(), $protocolls=null, 'display' ).'">'. esc_html( $item->get_title() ) .'</a>';
 			echo ' <span class="rss-date">'. $item->get_date('F j, Y') .'</span>';
 			echo '<div class="rssSummary">'. esc_html( strip_tags( $item->get_description() ) ).'</div>';
