@@ -136,7 +136,10 @@ function upfw_queue_scripts_styles(){
 	wp_enqueue_style('farbtastic');
 	wp_enqueue_script('jquery-color');
 	wp_enqueue_script('upfw', $upthemes . "js/up_framework.js", array('farbtastic'));
-		
+	wp_enqueue_script('media-upload');
+	wp_enqueue_script('thickbox');
+	wp_enqueue_style('thickbox');
+
 }
 
 add_action('admin_print_scripts-appearance_page_upfw-settings','upfw_queue_scripts_styles',40);
