@@ -220,7 +220,7 @@ function upfw_get_options() {
 	// Globalize the variable that holds the Theme options
 	global $up_options;
 	// Parse the stored options with the defaults
-	$up_options = wp_parse_args( get_option( "theme_" . get_current_theme_id() . "_options", array() ), $option_defaults );
+	$up_options = (object) wp_parse_args( get_option( "theme_" . get_current_theme_id() . "_options", array() ), $option_defaults );
 	// Return the parsed array
 	return $up_options;
 }

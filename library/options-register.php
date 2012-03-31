@@ -86,7 +86,7 @@ function upfw_options_validate( $input ) {
 	global $up_tabs;
 
 	// This is the "whitelist": current settings
-	$valid_input = upfw_get_options();
+	$valid_input = (array) upfw_get_options();
 	// Get the array of Theme settings, by Settings Page tab
 	$settingsbytab = upfw_get_settings_by_tab();
 	// Get the array of option parameters
@@ -149,7 +149,6 @@ function upfw_options_validate( $input ) {
 			// Validate select fields
 			else if ( 'select' == $optiondetails['type'] ) {
 				// Only update setting if input value is in the list of valid options
-				//echo $setting;
 				$valid_input[$setting] = ( array_key_exists( $setting, $valid_options ) ? $input[$setting] : $valid_input[$setting] );
 			}
 			else if ( 'multiple' == $optiondetails['type'] ) {
@@ -296,8 +295,8 @@ foreach ( $option_parameters as $option ) {
  * Callback for get_settings_field()
  */
 function upfw_setting_callback( $option ) {
-	$upfw_options = upfw_get_options();
-	//print_r($upfw_options);
+	$upfw_options = (array) upfw_get_options();
+
 	$option_parameters = upfw_get_option_parameters();
 	$optionname = $option['name'];
 	$optiontitle = $option['title'];
@@ -381,6 +380,8 @@ function upfw_setting_callback( $option ) {
 
 	    default:
 	    break;
+	    
+	    print_r($attr);
 	}
 
 }
