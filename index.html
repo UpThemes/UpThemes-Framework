@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="UpThemes Framework : A compact standalone theme options framework that contains extensible engines for SEO, custom layouts, typography, and much more." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>UpThemes Framework</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/LiftUX/UpThemes-Framework">Fork Me on GitHub</a>
+
+          <h1 id="project_title">UpThemes Framework</h1>
+          <h2 id="project_tagline">A compact standalone theme options framework that contains extensible engines for SEO, custom layouts, typography, and much more.</h2>
+
+          <section id="downloads">
+            <a class="zip_download_link" href="https://github.com/LiftUX/UpThemes-Framework/zipball/master">Download this project as a .zip file</a>
+            <a class="tar_download_link" href="https://github.com/LiftUX/UpThemes-Framework/tarball/master">Download this project as a tar.gz file</a>
+          </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3>Welcome to the UpThemes Framework</h3>
+
+<p>The UpThemes Framework is a super simple theme options framework that makes adding theme options to your WordPress themes both powerful and easy. Here's how to get started:</p>
+
+<ol>
+<li>Drop the UpThemes Framework into your theme:</li>
+</ol><p>If your plugin uses git... Add the UpThemes Framework as a submodule.</p>
+
+<pre><code>$ cd your_repo_root/repo_name
+$ git submodule add git://github.com/LiftUX/UpThemes-Framework.git admin
+</code></pre>
+
+<p>If your plugin does not use git... download the UpThemes Framework as a ZIP file and drop it into a folder named 'admin' within your theme's root folder.</p>
+
+<p>Copy the /theme-options/ folder into your theme root:</p>
+
+<pre><code>$ cp -R your_repo_root/repo_name/admin/theme-options/ your_repo_root/repo_name/theme-options/
+</code></pre>
+
+<ol>
+<li>Bootstrap the UpThemes Framework into your theme by adding this line to the top of functions.php:</li>
+</ol><pre><code>/**
+ * Bootstrap the Theme Options Framework
+ */
+if( file_exists('admin/admin.php') )
+  require_once('admin/admin.php');
+</code></pre>
+
+<ol>
+<li>Bootstrap each theme options file like so:</li>
+</ol><pre><code>/**
+ * Set up General Options
+ */
+if( file_exists('theme-options/general-settings.php') )
+  require_once('theme-options/general-settings.php')
+</code></pre>
+
+<ol>
+<li>Edit your theme options arrays.</li>
+</ol><pre><code>$thistab = array(
+    "name" =&gt; "colors_and_images",
+    "title" =&gt; __("Colors and Images","upfw"),
+    'sections' =&gt; array(
+        'color_scheme' =&gt; array(
+            'name' =&gt; 'color_scheme',
+            'title' =&gt; __( 'Color Scheme', 'upfw' ),
+            'description' =&gt; __( 'Select your color scheme.','upfw' )
+        )
+    )
+);
+register_theme_option_tab($thistab);
+
+$options = array(
+    'theme_color_scheme' =&gt; array(
+        'tab' =&gt; $thistab['name'],
+        "name" =&gt; "theme_color_scheme",
+        "title" =&gt; "Theme Color Scheme",
+        'description' =&gt; __( 'Display header navigation menu above or below the site title/description?', 'oenology' ),
+        'section' =&gt; 'color_scheme',
+        'since' =&gt; '1.0',
+        "id" =&gt; "color_scheme",
+        "type" =&gt; "select",
+        "default" =&gt; "light",
+        "valid_options" =&gt; array(
+            'light' =&gt; array(
+                "name" =&gt; "light",
+                "title" =&gt; __( 'Light', 'storefrontal' )
+            ),
+            'dark' =&gt; array(
+                "name" =&gt; "dark",
+                "title" =&gt; __( 'Dark', 'storefrontal' )
+            )
+        )
+    )
+    'theme_hyperlink_color' =&gt; array(
+        'tab' =&gt; $thistab['name'],
+        "name" =&gt; "theme_hyperlink_color",
+        "title" =&gt; "Theme Hyperlink Color",
+        'description' =&gt; __( 'Default hyperlink color.', 'upfw' ),
+        'section' =&gt; 'color_scheme',
+        'since' =&gt; '1.0',
+        "id" =&gt; "color_scheme",
+        "type" =&gt; "color",
+        "default" =&gt; "#ffffff"
+    )
+);
+
+register_theme_options($options);
+</code></pre>
+
+<p>The available types of theme options are listed below:</p>
+
+<ul>
+<li>'type' =&gt; 'text' - standard text box</li>
+<li>'type' =&gt; 'textarea' - standard textarea</li>
+<li>'type' =&gt; 'text_list' - custom text list</li>
+<li>'type' =&gt; 'select' - drop-down select</li>
+<li>'type' =&gt; 'multiple' - multiple select</li>
+<li>'type' =&gt; 'checkbox' - checkbox</li>
+<li>'type' =&gt; 'color' - colorpicker</li>
+<li>'type' =&gt; 'image' - WordPress image uploader</li>
+<li>'type' =&gt; 'category' - category picker drop-down</li>
+<li>'type' =&gt; 'categories' - categories multiple select</li>
+<li>'type' =&gt; 'page' - page picker drop-down</li>
+<li>'type' =&gt; 'pages' - page multiple select</li>
+<li>'type' =&gt; 'taxonomy' - taxonomy multiple select</li>
+</ul><ol>
+<li>To register theme options tabs, simply use <code>register_theme_options()</code> and <code>register_theme_options_tab()</code>  within your existing code as shown in the above example. This makes it extremely easy to attach your theme options to specific functionality. That way if you have a lite version and a pro version of a theme, you can keep the theme options separated easily.</li>
+</ol>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">UpThemes Framework maintained by <a href="https://github.com/LiftUX">LiftUX</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
