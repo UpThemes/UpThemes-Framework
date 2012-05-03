@@ -80,6 +80,24 @@ function upfw_get_context() {
 	return $context;
 }
 
+
+/**
+ * Get list of categories
+ */
+function upfw_get_category_list() {
+	$cat_list = get_categories();
+	$category_list = array();
+	foreach ( $cat_list as $cat ) {
+		$slug = $cat->slug;
+		$name = $cat->name;
+		$category_list[$slug] = array(
+			'name' => $slug,
+			'title' => $name
+		);
+	}
+	return $category_list;
+}
+
 /**
  * Get current settings page tab
  */
