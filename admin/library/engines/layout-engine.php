@@ -71,5 +71,5 @@ function enqueue_theme_layout(){
         if(!$queued && $global)wp_enqueue_style('up-layout-global', $up_layouts[$contexts['global']['id']]['style']);
     endif;
 }
-add_action('wp_enqueue_scripts', 'enqueue_theme_layout');
+add_action('wp_print_styles', 'enqueue_theme_layout');
 ?>

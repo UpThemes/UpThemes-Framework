@@ -120,22 +120,37 @@ function upfw_textarea($value,$attr){
 }
 
 function upfw_select($value,$attr){
-echo get_theme_mod($attr['name']);
+    global $up_options,$wpdb;
 ?>
-<select name="<?php echo $attr['name']; ?>" id="<?php echo $attr['name']; ?>">
-    <?php
-    if ( isset( $attr['valid_options'] ) ) :
-        $options = $attr['valid_options'];
-        foreach( $options as $option ) : 
-			?>
-            <option value="<?php echo $option['name']; ?>" <?php ; ?> <?php if( ( isset($value) && $value == $attr['name']) || (!$value && ($attr['default'] == $option['name'] ) ) ) echo " selected"; ?>><?php echo $option['title']; ?></option>
-			<?php 
-		endforeach;
-	else:
-		_e("This option has no valid options. Please create valid options as an array inside the UpThemes Framework.","upfw");
-    endif;
-    ?>
-</select>
+
+                <li class="type-<?php echo $value['type'];?>" id="container-<?php echo $value['id'];?>">
+                    <fieldset class="title">
+                        <div class="inner">
+                            <label for="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></label>
+                            <?php if($value['desc']): ?><kbd><?php echo $value['desc']; ?></kbd><?php endif;?>
+                        </div>
+                    </fieldset>
+                    
+                    <fieldset class="data">
+                        <div class="inner">
+                            <select name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" <?php echo $attr; ?>>
+                                <option value="<?php echo $value['default_value']; ?>"><?php if($value['default_text']): echo $value['default_text']; else: echo "None"; endif;?></option>
+                                <?php
+                                if ( isset( $value['options'] ) ) :
+                                    $i = $value['options'];
+                                    foreach( $i as $k => $v ) : 
+										?>
+                                        <option value="<?php echo $v; ?>" <?php selected( ( isset( $vlaue['value'] ) && $v == $vlaue['value'] ) || ( isset( $up_options->$value['id'] ) && $v == $up_options->$value['id'] ) ); ?>><?php echo $k; ?></option>
+										<?php 
+									endforeach;
+                                endif;
+                                ?>
+                            </select>
+                        </div>
+                    </fieldset>
+                    <div class="clear"></div>
+                </li>
+                
 <?php
 }
 
