@@ -434,20 +434,10 @@ function upfw_category($value,$attr){
 
     <select name="theme_<?php echo get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]" id="theme_<?php echo get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]">
         <?php
-        $i = $wpdb->get_results("SELECT $wpdb->terms.name, $wpdb->terms.slug, $wpdb->term_taxonomy.term_id FROM $wpdb->terms LEFT JOIN $wpdb->term_taxonomy ON $wpdb->terms.term_id = $wpdb->term_taxonomy.term_id WHERE $wpdb->term_taxonomy.taxonomy = 'category' ORDER BY $wpdb->terms.name", ARRAY_A);
-        foreach($i as $row):
-                if($attr['name']):
-                    if($row['slug'] == $attr['name']):
-                        $selected = " selected='selected'";
-                    endif;
-                else:
-                    if($value['value'] == $row['slug']):
-                        $selected = ' selected = "selected"';
-                    endif;
-                endif;
-            echo "<option value='".$row['slug']."'".$selected.">".$row['name']."</option>";
-            $selected = '';
-        endforeach;
+		$categories = upfw_get_category_list();
+		foreach ( $categories as $cat ) {
+			echo '<option value="' . $cat['name'] . '"' . selected( $cat['name'] == $attr['name'] || $cat['name'] == $attr['value'] ) . '>' . $cat['title'] . '</option>';
+		}
         ?>
     </select>
 
