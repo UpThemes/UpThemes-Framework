@@ -44,6 +44,9 @@ register_setting(
 function upfw_register_admin_js_globals(){
 
 	global $up_tabs;
+	
+	$tab = '';
+	$selected_tab = '';
 
 	$selected_tab = $selected_tab ? $up_tabs[0]['name'] : $tab;
 	$theme_name = strtolower(THEME_TITLE);
@@ -53,7 +56,7 @@ function upfw_register_admin_js_globals(){
 	echo "var upfw = {\n";
 	echo "    'theme' : '$theme_name',\n";
 
-	if( esc_attr( $_GET['page'] ) == 'upfw-settings' && $selected_tab )
+	if( isset( $_GET['page']) && esc_attr( $_GET['page'] ) == 'upfw-settings' && $selected_tab )
 		echo "    'current_tab' : '$selected_tab',\n";
 	
 	echo "    'theme_url' : '$theme_url'\n";	
