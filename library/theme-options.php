@@ -142,6 +142,33 @@ function upfw_get_option_defaults() {
 }
 
 /**
+ * upfw Theme Option Default
+ * 
+ * Returns an associative array that holds 
+ * all of the default values for all Theme 
+ * options.
+ * 
+ * @uses	upfw_get_option_parameters()	defined in \functions\options.php
+ * 
+ * @return	string	$default single default value
+ */
+function upfw_get_option_default($name) {
+	// Get the array that holds all
+	// Theme option parameters
+	$option_parameters = upfw_get_option_parameters();
+	// Initialize the array to hold
+	// the default values for all
+	// Theme options
+
+	$option_parameter = $option_parameters[$name];
+
+	if( isset($option_parameter['default']) )
+		$default = $option_parameter['default'];
+
+	return $default;
+}
+
+/**
  * upfw Theme Option Parameters
  * 
  * Array that holds parameters for all options for

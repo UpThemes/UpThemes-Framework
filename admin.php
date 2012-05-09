@@ -34,7 +34,7 @@ function get_current_theme_id(){
 /******
 ** UpThemes Framework Version
 *************************************/
-define('UPTHEMES_VER', '2.0.2');
+define('UPTHEMES_VER', '2.1');
 
 /******
 ** Theme init hook
@@ -111,8 +111,9 @@ add_action('upfw_theme_init','upfw_generate_theme_data',1);
 *************************************/
 function upfw_engines_init(){
 
-	require_once('library/custom.php');
-	require_once('library/theme-options.php');
+	include_once('library/custom.php');
+	include_once('library/theme-options.php');
+	include_once('library/theme-customizer.php');
 
 }
 

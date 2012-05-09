@@ -222,6 +222,7 @@ foreach ( $up_tabs as $tab ) {
 			// $pageid
 			'upfw_' . $tabname . '_tab'
 		);
+
 	}
 }
 
