@@ -34,7 +34,7 @@ function get_current_theme_id(){
 /******
 ** UpThemes Framework Version
 *************************************/
-define('UPTHEMES_VER', '2.1');
+define('UPTHEMES_VER', '2.1.1');
 
 /******
 ** Theme init hook

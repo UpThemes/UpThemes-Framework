@@ -32,7 +32,8 @@ function upfw_customize_register($wp_customize) {
 			$sectiontitle = $section['title'];
 
 			$wp_customize->add_section($sectionname, array(
-				'title' => $sectiontitle
+				'title' => $sectiontitle,
+				'description' => $sectiondescription
 			) );
 
 		}
@@ -50,7 +51,7 @@ function upfw_customize_register($wp_customize) {
 
 		if( $option['type'] == 'text' || $option['type'] == 'textarea' ){
 
-			$wp_customize->add_setting( $option['name'], array(
+			$wp_customize->add_setting( $optiondb, array(
 				'default'				=> $option['default'],
 				'type'					=> 'option',
 				'capabilities'	=> 'manage_theme_options'
@@ -59,7 +60,7 @@ function upfw_customize_register($wp_customize) {
 			$wp_customize->add_control( $option['name'], array(
 				'label'   => $option['title'],
 				'section' => $option_section_name,
-				//'settings' => $optiondb, @todo figure out how to get this connected to the theme options database
+				'settings' => $optiondb,
 				'type'    => 'text',
 			) );
 
@@ -67,18 +68,46 @@ function upfw_customize_register($wp_customize) {
 
 		if( $option['type'] == 'color' ){
 
-			/*$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, $option['name'], array(
+			$wp_customize->add_setting( $optiondb, array(
+				'default'				=> $option['default'],
+				'type'					=> 'option',
+				'capabilities'	=> 'manage_theme_options'
+			) );
+
+			$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, $option['name'], array(
 				'label'   => $option['title'],
 				'section' => $option_section_name,
-				'settings'   => $option_array_name
-			) ) );*/
+				'settings'=> $optiondb,
+			) ) );
+
+		}
+
+		if( $option['type'] == 'radio' || $option['type'] == 'select' ){
+
+			$wp_customize->add_setting( $optiondb, array(
+				'default'				=> $option['default'],
+				'type'					=> 'option',
+				'capabilities'	=> 'manage_theme_options'
+			) );
+
+			$wp_customize->add_control( $option['name'], array(
+				'label'   => $option['title'],
+				'section' => $option_section_name,
+				'settings'=> $optiondb,
+				'type'    => $option['type'],
+				'choices' => upfw_extract_valid_options($option['valid_options'])
+			) );
 
 		}
 
 	}
-	
-	//echo "<pre>";
-	//print_r($wp_customize);
-	//echo "</pre>";
 
+}
+
+function upfw_extract_valid_options($options){
+	$new_options = array();
+	foreach($options as $option){
+		$new_options[$option['name']] = $option['title'];
+	}
+	return $new_options;
 }
