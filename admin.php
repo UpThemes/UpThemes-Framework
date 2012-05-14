@@ -20,11 +20,14 @@ function register_theme_option_tab( $args ){
 
 function get_current_theme_id(){
 
-	$get_up_theme = get_theme_data(TEMPLATEPATH .'/style.css');
-	$theme_title = $get_up_theme['Title'];
-	
-	if( !defined('THEME_TITLE') )
-		define('THEME_TITLE',$theme_title);
+  if( function_exists('wp_get_theme') ):
+    $themedata = wp_get_theme();
+	  $theme_title = $themedata->title;
+  else:
+	  $themedata = get_theme_data(get_template_directory() .'/style.css');
+	  $theme_title = $themedata['Title'];
+	endif;
+
 	$theme_shortname = strtolower(preg_replace('/ /', '_', $theme_title));
 	
 	return $theme_shortname;
@@ -34,7 +37,7 @@ function get_current_theme_id(){
 /******
 ** UpThemes Framework Version
 *************************************/
-define('UPTHEMES_VER', '2.1.1');
+define('UPTHEMES_VER', '2.1.5');
 
 /******
 ** Theme init hook
@@ -69,36 +72,51 @@ add_action('after_setup_theme','upfw_init',1);
 ** Set up theme data
 *************************************/
 function upfw_generate_theme_data(){
-	
-	$get_up_theme = get_theme_data(TEMPLATEPATH .'/style.css');
-	$theme_title = $get_up_theme['Title'];
-	$theme_shortname = strtolower(preg_replace('/ /', '_', $theme_title));
-	$theme_version = $get_up_theme['Version'];
-	$theme_template = $get_up_theme['Template'];
-	define('UPTHEMES_NAME', $theme_title);
-	define('TEMPLATENAME', $theme_title);
-	define('UPTHEMES_SHORT_NAME', $theme_shortname);
-	define('UPTHEMES_THEME_VER', $theme_version);
 
-	if( file_exists(TEMPLATEPATH.'/admin/admin.php') ):
-		define( 'THEME_PATH' , TEMPLATEPATH );
-		define( 'THEME_DIR' , get_template_directory_uri() );
-	elseif( file_exists(STYLESHEETPATH.'/admin/admin.php') ):
-		define( 'THEME_PATH' , STYLESHEETPATH );
-		define( 'THEME_DIR' , get_stylesheet_directory_uri() );
-	endif;
-	
-	// Detect child theme info
-	if(STYLESHEETPATH != TEMPLATEPATH): 
-	    $get_up_theme = get_theme_data(STYLESHEETPATH .'/style.css');
-	    $theme_title = $get_up_theme['Title'];
-	    $theme_shortname = strtolower(preg_replace('/ /', '_', $theme_title));
-	    $theme_version = $get_up_theme['Version'];
-	    $theme_template = $get_up_theme['Template'];
-	    define('CHILD_NAME', $theme_title);
-	    define('CHILD_SHORT_NAME', $theme_shortname);
-	    define('CHILD_THEME_VER', $theme_version);
-	    define('CHILD_PATH', STYLESHEETPATH);
+  if( function_exists('wp_get_theme') ):
+    $themedata = wp_get_theme();
+  
+    $version = $themedata->Version;
+    $name = $themedata->Name;
+  
+    //If theme is child theme this is the name of the parent theme
+    $template = $themedata->Template;
+  
+    $theme_title = $themedata->Name;
+    $theme_shortname = strtolower(preg_replace('/ /', '_', $name));
+    $theme_version = $version;
+  
+    if( !empty($template) ):
+      $theme_template = $template;
+    endif;
+  
+  else:
+    $themedata = get_theme_data(get_template_directory() .'/style.css');
+    $theme_title = $themedata['Title'];
+    $theme_shortname = strtolower(preg_replace('/ /', '_', $theme_title));
+    $theme_version = $themedata['Version'];
+    $theme_template = $themedata['Template'];
+  endif;
+
+  if( !defined('UPTHEMES_NAME') )
+  	define('UPTHEMES_NAME', $theme_title);
+  if( !defined('TEMPLATENAME') )
+  	define('TEMPLATENAME', $theme_title);
+  if( !defined('UPTHEMES_SHORT_NAME') )
+	  define('UPTHEMES_SHORT_NAME', $theme_shortname);
+  if( !defined('UPTHEMES_THEME_VER') )
+  	define('UPTHEMES_THEME_VER', $theme_version);
+
+	if( file_exists(get_template_directory().'/admin/admin.php') ):
+		if( !defined('THEME_PATH') );
+		  define( 'THEME_PATH' , get_template_directory() );
+		if( !defined('THEME_DIR') );
+  		define( 'THEME_DIR' , get_template_directory_uri() );
+	elseif( file_exists(get_stylesheet_directory().'/admin/admin.php') ):
+		if( !defined('THEME_PATH') );
+  		define( 'THEME_PATH' , get_stylesheet_directory() );
+		if( !defined('THEME_DIR') );
+  		define( 'THEME_DIR' , get_stylesheet_directory_uri() );
 	endif;
 
 }
@@ -128,11 +146,6 @@ function upfw_queue_scripts_styles(){
 	$upthemes =  THEME_DIR.'/admin/';
 	
 	wp_enqueue_style('up_framework',$upthemes."css/up_framework.css");
-	
-	//Check if theme-options/style.css exists and load it
-	if(file_exists(THEME_PATH ."/theme-options/style.css")):
-		wp_enqueue_style('theme_options',THEME_DIR."/theme-options/style.css");
-	endif;
 
 	wp_enqueue_style('farbtastic');
 	wp_enqueue_script('jquery-color');
