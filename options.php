@@ -7,7 +7,7 @@ $up_theme_options = array();
 /**
 * UpThemes Framework Version
 */
-define('UPTHEMES_VER', '2.2.1');
+define('UPTHEMES_VER', '2.2.2');
 
 function register_theme_options( $options ){
     global $up_theme_options;
@@ -484,6 +484,45 @@ function upfw_select($value,$attr){ ?>
         ?>
             <option value="<?php echo $option['name']; ?>" <?php selected($option['name'],$value); ?>><?php echo $option['title']; ?></option>
 			<?php 
+		endforeach;
+	else:
+		_e("This option has no valid options. Please create valid options as an array inside the UpThemes Framework.","upfw");
+    endif;
+    ?>
+</select>
+<?php
+}
+
+function upfw_radio_image($value,$attr){ ?>
+    <?php
+    if ( isset( $attr['valid_options'] ) ) :
+        $options = $attr['valid_options'];
+        foreach( $options as $option ) : 
+        ?>
+    <label class="radio_image">
+    <input type="radio" name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]" value="<?php echo $option['name']; ?>" <?php checked($option['name'],$value); ?>>
+      <?php if( $option['image'] ) echo '<img src="' . $option['image'] . '">'; ?>
+    </label>
+			<?php
+		endforeach;
+	else:
+		_e("This option has no valid options. Please create valid options as an array inside the UpThemes Framework.","upfw");
+    endif;
+    ?>
+</select>
+<?php
+}
+
+function upfw_radio($value,$attr){ ?>
+    <?php
+    if ( isset( $attr['valid_options'] ) ) :
+        $options = $attr['valid_options'];
+        foreach( $options as $option ) : 
+        ?>
+    <label class="radio">
+      <input type="radio" name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]" value="<?php echo $option['name']; ?>" <?php checked($option['name'],$value); ?>> <?php echo $option['title']; ?>
+    </label>
+			<?php
 		endforeach;
 	else:
 		_e("This option has no valid options. Please create valid options as an array inside the UpThemes Framework.","upfw");

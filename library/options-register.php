@@ -325,9 +325,17 @@ function upfw_setting_callback( $option ) {
         //Render textarea options
         case 'textarea': upfw_textarea($value,$attr);
         break;
-        
+                
         //Render select dropdowns
         case 'select': upfw_select($value,$attr);
+        break;
+        
+        //Render radio image dropdowns
+        case 'radio': upfw_radio($value,$attr);
+        break;
+                
+        //Render radio image dropdowns
+        case 'radio_image': upfw_radio_image($value,$attr);
         break;
         
         //Render multple selects
@@ -361,33 +369,14 @@ function upfw_setting_callback( $option ) {
         //Render pages muliple select
         case 'pages': upfw_pages($value,$attr);
         break;
-    
-        //Render Form Button
-        case 'submit': upfw_submit($value,$attr);
-        break;
 
         //Render taxonomy multiple select
         case 'taxonomy': upfw_taxonomy($value,$attr);
         break;
 
-        //Render Style Selector
-        case 'styles': upfw_style($value,$attr);
-        break;
-        
-        //Render Form Button
-        case 'button': upfw_button($value,$attr);
-        break;
-
-				//Render Text Input
-        case 'divider': upfw_divider($value,$attr);
-        break;
-
 	    default:
 	    break;
 	    
-	    print_r($attr);
 	}
 
 }
-
-?>
