@@ -4,6 +4,11 @@ global $up_theme_options;
 
 $up_theme_options = array();
 
+/**
+* UpThemes Framework Version
+*/
+define('UPTHEMES_VER', '2.2.1');
+
 function register_theme_options( $options ){
     global $up_theme_options;
     $up_theme_options = array_merge( $up_theme_options, $options );
@@ -80,11 +85,6 @@ function upfw_get_theme_options_directory_uri(){
   return trailingslashit( trailingslashit( get_template_directory_uri() ) . basename( dirname(__FILE__) ) );
 
 }
-
-/**
-* UpThemes Framework Version
-*/
-define('UPTHEMES_VER', '2.2');
 
 /**
 * Gentlemen, start your engines

@@ -1,17 +1,48 @@
+form h3{
+  margin-bottom: 0;
+}
+
+form p{
+  margin-top: 0;
+  padding-bottom: 1em;
+  border-bottom: 1px solid #eee;
+}
+
+.form-table{
+  margin-bottom: 20px;
+}
+
 /* @group Colorpicker Styles */
 
 .colorPickerWrapper{
 	position: relative;
-	display: block;
+	z-index: 0;
 }
 
 .popup-guy{
 	position: absolute;
-	left: 40px;
-	bottom: 30px;
-	background-color: white;
-	border: 1px solid #222;
+	left: 170px;
+	top: -121px;
 	padding: 5px;
+	background: #fff;
+	border: 3px solid #ddd;
+	box-shadow: 0 0 3px rgba(0,0,0,0.8);
+	border-radius: 50% 50%;
+	-moz-border-radius: 50% 50%;
+	-webkit-border-radius: 50% 50%;
+	-o-border-radius: 50% 50%;
+}
+
+.popup-guy-inside:before{
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid #ddd;
+  content: "";
+  width: 0;
+  height: 0;
+  position: absolute;
+  left: -10px;
+  top: 98px;
 }
 
 /* @end */
