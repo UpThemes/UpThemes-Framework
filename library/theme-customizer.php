@@ -46,7 +46,7 @@ function upfw_customize_register($wp_customize) {
 	foreach( $upfw_option_parameters as $option ){
 	
 		$optionname = $option['name'];
-		$optiondb = "theme_" . ( get_current_theme_id() ) . "_options[$optionname]";
+		$optiondb = "theme_" . ( upfw_get_current_theme_id() ) . "_options[$optionname]";
 		$option_section_name =  $option['section'];
 
 		if( $option['type'] == 'text' || $option['type'] == 'textarea' ){

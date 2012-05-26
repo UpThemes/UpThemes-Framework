@@ -25,9 +25,9 @@
  */
 register_setting( 
 	// $option_group
-	"theme_" . get_current_theme_id() . "_options", 
+	"theme_" . upfw_get_current_theme_id() . "_options", 
 	// $option_name
-	"theme_" . get_current_theme_id() . "_options", 
+	"theme_" . upfw_get_current_theme_id() . "_options", 
 	// $sanitize_callback
 	'upfw_options_validate'
 );
@@ -50,7 +50,7 @@ function upfw_register_admin_js_globals(){
 
 	$selected_tab = $selected_tab ? $up_tabs[0]['name'] : $tab;
 	$theme_name = strtolower(THEME_TITLE);
-	$theme_url = THEME_DIR;
+	$theme_url = get_template_directory_uri();
 
 	echo "<script type=\"text/javascript\">\n";
 	echo "var upfw = {\n";
@@ -306,7 +306,7 @@ function upfw_setting_callback( $option ) {
 	$optiontitle = $option['title'];
 	$optiondescription = $option['description'];
 	$fieldtype = $option['type'];
-	$fieldname = "theme_" . ( get_current_theme_id() ) . "_options[{$optionname}]";
+	$fieldname = "theme_" . ( upfw_get_current_theme_id() ) . "_options[{$optionname}]";
 
 	$attr = $option_parameters[$option['name']];
 	$value = $upfw_options[$optionname];
