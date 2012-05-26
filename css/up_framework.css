@@ -12,6 +12,37 @@ form p{
   margin-bottom: 20px;
 }
 
+label.radio{
+  display: block;
+  margin-bottom: 5px;
+}
+
+label.radio input{
+  vertical-align: text-top;
+  margin-right: 4px;
+}
+
+label.radio_image input{
+  display: none;
+}
+
+label.radio_image img{
+  padding: 8px;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -o-border-radius: 3px;
+  background: none;
+}
+
+label.radio_image input:checked + img{
+  background: #a2daec;
+}
+
+input[type="radio"]{
+  vertical-align: top;
+}
+
 /* @group Colorpicker Styles */
 
 .colorPickerWrapper{
