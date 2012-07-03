@@ -4,6 +4,9 @@ global $up_theme_options;
 
 $up_theme_options = array();
 
+require_once('library/custom.php');
+require_once('library/theme-customizer.php');
+
 /**
 * UpThemes Framework Version
 */
@@ -85,18 +88,6 @@ function upfw_get_theme_options_directory_uri(){
   return trailingslashit( trailingslashit( get_template_directory_uri() ) . basename( dirname(__FILE__) ) );
 
 }
-
-/**
-* Gentlemen, start your engines
-*/
-function upfw_engines_init(){
-
-	include_once('library/custom.php');
-	include_once('library/theme-customizer.php');
-
-}
-
-add_action('after_setup_theme','upfw_engines_init',10);
 
 /**
 * Add CSS and Javascript includes
