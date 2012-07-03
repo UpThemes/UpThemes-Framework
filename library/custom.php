@@ -173,6 +173,23 @@ function upfw_get_post_formats() {
 }
 
 /**
+ * Get list of categories
+ */
+function upfw_get_category_list() {
+	$cat_list = get_categories();
+	$category_list = array();
+	foreach ( $cat_list as $cat ) {
+		$slug = $cat->slug;
+		$name = $cat->name;
+		$category_list[$slug] = array(
+			'name' => $slug,
+			'title' => $name
+		);
+	}
+	return $category_list;
+}
+
+/**
  * Define upfw Admin Page Tab Markup
  * 
  * @uses	upfw_get_current_tab()	defined in \functions\options.php
