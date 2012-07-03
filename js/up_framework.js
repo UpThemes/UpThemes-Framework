@@ -42,11 +42,12 @@
 		
 		$colorpicker_inputs.live('focus',function(e){
 			$(this).parent().find('.popup-guy').show();
-			$(this).parents('li').css({
-				position : 'relative',
+			$(this).parents('table').find('.colorPickerWrapper').css({
+			  zIndex : '0'
+			});
+			$(this).parents('.colorPickerWrapper').css({
 				zIndex : '9999'
 			})
-			$('#tabber').css({overflow:'visible'});
 		});
 	
 		$colorpicker_inputs.live('blur',function(e){

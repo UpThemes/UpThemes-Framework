@@ -25,9 +25,9 @@
  */
 register_setting( 
 	// $option_group
-	"theme_" . get_current_theme_id() . "_options", 
+	"theme_" . upfw_get_current_theme_id() . "_options", 
 	// $option_name
-	"theme_" . get_current_theme_id() . "_options", 
+	"theme_" . upfw_get_current_theme_id() . "_options", 
 	// $sanitize_callback
 	'upfw_options_validate'
 );
@@ -44,16 +44,19 @@ register_setting(
 function upfw_register_admin_js_globals(){
 
 	global $up_tabs;
+	
+	$tab = '';
+	$selected_tab = '';
 
 	$selected_tab = $selected_tab ? $up_tabs[0]['name'] : $tab;
 	$theme_name = strtolower(THEME_TITLE);
-	$theme_url = THEME_DIR;
+	$theme_url = get_template_directory_uri();
 
 	echo "<script type=\"text/javascript\">\n";
 	echo "var upfw = {\n";
 	echo "    'theme' : '$theme_name',\n";
 
-	if( esc_attr( $_GET['page'] ) == 'upfw-settings' && $selected_tab )
+	if( isset( $_GET['page']) && esc_attr( $_GET['page'] ) == 'upfw-settings' && $selected_tab )
 		echo "    'current_tab' : '$selected_tab',\n";
 	
 	echo "    'theme_url' : '$theme_url'\n";	
@@ -219,6 +222,7 @@ foreach ( $up_tabs as $tab ) {
 			// $pageid
 			'upfw_' . $tabname . '_tab'
 		);
+
 	}
 }
 
@@ -302,7 +306,7 @@ function upfw_setting_callback( $option ) {
 	$optiontitle = $option['title'];
 	$optiondescription = $option['description'];
 	$fieldtype = $option['type'];
-	$fieldname = "theme_" . ( get_current_theme_id() ) . "_options[{$optionname}]";
+	$fieldname = "theme_" . ( upfw_get_current_theme_id() ) . "_options[{$optionname}]";
 
 	$attr = $option_parameters[$option['name']];
 	$value = $upfw_options[$optionname];
@@ -321,9 +325,17 @@ function upfw_setting_callback( $option ) {
         //Render textarea options
         case 'textarea': upfw_textarea($value,$attr);
         break;
-        
+                
         //Render select dropdowns
         case 'select': upfw_select($value,$attr);
+        break;
+        
+        //Render radio image dropdowns
+        case 'radio': upfw_radio($value,$attr);
+        break;
+                
+        //Render radio image dropdowns
+        case 'radio_image': upfw_radio_image($value,$attr);
         break;
         
         //Render multple selects
@@ -357,33 +369,14 @@ function upfw_setting_callback( $option ) {
         //Render pages muliple select
         case 'pages': upfw_pages($value,$attr);
         break;
-    
-        //Render Form Button
-        case 'submit': upfw_submit($value,$attr);
-        break;
 
         //Render taxonomy multiple select
         case 'taxonomy': upfw_taxonomy($value,$attr);
         break;
 
-        //Render Style Selector
-        case 'styles': upfw_style($value,$attr);
-        break;
-        
-        //Render Form Button
-        case 'button': upfw_button($value,$attr);
-        break;
-
-				//Render Text Input
-        case 'divider': upfw_divider($value,$attr);
-        break;
-
 	    default:
 	    break;
 	    
-	    print_r($attr);
 	}
 
 }
-
-?>
