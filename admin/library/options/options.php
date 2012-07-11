@@ -375,7 +375,7 @@ function upfw_image($value,$attr){
                         var <?php echo $value['id']; ?>=jQuery('div.uploadify button#<?php echo $value['id']; ?>');
                         var status=jQuery('#<?php echo $value['id']; ?>status');
                         new AjaxUpload(<?php echo $value['id']; ?>, {
-                            action: '<?php echo THEME_DIR; ?>/admin/upload-file.php',
+							action: '<?php echo get_template_directory_uri(); ?>/admin/upload-file.php?_wp_upthemes_admin_upload_nonce=<?php echo wp_create_nonce( '_wp_upthemes_admin_upload_nonce' ) ?>',
                             name: '<?php echo $upload_security?>',
                             data: {
                             	upload_path : '<?php echo base64_encode(UPFW_UPLOADS_DIR); ?>'
