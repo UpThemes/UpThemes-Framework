@@ -4,6 +4,7 @@ by Jason Costello, @jsncostello
 *******************************************************************************/
 
 @import url(pygment_trac.css);
+@import url(http://fonts.googleapis.com/css?family=Lilita+One|Pontano+Sans);
 
 /*******************************************************************************
 MeyerWeb Reset
@@ -60,7 +61,7 @@ body {
   color:#373737;
   background: #212121;
   font-size: 16px;
-  font-family: 'Myriad Pro', Calibri, Helvetica, Arial, sans-serif;
+  font-family: 'Pontano Sans', sans-serif;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -69,7 +70,7 @@ h1, h2, h3, h4, h5, h6 {
   margin: 10px 0;
   font-weight: 700;
   color:#222222;
-  font-family: 'Lucida Grande', 'Calibri', Helvetica, Arial, sans-serif;
+  font-family: 'Lilita One', cursive;
   letter-spacing: -1px;
 }
 
@@ -165,7 +166,6 @@ pre, code {
 
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
   font-size: 14px;
-
   border-radius: 2px;
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -178,6 +178,7 @@ pre {
   width: 100%;
   padding: 10px;
   box-shadow: 0 0 10px rgba(0,0,0,.1);
+  margin-bottom: 1em;
   overflow: auto;
 }
 
@@ -316,6 +317,8 @@ Full-Width Styles
 #project_tagline {
   color: #fff;
   font-size: 24px;
+  line-height: 1.2em;
+  font-family: 'Pontano Sans',sans-serif;
   font-weight: 300;
   background: none;
   text-shadow: #111 0px 0px 10px;
@@ -372,6 +375,15 @@ Full-Width Styles
 
 #footer_wrap {
   background: #212121;
+}
+
+
+pre.terminal, pre.terminal code {
+  width: 100%;
+  color: #64ff18;
+  background-color: #111;
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  font-size: 14px;
 }
 
 

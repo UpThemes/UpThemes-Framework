@@ -31,115 +31,128 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>Welcome to the UpThemes Framework</h3>
 
-<p>The UpThemes Framework is a super simple theme options framework that makes adding theme options to your WordPress themes both powerful and easy. Here's how to get started:</p>
-
-<ol>
-<li>Drop the UpThemes Framework into your theme:</li>
-</ol><p>If your plugin uses git... Add the UpThemes Framework as a submodule.</p>
-
-<pre><code>$ cd your_repo_root/repo_name
-$ git submodule add git://github.com/LiftUX/UpThemes-Framework.git admin
-</code></pre>
-
-<p>If your plugin does not use git... download the UpThemes Framework as a ZIP file and drop it into a folder named 'admin' within your theme's root folder.</p>
-
-<p>Copy the theme-options-example.txt to theme-options.php:</p>
-
-<pre><code>$ cp -R your_repo_root/repo_name/admin/theme-options-example.txt your_repo_root/repo_name/theme-options.php
-</code></pre>
-
-<ol>
-<li>Bootstrap the UpThemes Framework into your theme by adding this line to the top of functions.php:</li>
-</ol><pre><code>/**
- * Bootstrap the Theme Options Framework
- */
-if( file_exists('admin/admin.php') )
-  require_once('admin/admin.php');
-</code></pre>
-
-<ol>
-<li>Bootstrap each theme options file like so (this is new in this version of the framework, previously these files were automatically included if they were in the /theme-options/ folder.):</li>
-</ol><pre><code>/**
- * Set up General Options
- */
-if( file_exists('theme-options.php') )
-  require_once('theme-options.php')
-</code></pre>
-
-<ol>
-<li>Edit your theme options arrays. The framework now supports option tabs, which are now required. Once you create a tab, you can then hook your actual options into the tabs, using the 'tab' argument, as shown below:</li>
-</ol><pre><code>$thistab = array(
-    "name" =&gt; "colors_and_images",
-    "title" =&gt; __("Colors and Images","upfw"),
-    'sections' =&gt; array(
-        'color_scheme' =&gt; array(
-            'name' =&gt; 'color_scheme',
-            'title' =&gt; __( 'Color Scheme', 'upfw' ),
-            'description' =&gt; __( 'Select your color scheme.','upfw' )
-        )
-    )
-);
-register_theme_option_tab($thistab);
-
-$options = array(
-    'theme_color_scheme' =&gt; array(
-        'tab' =&gt; $thistab['name'],
-        "name" =&gt; "theme_color_scheme",
-        "title" =&gt; "Theme Color Scheme",
-        'description' =&gt; __( 'Display header navigation menu above or below the site title/description?', 'oenology' ),
-        'section' =&gt; 'color_scheme',
-        'since' =&gt; '1.0',
-        "id" =&gt; "color_scheme",
-        "type" =&gt; "select",
-        "default" =&gt; "light",
-        "valid_options" =&gt; array(
-            'light' =&gt; array(
-                "name" =&gt; "light",
-                "title" =&gt; __( 'Light', 'storefrontal' )
-            ),
-            'dark' =&gt; array(
-                "name" =&gt; "dark",
-                "title" =&gt; __( 'Dark', 'storefrontal' )
+        <h2>Getting Started Guide</h2>
+        
+        <p>The UpThemes Framework is a super simple theme options framework that makes adding theme options to your WordPress themes both powerful and easy. Here's how to get started:</p>
+        
+        <h4>Step 1. Add the framework to your theme</h4>
+        
+        <p>First you'll want to drop the UpThemes Framework into your WordPress theme.
+        
+        <h6>Method 1: Git Submodule (recommended)</h6>
+        
+        <p>If your plugin uses git... Add the UpThemes Framework as a submodule. This makes it easy for you to stay updated with the latest version of the UpThemes Framework. Any time we update the module, you can run <code>git submodule update</code> and grab the latest stable version of the framework.</p>
+        
+        <pre class="terminal"><code>$ cd your_repo_root/repo_name
+        $ git submodule add git://github.com/LiftUX/UpThemes-Framework.git options
+        </code></pre>
+        
+        <h6>Method 2: Drag-n-Drop /options/ folder into your theme</h6>
+        
+        <p><a href="https://github.com/LiftUX/UpThemes-Framework/zipball/master">Download the UpThemes Framework as a ZIP file</a>, unzip it, then move the contents into a folder named 'options' within your theme's root folder.</p>
+        
+        <h4>Step 2. Create Theme Options</h4>
+        
+        <p>Copy the theme-options-example.txt to theme-options.php:</p>
+        
+        <pre class="terminal"><code>$ cp -R your_repo_root/repo_name/admin/theme-options-example.txt your_repo_root/repo_name/theme-options.php
+        </code></pre>
+        
+        <h4>Step 3. Include the UpThemes Framework in functions.php</h4>
+        
+        <p>Add this to the top of functions.php:</p>
+        <pre><code>/**
+         * Bootstrap the Theme Options Framework
+         */
+        if( file_exists('options/options.php') )
+          require_once('options/options.php');
+        </code></pre>
+        
+        <p>Bootstrap each theme options file <strong>in your theme's root folder</strong> like so (this is new in this version of the framework, previously these files were automatically included if they were in the /theme-options/ folder.):</p>
+        
+        <pre><code>/**
+         * Set up General Options
+         */
+        if( file_exists('theme-options.php') )
+          require_once('theme-options.php')
+        </code></pre>
+        
+        <h4>Step 4. Customize your options</h4>
+        
+        <p>Edit your theme options arrays. The framework now supports option tabs, which are now required. Options must be attached to an option tab. Once you create a tab, you can then hook your actual options into the tabs, using the 'tab' argument, as shown below:</p>
+        
+        <pre><code>$thistab = array(
+            "name" =&gt; "colors_and_images",
+            "title" =&gt; __("Colors and Images","upfw"),
+            "sections" =&gt; array(
+                "color_scheme" =&gt; array(
+                    "name" =&gt; "color_scheme",
+                    "title" =&gt; __( "Color Scheme", "upfw" ),
+                    "description" =&gt; __( "Select your color scheme.","upfw" )
+                )
             )
-        )
-    )
-    'theme_hyperlink_color' =&gt; array(
-        'tab' =&gt; $thistab['name'],
-        "name" =&gt; "theme_hyperlink_color",
-        "title" =&gt; "Theme Hyperlink Color",
-        'description' =&gt; __( 'Default hyperlink color.', 'upfw' ),
-        'section' =&gt; 'color_scheme',
-        'since' =&gt; '1.0',
-        "id" =&gt; "color_scheme",
-        "type" =&gt; "color",
-        "default" =&gt; "#ffffff"
-    )
-);
+        );
+        register_theme_option_tab($thistab);
+        
+        $options = array(
+            "theme_color_scheme" =&gt; array(
+                "tab" =&gt; $thistab["name"],
+                "name" =&gt; "theme_color_scheme",
+                "title" =&gt; "Theme Color Scheme",
+                "description" =&gt; __( "Display header navigation menu above or below the site title/description?", "upfw" ),
+                "section" =&gt; "color_scheme",
+                "since" =&gt; "1.0",
+                "id" =&gt; "color_scheme",
+                "type" =&gt; "select",
+                "default" =&gt; "light",
+                "valid_options" =&gt; array(
+                    "light" =&gt; array(
+                        "name" =&gt; "light",
+                        "title" =&gt; __( "Light", "upfw" )
+                    ),
+                    "dark" =&gt; array(
+                        "name" =&gt; "dark",
+                        "title" =&gt; __( "Dark", "upfw" )
+                    )
+                )
+            )
+            "theme_hyperlink_color" =&gt; array(
+                "tab" =&gt; $thistab["name"],
+                "name" =&gt; "theme_hyperlink_color",
+                "title" =&gt; "Theme Hyperlink Color",
+                "description" =&gt; __( "Default hyperlink color.", "upfw" ),
+                "section" =&gt; "color_scheme",
+                "since" =&gt; "1.0",
+                "id" =&gt; "color_scheme",
+                "type" =&gt; "color",
+                "default" =&gt; "#ffffff"
+            )
+        );
+        
+        register_theme_options($options);
+        </code></pre>
+        
+        <p>The available types of theme options are listed below:</p>
+        
+        <ul>
+        <li>'type' =&gt; 'text' - standard text box</li>
+        <li>'type' =&gt; 'textarea' - standard textarea</li>
+        <li>'type' =&gt; 'text_list' - custom text list</li>
+        <li>'type' =&gt; 'select' - drop-down select</li>
+        <li>'type' =&gt; 'multiple' - multiple select</li>
+        <li>'type' =&gt; 'checkbox' - checkbox</li>
+        <li>'type' =&gt; 'color' - colorpicker</li>
+        <li>'type' =&gt; 'image' - WordPress image uploader</li>
+        <li>'type' =&gt; 'category' - category picker drop-down</li>
+        <li>'type' =&gt; 'categories' - categories multiple select</li>
+        <li>'type' =&gt; 'page' - page picker drop-down</li>
+        <li>'type' =&gt; 'pages' - page multiple select</li>
+        <li>'type' =&gt; 'taxonomy' - taxonomy multiple select</li>
+        </ul>
+        
+        <p>To register theme options tabs, simply use <code>register_theme_options()</code> and <code>register_theme_options_tab()</code>  within your existing code as shown in the above example. This makes it extremely easy to attach your theme options to specific functionality. That way if you have a lite version and a pro version of a theme, you can keep the theme options separated easily.</p>
 
-register_theme_options($options);
-</code></pre>
-
-<p>The available types of theme options are listed below:</p>
-
-<ul>
-<li>'type' =&gt; 'text' - standard text box</li>
-<li>'type' =&gt; 'textarea' - standard textarea</li>
-<li>'type' =&gt; 'text_list' - custom text list</li>
-<li>'type' =&gt; 'select' - drop-down select</li>
-<li>'type' =&gt; 'multiple' - multiple select</li>
-<li>'type' =&gt; 'checkbox' - checkbox</li>
-<li>'type' =&gt; 'color' - colorpicker</li>
-<li>'type' =&gt; 'image' - WordPress image uploader</li>
-<li>'type' =&gt; 'category' - category picker drop-down</li>
-<li>'type' =&gt; 'categories' - categories multiple select</li>
-<li>'type' =&gt; 'page' - page picker drop-down</li>
-<li>'type' =&gt; 'pages' - page multiple select</li>
-<li>'type' =&gt; 'taxonomy' - taxonomy multiple select</li>
-</ul><ol>
-<li>To register theme options tabs, simply use <code>register_theme_options()</code> and <code>register_theme_options_tab()</code>  within your existing code as shown in the above example. This makes it extremely easy to attach your theme options to specific functionality. That way if you have a lite version and a pro version of a theme, you can keep the theme options separated easily.</li>
-</ol>
       </section>
     </div>
 
