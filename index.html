@@ -19,7 +19,7 @@
           <a id="forkme_banner" href="https://github.com/LiftUX/UpThemes-Framework">Fork Me on GitHub</a>
 
           <h1 id="project_title">UpThemes Framework</h1>
-          <h2 id="project_tagline">A compact standalone theme options framework that contains extensible engines for SEO, custom layouts, typography, and much more.</h2>
+          <h2 id="project_tagline">A compact theme options framework with simple integration with any WordPress theme.</h2>
 
           <section id="downloads">
             <a class="zip_download_link" href="https://github.com/LiftUX/UpThemes-Framework/zipball/master">Download this project as a .zip file</a>
@@ -45,9 +45,9 @@ $ git submodule add git://github.com/LiftUX/UpThemes-Framework.git admin
 
 <p>If your plugin does not use git... download the UpThemes Framework as a ZIP file and drop it into a folder named 'admin' within your theme's root folder.</p>
 
-<p>Copy the /theme-options/ folder into your theme root:</p>
+<p>Copy the theme-options-example.txt to theme-options.php:</p>
 
-<pre><code>$ cp -R your_repo_root/repo_name/admin/theme-options/ your_repo_root/repo_name/theme-options/
+<pre><code>$ cp -R your_repo_root/repo_name/admin/theme-options-example.txt your_repo_root/repo_name/theme-options.php
 </code></pre>
 
 <ol>
@@ -60,16 +60,16 @@ if( file_exists('admin/admin.php') )
 </code></pre>
 
 <ol>
-<li>Bootstrap each theme options file like so:</li>
+<li>Bootstrap each theme options file like so (this is new in this version of the framework, previously these files were automatically included if they were in the /theme-options/ folder.):</li>
 </ol><pre><code>/**
  * Set up General Options
  */
-if( file_exists('theme-options/general-settings.php') )
-  require_once('theme-options/general-settings.php')
+if( file_exists('theme-options.php') )
+  require_once('theme-options.php')
 </code></pre>
 
 <ol>
-<li>Edit your theme options arrays.</li>
+<li>Edit your theme options arrays. The framework now supports option tabs, which are now required. Once you create a tab, you can then hook your actual options into the tabs, using the 'tab' argument, as shown below:</li>
 </ol><pre><code>$thistab = array(
     "name" =&gt; "colors_and_images",
     "title" =&gt; __("Colors and Images","upfw"),
@@ -146,12 +146,9 @@ register_theme_options($options);
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p class="copyright">UpThemes Framework maintained by <a href="https://github.com/LiftUX">LiftUX</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+        <p class="copyright">UpThemes Framework maintained by <a href="https://upthemes.com">UpThemes</a></p>
       </footer>
     </div>
-
-    
 
   </body>
 </html>
