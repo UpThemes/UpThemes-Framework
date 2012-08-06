@@ -45,7 +45,7 @@
         <p>If your plugin uses git... Add the UpThemes Framework as a submodule. This makes it easy for you to stay updated with the latest version of the UpThemes Framework. Any time we update the module, you can run <code>git submodule update</code> and grab the latest stable version of the framework.</p>
         
         <pre class="terminal"><code>$ cd your_repo_root/repo_name
-        $ git submodule add git://github.com/LiftUX/UpThemes-Framework.git options
+$ git submodule add git://github.com/LiftUX/UpThemes-Framework.git options
         </code></pre>
         
         <h6>Method 2: Drag-n-Drop /options/ folder into your theme</h6>
@@ -56,7 +56,7 @@
         
         <p>Copy the theme-options-example.txt to theme-options.php:</p>
         
-        <pre class="terminal"><code>$ cp -R your_repo_root/repo_name/admin/theme-options-example.txt your_repo_root/repo_name/theme-options.php
+        <pre class="terminal"><code>$ cp -R your_repo_root/repo_name/options/theme-options-example.txt your_repo_root/repo_name/theme-options.php
         </code></pre>
         
         <h4>Step 3. Include the UpThemes Framework in functions.php</h4>
@@ -65,73 +65,73 @@
         <pre><code>/**
          * Bootstrap the Theme Options Framework
          */
-        if( file_exists('options/options.php') )
-          require_once('options/options.php');
+        if( file_exists(get_template_directory().'/options/options.php') )
+          require_once(get_template_directory().'/options/options.php');
         </code></pre>
         
         <p>Bootstrap each theme options file <strong>in your theme's root folder</strong> like so (this is new in this version of the framework, previously these files were automatically included if they were in the /theme-options/ folder.):</p>
         
         <pre><code>/**
-         * Set up General Options
-         */
-        if( file_exists('theme-options.php') )
-          require_once('theme-options.php')
-        </code></pre>
+* Set up General Options
+*/
+if( file_exists(get_template_directory().'/theme-options.php') )
+  require_once(get_template_directory().'/theme-options.php')
+</code></pre>
         
         <h4>Step 4. Customize your options</h4>
         
         <p>Edit your theme options arrays. The framework now supports option tabs, which are now required. Options must be attached to an option tab. Once you create a tab, you can then hook your actual options into the tabs, using the 'tab' argument, as shown below:</p>
         
         <pre><code>$thistab = array(
-            "name" =&gt; "colors_and_images",
-            "title" =&gt; __("Colors and Images","upfw"),
-            "sections" =&gt; array(
-                "color_scheme" =&gt; array(
-                    "name" =&gt; "color_scheme",
-                    "title" =&gt; __( "Color Scheme", "upfw" ),
-                    "description" =&gt; __( "Select your color scheme.","upfw" )
-                )
-            )
-        );
-        register_theme_option_tab($thistab);
+    "name" =&gt; "colors_and_images",
+    "title" =&gt; __("Colors and Images","upfw"),
+    "sections" =&gt; array(
+        "color_scheme" =&gt; array(
+            "name" =&gt; "color_scheme",
+            "title" =&gt; __( "Color Scheme", "upfw" ),
+            "description" =&gt; __( "Select your color scheme.","upfw" )
+        )
+    )
+);
+register_theme_option_tab($thistab);
         
-        $options = array(
-            "theme_color_scheme" =&gt; array(
-                "tab" =&gt; $thistab["name"],
-                "name" =&gt; "theme_color_scheme",
-                "title" =&gt; "Theme Color Scheme",
-                "description" =&gt; __( "Display header navigation menu above or below the site title/description?", "upfw" ),
-                "section" =&gt; "color_scheme",
-                "since" =&gt; "1.0",
-                "id" =&gt; "color_scheme",
-                "type" =&gt; "select",
-                "default" =&gt; "light",
-                "valid_options" =&gt; array(
-                    "light" =&gt; array(
-                        "name" =&gt; "light",
-                        "title" =&gt; __( "Light", "upfw" )
-                    ),
-                    "dark" =&gt; array(
-                        "name" =&gt; "dark",
-                        "title" =&gt; __( "Dark", "upfw" )
-                    )
-                )
+$options = array(
+    "theme_color_scheme" =&gt; array(
+        "tab" =&gt; $thistab["name"],
+        "name" =&gt; "theme_color_scheme",
+        "title" =&gt; "Theme Color Scheme",
+        "description" =&gt; __( "Display header navigation menu above or below the site title/description?", "upfw" ),
+        "section" =&gt; "color_scheme",
+        "since" =&gt; "1.0",
+        "id" =&gt; "color_scheme",
+        "type" =&gt; "select",
+        "default" =&gt; "light",
+        "valid_options" =&gt; array(
+            "light" =&gt; array(
+                "name" =&gt; "light",
+                "title" =&gt; __( "Light", "upfw" )
+            ),
+            "dark" =&gt; array(
+                "name" =&gt; "dark",
+                "title" =&gt; __( "Dark", "upfw" )
             )
-            "theme_hyperlink_color" =&gt; array(
-                "tab" =&gt; $thistab["name"],
-                "name" =&gt; "theme_hyperlink_color",
-                "title" =&gt; "Theme Hyperlink Color",
-                "description" =&gt; __( "Default hyperlink color.", "upfw" ),
-                "section" =&gt; "color_scheme",
-                "since" =&gt; "1.0",
-                "id" =&gt; "color_scheme",
-                "type" =&gt; "color",
-                "default" =&gt; "#ffffff"
-            )
-        );
+        )
+    )
+    "theme_hyperlink_color" =&gt; array(
+        "tab" =&gt; $thistab["name"],
+        "name" =&gt; "theme_hyperlink_color",
+        "title" =&gt; "Theme Hyperlink Color",
+        "description" =&gt; __( "Default hyperlink color.", "upfw" ),
+        "section" =&gt; "color_scheme",
+        "since" =&gt; "1.0",
+        "id" =&gt; "color_scheme",
+        "type" =&gt; "color",
+        "default" =&gt; "#ffffff"
+    )
+);
         
-        register_theme_options($options);
-        </code></pre>
+register_theme_options($options);
+</code></pre>
         
         <p>The available types of theme options are listed below:</p>
         
