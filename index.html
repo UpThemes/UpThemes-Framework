@@ -66,7 +66,7 @@ $ git submodule add git://github.com/LiftUX/UpThemes-Framework.git options
          * Bootstrap the Theme Options Framework
          */
         if( file_exists(get_template_directory().'/options/options.php') )
-          require_once(get_template_directory().'/options/options.php');
+          include_once(get_template_directory().'/options/options.php');
         </code></pre>
         
         <p>Bootstrap each theme options file <strong>in your theme's root folder</strong> like so (this is new in this version of the framework, previously these files were automatically included if they were in the /theme-options/ folder.):</p>
@@ -75,7 +75,7 @@ $ git submodule add git://github.com/LiftUX/UpThemes-Framework.git options
 * Set up General Options
 */
 if( file_exists(get_template_directory().'/theme-options.php') )
-  require_once(get_template_directory().'/theme-options.php')
+  include_once(get_template_directory().'/theme-options.php')
 </code></pre>
         
         <h4>Step 4. Customize your options</h4>
