@@ -152,7 +152,7 @@ global $up_theme_options;
  * @link	http://planetozh.com/blog/2009/05/handling-plugins-options-in-wordpress-28-with-register_setting/	Ozh
  */
 function upfw_register_options(){
-	require( 'library/options-register.php' );
+	include_once( 'library/options-register.php' );
 }
 // Settings API options initilization and validation
 add_action( 'admin_init', 'upfw_register_options' );
