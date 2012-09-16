@@ -91,7 +91,6 @@ function upfw_get_theme_options_directory_uri(){
 */
 function upfw_engines_init(){
 
-	include_once('library/custom.php');
 	include_once('library/theme-customizer.php');
 
 }
@@ -153,6 +152,7 @@ global $up_theme_options;
  */
 function upfw_register_options(){
 	include_once( 'library/options-register.php' );
+	include_once( 'library/custom.php' );
 }
 // Settings API options initilization and validation
 add_action( 'admin_init', 'upfw_register_options' );
@@ -192,8 +192,8 @@ add_action( 'admin_menu', 'upfw_add_theme_page' );
 /**
  * upfw Theme Settings Page Markup
  * 
- * @uses	upfw_get_current_tab()	defined in \functions\custom.php
- * @uses	upfw_get_page_tab_markup()	defined in \functions\custom.php
+ * @uses	upfw_get_current_tab()	defined in \library\custom.php
+ * @uses	upfw_get_page_tab_markup()	defined in \library\custom.php
  */
 function upfw_admin_options_page() {
 	global $up_tabs;
