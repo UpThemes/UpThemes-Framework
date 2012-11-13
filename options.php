@@ -706,45 +706,15 @@ function upfw_pages($value,$attr){
 }
 
 function upfw_taxonomy($value,$attr){
-    global $wpdb;
-?>
+  global $wpdb;
 
- <select name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]" id="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]">
-	<?php $taxonomy = $value['taxonomy'];
-	$i = $wpdb->get_results("SELECT $wpdb->terms.name, $wpdb->terms.slug, $wpdb->term_taxonomy.term_id FROM $wpdb->terms LEFT JOIN $wpdb->term_taxonomy ON $wpdb->terms.term_id = $wpdb->term_taxonomy.term_id WHERE $wpdb->term_taxonomy.taxonomy = '$taxonomy' ORDER BY $wpdb->terms.name", ARRAY_A);
-	foreach($i as $row):
-	    if(!empty($attr['name'])):
-	        foreach($attr['name'] as $std):
-	            if($std == $row['slug']):
-	                $selected = ' selected = "selected"';
-	            endif;
-	        endforeach;
-	    else:
-	        if($value['value']):
-	            if(preg_match('/,/', $value['value'])):
-	                $cats = explode(', ', $value['value']);
-	                foreach($cats as $cat):
-	                    if(preg_match('/\b'.$row['slug'].'\b/', $cat)):
-	                        $selected = ' selected = "selected"';
-	                    endif;
-	                endforeach;
-	            else:
-	                if($value['value'] == $row['slug'] ):
-	                    $selected = ' selected = "selected"';
-	                endif;
-	            endif;
-	        else:
-	            if($value['value'] == $row['post_title'] ):
-	                $selected = ' selected = "selected"';
-	            endif;
-	        endif;
-	    endif;
-	    
-	    echo "<option value='".$row['slug']."'".$selected.">".$row['name']."</option>";
-	    $selected = '';
-	endforeach;
- 	?>
- </select>
+  $terms = get_terms( $attr['taxonomy'] );
+  if ( $terms ) {
+  	printf( '<select name="%s" class="postform">', "theme_" . upfw_get_current_theme_id() . "_options[" . $attr['name'] . "]" );
+  	foreach ( $terms as $term ) {
+  		printf( '<option value="%s" ' . selected( $term->slug, $value ) . '>%s</option>', $term->slug, $term->name );
+  	}
+  	print( '</select>' );
+  }
 
-<?php
 }
