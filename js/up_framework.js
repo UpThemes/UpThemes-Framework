@@ -1,5 +1,7 @@
 ;(function($){
 
+  // Color Picker adapted from Rachel Baker's color picker example
+  // http://rachelbaker.me/how-to-use-the-new-wordpress-color-picker-in-a-plugin/
   function pickColor(color) {
       $(".colorPickerWrapper").find('input[type="text"]').val(color);
   }
