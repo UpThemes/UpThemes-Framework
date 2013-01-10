@@ -25,8 +25,9 @@
             pickColor("");
         }
     });
+
     colorPicker.click(toggle_text);
-    toggle_text();
+    if( colorPicker.length ) toggle_text();
 
     $('.imageWrapper').each(function(i){
     	if( $(this).find('input[type="text"]').val() )
