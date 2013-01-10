@@ -3,6 +3,7 @@
   function pickColor(color) {
       $(".colorPickerWrapper").find('input[type="text"]').val(color);
   }
+
   function toggle_text() {
       colorPicker = $(".colorPickerWrapper").find('input');
       if ("" === colorPicker.val().replace("#", "")) {
@@ -10,6 +11,7 @@
           pickColor(default_color);
       } else pickColor(colorPicker.val());
   }
+
   var default_color = "fbfbfb";
 
 	$(document).ready(function($){
@@ -25,6 +27,11 @@
     });
     colorPicker.click(toggle_text);
     toggle_text();
+
+    $('.imageWrapper').each(function(i){
+    	if( $(this).find('input[type="text"]').val() )
+				$(this).find('.image_preview').html('<img src="'+$(this).find('input[type="text"]').val()+'" alt="">');
+		});
 
 		$('.add_text_list').find('a').live('click', function(e){
 			
@@ -45,7 +52,7 @@
 		    return false;
 
 		});
-	
+
 	});
 
 })(jQuery);

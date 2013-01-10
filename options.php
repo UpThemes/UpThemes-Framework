@@ -7,7 +7,7 @@ $up_theme_options = array();
 /**
 * UpThemes Framework Version
 */
-define('UPTHEMES_VER', '2.2.2');
+define('UPTHEMES_VER', '2.3');
 
 function register_theme_options( $options ){
     global $up_theme_options;
@@ -101,16 +101,26 @@ add_action('after_setup_theme','upfw_engines_init',10);
 * Add CSS and Javascript includes
 */
 function upfw_enqueue_scripts_styles(){
-	
+
 	wp_enqueue_style('up_framework',upfw_get_theme_options_directory_uri() . "css/up_framework.css");
 
 	wp_enqueue_script( 'wp-color-picker' );
 	wp_enqueue_style( 'wp-color-picker' );
-	wp_enqueue_script('jquery-color');
+
 	wp_enqueue_script('up_framework', upfw_get_theme_options_directory_uri() . "js/up_framework.js", array('jquery'));
-	wp_enqueue_script('media-upload');
-	wp_enqueue_script('thickbox');
-	wp_enqueue_style('thickbox');
+
+	// This function loads in the required media files for the media manager.
+	wp_enqueue_media();
+
+  // Register, localize and enqueue our custom JS.
+  wp_register_script( 'upfw-nmp-media', upfw_get_theme_options_directory_uri() . 'js/media.js', array( 'jquery' ), '1.0.0', true );
+  wp_localize_script( 'upfw-nmp-media', 'upfw_nmp_media',
+      array(
+          'title'     => __( 'Upload or Choose Your Custom Image File', 'upfw' ), // This will be used as the default title
+          'button'    => __( 'Insert Image into Input Field', 'upfw' )            // This will be used as the default button text
+      )
+  );
+  wp_enqueue_script( 'upfw-nmp-media' );
 
 }
 
@@ -570,36 +580,10 @@ function upfw_color($value,$attr){ ?>
 }
 
 function upfw_image($value,$attr){ ?>
-	
-	<script language="JavaScript">
-	jQuery(document).ready(function() {
-	
-		$container = jQuery("#<?php echo $attr['name']; ?>_container");
-		$image_field = $container.find('.upload_image_field');
-		$image_button = $container.find('.upload_image_button');
 
-		if( $image_field.val() )
-			$container.find('.image_preview').html("<img src='"+$image_field.val()+"'>");
-	
-		$image_button.click(function() {
-			formfield = $image_field.attr('name');
-			tb_show('', 'media-upload.php?type=image&TB_iframe=true');
-			return false;
-		});
-		
-		window.send_to_editor = function(html) {
-			imgurl = jQuery('img',html).attr('src');
-			$image_field.val(imgurl);
-			$container.find('.image_preview').html("<img src='"+imgurl+"'>");
-			tb_remove();
-		}
-	
-	});
-	</script>
-
-	<div id="<?php echo $attr['name']; ?>_container">
-		<input type="text" class="upload_image_field" id="<?php echo $attr['name']; ?>" name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]" value="<?php echo $value; ?>">
-		<input class="upload_image_button" type="button" value="Upload or Select Image" />
+	<div id="<?php echo $attr['name']; ?>_container" class="imageWrapper">
+		<input type="text" class="upfw-open-media" id="<?php echo $attr['name']; ?>" name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]" value="<?php echo $value; ?>">
+		<input class="upfw-open-media button button-primary" type="submit" value="Upload or Select Image" />
 		<div class="image_preview"></div>
 	</div>
 
