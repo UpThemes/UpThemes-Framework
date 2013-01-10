@@ -104,9 +104,10 @@ function upfw_enqueue_scripts_styles(){
 	
 	wp_enqueue_style('up_framework',upfw_get_theme_options_directory_uri() . "css/up_framework.css");
 
-	wp_enqueue_style('farbtastic');
+	wp_enqueue_script( 'wp-color-picker' );
+	wp_enqueue_style( 'wp-color-picker' );
 	wp_enqueue_script('jquery-color');
-	wp_enqueue_script('up_framework', upfw_get_theme_options_directory_uri() . "js/up_framework.js", array('farbtastic'));
+	wp_enqueue_script('up_framework', upfw_get_theme_options_directory_uri() . "js/up_framework.js", array('jquery'));
 	wp_enqueue_script('media-upload');
 	wp_enqueue_script('thickbox');
 	wp_enqueue_style('thickbox');
@@ -563,12 +564,6 @@ function upfw_color($value,$attr){ ?>
 
     <span class="colorPickerWrapper">
         <input type="text" class="popup-colorpicker" id="<?php echo $attr['name']; ?>" name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]" value="<?php echo $value; ?>" />
-        <a href="#" class="clear"><img src="<?php echo upfw_get_theme_options_directory_uri(); ?>images/upfw_ico_delete.png" alt="Delete Text Field" /></a>
-        <div class="popup-guy">
-            <div class="popup-guy-inside">
-                <div id="<?php echo $attr['name']; ?>picker" class="color-picker"></div>
-            </div>
-        </div>
     </span>
 
 <?php
