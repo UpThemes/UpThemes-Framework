@@ -7,7 +7,7 @@ $up_theme_options = array();
 /**
 * UpThemes Framework Version
 */
-define('UPTHEMES_VER', '2.3');
+define('UPTHEMES_VER', '2.3.1');
 
 function register_theme_options( $options ){
     global $up_theme_options;
