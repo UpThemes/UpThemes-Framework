@@ -62,8 +62,8 @@ $options = array(
   	"section" => "color_scheme",
   	"since" => "1.0",
       "id" => "color_scheme",
-      "type" => "text",
-      "default" => "Copyright 2012 UpThemes"
+      "type" => "color",
+      "default" => "#ffffff"
   )
 );
 

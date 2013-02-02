@@ -227,6 +227,7 @@ if ($up_tabs) {
     	}
     }
 }
+
 /**
  * Callback for add_settings_section()
  *
