@@ -204,28 +204,29 @@ global $up_tabs;
  * @param	callback	$callback	Name of the callback function in which section text is output
  * @param	string		$pageid		Name of the Settings page to which to add the section; passed to do_settings_sections()
  */
-foreach ( $up_tabs as $tab ) {
-	$tabname = $tab['name'];
-	$tabsections = $tab['sections'];
-	foreach ( $tabsections as $section ) {
-		$sectionname = $section['name'];
-		$sectiontitle = $section['title'];
+if ($up_tabs) {
+    foreach ( $up_tabs as $tab ) {
+    	$tabname = $tab['name'];
+    	$tabsections = $tab['sections'];
+    	foreach ( $tabsections as $section ) {
+    		$sectionname = $section['name'];
+    		$sectiontitle = $section['title'];
 
-		// Add settings section
-		add_settings_section(
-			// $sectionid
-			'upfw_' . $sectionname . '_section',
-			// $title
-			$sectiontitle,
-			// $callback
-			'upfw_sections_callback',
-			// $pageid
-			'upfw_' . $tabname . '_tab'
-		);
+    		// Add settings section
+    		add_settings_section(
+    			// $sectionid
+    			'upfw_' . $sectionname . '_section',
+    			// $title
+    			$sectiontitle,
+    			// $callback
+    			'upfw_sections_callback',
+    			// $pageid
+    			'upfw_' . $tabname . '_tab'
+    		);
 
-	}
+    	}
+    }
 }
-
 /**
  * Callback for add_settings_section()
  *
