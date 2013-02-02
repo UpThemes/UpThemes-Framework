@@ -432,6 +432,29 @@ function upfw_get_settings_page_cap() {
 // Hook into option_page_capability_{option_page}
 add_action( 'option_page_capability_upfw-settings', 'upfw_get_settings_page_cap' );
 
+/**
+ * Hook for adding custom fields
+ */
+
+global $upwf_custom_callbacks;
+
+function upfw_add_custom_field($type = null, $callback = null)
+{
+    // don't do anything if they don't input the correct args
+    if (is_null($type) or is_null($callback)) {
+        return false;
+    }
+
+    // check to see if $callback is an actual function
+    // we only want to add the callback if the function exists
+    if (function_exists($callback)) {
+        global $upwf_custom_callbacks;
+
+        // for right now we will override any previous callbacks added
+        $upwf_custom_callbacks[$type] = $callback;
+    }
+}
+
 
 function upfw_text_field($value,$attr){ ?>
 
