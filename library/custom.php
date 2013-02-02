@@ -4,7 +4,7 @@
  *
  * Contains all of the Theme's custom functions, which include
  * helper functions and various filters.
- * 
+ *
  * @package 	upfw
  * @copyright	Copyright (c) 2010 Chip Bennett
  * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License, v2 (or newer)
@@ -14,23 +14,23 @@
 
 /**
  * Get current page context
- * 
+ *
  * Returns a string containing the context of the
  * current page. This string is useful for several
  * purposes, including applying an ID to the HTML
  * body tag, and adding a contextual $name to calls
- * to get_header(), get_footer(), get_sidebar(), 
- * and get_template_part_file(), in order to 
+ * to get_header(), get_footer(), get_sidebar(),
+ * and get_template_part_file(), in order to
  * facilitate Child Themes overriding default Theme
  * template part files.
- * 
+ *
  * @param	none
  * @return	string	current page context
  */
 function upfw_get_context() {
 
 	$context = 'index';
-	
+
 	if ( is_front_page() ) {
 		// Front Page
 		$context = 'front-page';
@@ -71,7 +71,7 @@ function upfw_get_context() {
 		// Blog Posts Index
 		$context = 'home';
 	}
-	
+
 	return $context;
 }
 
@@ -99,48 +99,48 @@ function upfw_get_category_list() {
 function upfw_get_current_tab() {
 
 	global $up_tabs;
-	
+
 	$first_tab = $up_tabs[0]['name'];
-	
+
     if ( isset( $_GET['tab'] ) ) {
         $current = esc_attr( $_GET['tab'] );
     } else {
     	$current = $first_tab;
     }
-    
+
 	return $current;
 }
 
 /**
  * Define upfw Admin Page Tab Markup
- * 
+ *
  * @uses	upfw_get_current_tab()	defined in \functions\options.php
  * @uses	upfw_get_settings_page_tabs()	defined in \functions\options.php
- * 
+ *
  * @link	http://www.onedesigns.com/tutorials/separate-multiple-theme-options-pages-using-tabs	Daniel Tara
  */
 function upfw_get_page_tab_markup() {
 
 	global $up_tabs;
 
-	$page = 'upfw-settings';	
-	
+	$page = 'upfw-settings';
+
 	if ( isset( $_GET['page'] ) && 'upfw-reference' == $_GET['page'] ) {
 		$page = 'upfw-reference';
 	} else {
-		
+
 	}
 
     $current = upfw_get_current_tab();
-		
+
 	if ( 'upfw-settings' == $page ) {
         $tabs = $up_tabs;
 	} else if ( 'upfw-reference' == $page ) {
         $tabs = upfw_get_reference_page_tabs();
 	}
-    
+
     $links = array();
-    
+
     foreach( $tabs as $tab ) {
 		if( isset($tab['name']) )
 			$tabname = $tab['name'];
@@ -152,11 +152,11 @@ function upfw_get_page_tab_markup() {
             $links[] = "<a class='nav-tab' href='?page=$page&tab=$tabname'>$tabtitle</a>";
         }
     }
-    
+
     echo '<div id="icon-themes" class="icon32"><br /></div>';
     echo '<h2 class="nav-tab-wrapper">';
     foreach ( $links as $link )
         echo $link;
     echo '</h2>';
-    
+
 }

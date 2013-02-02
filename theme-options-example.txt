@@ -1,7 +1,7 @@
 <?php
 /**
  * Theme Colors and Images Settings Functions file
- * 
+ *
  * Below is an example of creating a new tab for your Theme Options page:
 
 $colors_images_tab = array(
@@ -71,7 +71,7 @@ register_theme_options($options);
 
 
  * The different types of options you can define are: text, color, image, select, list, multiple, textarea, page, pages, category, categories
- * 
+ *
  */
 
 ?>

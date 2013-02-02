@@ -37,18 +37,18 @@
 		});
 
 		$('.add_text_list').find('a').live('click', function(e){
-			
+
 			var $clone = $(this).parents('td').find('div.text_list').find('.entry').eq(0).clone();
-			
+
 			$(this).parents('td').find('div.text_list').append($clone).find('input:last').val('');
-			
+
 		    return false;
 		});
-		
+
 		$('.text_list').find('.delete_text_list').live('click',function(e){
 
 			if( $(this).parents('.text_list').find('.entry').length > 1 )
-				$(this).parents('.entry').remove();	
+				$(this).parents('.entry').remove();
 			else
 				$(this).parents('.entry').find('input').val('');
 
