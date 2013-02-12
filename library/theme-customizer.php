@@ -11,18 +11,18 @@ add_action( 'customize_register', 'upfw_customize_register' );
 
 function upfw_customize_register($wp_customize) {
 	/**
-	 * Globalize the variable that holds 
+	 * Globalize the variable that holds
 	 * the Settings Page tab definitions
-	 * 
+	 *
 	 * @global	array	Settings Page Tab definitions
 	 */
 	global $up_tabs;
-	
+
 	/**
 	 * Register each tab section in the Theme Customizer
-	 * 
+	 *
 	 * @todo Add description.
-	 * 
+	 *
 	 */
 	foreach ( $up_tabs as $tab ) {
 		$tabname = $tab['name'];
@@ -40,11 +40,11 @@ function upfw_customize_register($wp_customize) {
 	}
 
 	$upfw_options = upfw_get_options();
-	
+
 	$upfw_option_parameters = upfw_get_option_parameters();
-	
+
 	foreach( $upfw_option_parameters as $option ){
-	
+
 		$optionname = $option['name'];
 		$optiondb = "theme_" . ( upfw_get_current_theme_id() ) . "_options[$optionname]";
 		$option_section_name =  $option['section'];
