@@ -125,19 +125,10 @@ function upfw_get_page_tab_markup() {
 
 	$page = 'upfw-settings';
 
-	if ( isset( $_GET['page'] ) && 'upfw-reference' == $_GET['page'] ) {
-		$page = 'upfw-reference';
-	} else {
-
-	}
-
-    $current = upfw_get_current_tab();
+	$current = upfw_get_current_tab();
 
 	if ( 'upfw-settings' == $page ) {
-        $tabs = $up_tabs;
-	} else if ( 'upfw-reference' == $page ) {
-        $tabs = upfw_get_reference_page_tabs();
-	}
+		$tabs = $up_tabs;
 
     $links = array();
 
@@ -158,5 +149,5 @@ function upfw_get_page_tab_markup() {
     foreach ( $links as $link )
         echo $link;
     echo '</h2>';
-
+  }
 }
