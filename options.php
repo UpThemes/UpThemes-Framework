@@ -477,8 +477,7 @@ function upfw_text_list($value,$attr){ ?>
                     </div>
                 <?php endforeach;
             endif;
-        else:
-            if( isset( $value['value'] ) ) :
+        elseif( isset( $value['value'] ) ) :
                 if(preg_match('/,/', $value['value'])):
                     $list = explode(', ', $value['value']);
                     foreach($list as $text):?>
@@ -493,7 +492,14 @@ function upfw_text_list($value,$attr){ ?>
                         $selected = ' selected = "selected"';
                     endif;
                 endif;
-            endif;
+		else:
+			?>
+				<div class="entry">
+					<input class="text_list" type="text" name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>][]" value="<?php echo $text?>" />
+					<span class="delete_text_list"><a href="#"><img src="<?php echo upfw_get_theme_options_directory_uri(); ?>images/upfw_ico_delete.png" alt="Delete Text Field" /></a></span>
+					<div class="clear"></div>
+				</div>
+			<?php
         endif;?>
 
     </div>
