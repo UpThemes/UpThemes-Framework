@@ -82,7 +82,7 @@ function upfw_get_current_theme_id(){
 
 function upfw_get_theme_options_directory_uri(){
 
-  return trailingslashit( trailingslashit( get_template_directory_uri() ) . basename( dirname(__FILE__) ) );
+  return str_replace('\\', '/', trailingslashit(substr(get_template_directory_uri(), 0, strpos(get_template_directory_uri(), 'themes')) . substr(dirname(__FILE__), strpos(dirname(__FILE__), 'themes'))));
 
 }
 
