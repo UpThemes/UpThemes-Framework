@@ -436,7 +436,7 @@ add_action( 'option_page_capability_upfw-settings', 'upfw_get_settings_page_cap'
  * Hook for adding custom fields
  */
 
-global $upwf_custom_callbacks;
+global $upfw_custom_callbacks;
 
 function upfw_add_custom_field($type = null, $callback = null)
 {
@@ -448,10 +448,10 @@ function upfw_add_custom_field($type = null, $callback = null)
     // check to see if $callback is an actual function
     // we only want to add the callback if the function exists
     if (function_exists($callback)) {
-        global $upwf_custom_callbacks;
+        global $upfw_custom_callbacks;
 
         // for right now we will override any previous callbacks added
-        $upwf_custom_callbacks[$type] = $callback;
+        $upfw_custom_callbacks[$type] = $callback;
     }
 }
 

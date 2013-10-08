@@ -301,7 +301,7 @@ foreach ( $option_parameters as $option ) {
  * Callback for get_settings_field()
  */
 function upfw_setting_callback( $option ) {
-	global $upwf_custom_callbacks;
+	global $upfw_custom_callbacks;
 
     $upfw_options = (array) upfw_get_options();
 
@@ -387,9 +387,9 @@ function upfw_setting_callback( $option ) {
     }
 
     // Check if there is a callback to envoke for custom fields
-    if (isset($upwf_custom_callbacks[$fieldtype])) {
+    if (isset($upfw_custom_callbacks[$fieldtype])) {
         $custom_field_name = 'theme_' . upfw_get_current_theme_id() . '_options[' . $attr['name'] . ']';
 
-        call_user_func($upwf_custom_callbacks[$fieldtype], $value, $attr, $custom_field_name);
+        call_user_func($upfw_custom_callbacks[$fieldtype], $value, $attr, $custom_field_name);
     }
 }
