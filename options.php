@@ -36,18 +36,11 @@ function register_theme_option_tab( $args ){
  * @param	string	$theme_title	    Name of the current theme
  */
 function upfw_define_theme_title(){
+	$themedata = wp_get_theme();
+	$theme_title = $themedata->title;
 
-  if( function_exists('wp_get_theme') ):
-    $themedata = wp_get_theme();
-    $theme_title = $themedata->title;
-  else:
-    $themedata = get_theme_data(get_template_directory() .'/style.css');
-    $theme_title = $themedata['Title'];
-  endif;
-
-  if( !defined('THEME_TITLE') )
-    define('THEME_TITLE',$theme_title);
-
+	if( !defined('THEME_TITLE') )
+		define('THEME_TITLE',$theme_title);
 }
 
 add_action('after_setup_theme','upfw_define_theme_title');
@@ -65,34 +58,23 @@ add_action('after_setup_theme','upfw_define_theme_title');
  * @returns  string $theme_shortname  Name of current theme
  */
 function upfw_get_current_theme_id(){
-
-  if( function_exists('wp_get_theme') ):
-    $themedata = wp_get_theme();
-	  $theme_title = $themedata->title;
-  else:
-	  $themedata = get_theme_data(get_template_directory() .'/style.css');
-	  $theme_title = $themedata['Title'];
-	endif;
+	$themedata = wp_get_theme();
+	$theme_title = $themedata->title;
 
 	$theme_shortname = strtolower(preg_replace('/ /', '_', $theme_title));
 
 	return $theme_shortname;
-
 }
 
 function upfw_get_theme_options_directory_uri(){
-
   return trailingslashit( trailingslashit( get_template_directory_uri() ) . basename( dirname(__FILE__) ) );
-
 }
 
 /**
 * Gentlemen, start your engines
 */
 function upfw_engines_init(){
-
 	include_once('library/theme-customizer.php');
-
 }
 
 add_action('after_setup_theme','upfw_engines_init',10);
