@@ -6,31 +6,11 @@
  * Options for the UpThemes Framework.
  *
  * @package 	UpThemes Framework
- * @copyright	Copyright (c) 2011, Chip Bennett
+ * @copyright	Copyright (c) 2013, UpThemes
  * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License, v2 (or newer)
  *
  * @since 		upfw 1.0
  */
-
-/**
- * Register Theme Settings
- *
- * Register theme options array to hold all theme options.
- *
- * @link	http://codex.wordpress.org/Function_Reference/register_setting	Codex Reference: register_setting()
- *
- * @param	string		$option_group		Unique Settings API identifier; passed to settings_fields() call
- * @param	string		$option_name		Name of the wp_options database table entry
- * @param	callback	$sanitize_callback	Name of the callback function in which user input data are sanitized
- */
-register_setting(
-	// $option_group
-	"theme_" . upfw_get_current_theme_id() . "_options",
-	// $option_name
-	"theme_" . upfw_get_current_theme_id() . "_options",
-	// $sanitize_callback
-	'upfw_options_validate'
-);
 
 /**
  * Register Global Admin Javascript Variables
@@ -66,119 +46,106 @@ function upfw_register_admin_js_globals(){
 }
 
 add_action('admin_enqueue_scripts','upfw_register_admin_js_globals',1);
-//add_action('admin_head','do_awesome',1);
 
 /**
- * Theme register_setting() sanitize callback
+ * Validate and sanitize options on save
  *
- * Validate and whitelist user-input data before updating Theme
- * Options in the database. Only whitelisted options are passed
- * back to the database, and user-input data for all whitelisted
- * options are sanitized.
+ * This function iterates through our options, sanitizes them, and
+ * saves them to the database.
  *
- * @link	http://codex.wordpress.org/Data_Validation	Codex Reference: Data Validation
- *
- * @param	array	$input	Raw user-input data submitted via the Theme Settings page
- * @return	array	$input	Sanitized user-input data passed to the database
- *
- * @global	array	Settings Page Tab definitions
+ * @uses has_filter()
+ * @uses apply_filters()
  *
  */
 function upfw_options_validate( $input ) {
 
-	global $up_tabs;
+        global $up_tabs;
 
-	// This is the "whitelist": current settings
-	$valid_input = (array) upfw_get_options();
-	// Get the array of Theme settings, by Settings Page tab
-	$settingsbytab = upfw_get_settings_by_tab();
-	// Get the array of option parameters
-	$option_parameters = upfw_get_option_parameters();
-	// Get the array of option defaults
-	$option_defaults = upfw_get_option_defaults();
-	// Get list of tabs
+        // This is the "whitelist": current settings
+        $valid_input = (array) upfw_get_options();
+        // Get the array of Theme settings, by Settings Page tab
+        $settingsbytab = upfw_get_settings_by_tab();
+        // Get the array of option parameters
+        $option_parameters = upfw_get_option_parameters();
+        // Get the array of option defaults
+        $option_defaults = upfw_get_option_defaults();
+        // Get list of tabs
 
-	// Determine what type of submit was input
-	$submittype = 'submit';
-	foreach ( $up_tabs as $tab ) {
-		$resetname = 'reset-' . $tab['name'];
-		if ( ! empty( $input[$resetname] ) ) {
-			$submittype = 'reset';
-		}
-	}
+        // Determine what type of submit was input
+        $submittype = 'submit';
+        foreach ( $up_tabs as $tab ) {
+                $resetname = 'reset-' . $tab['name'];
+                if ( ! empty( $input[$resetname] ) ) {
+                        $submittype = 'reset';
+                }
+        }
 
-	// Determine what tab was input
-	$submittab = '';
-	foreach ( $up_tabs as $tab ) {
-		$submitname = 'submit-' . $tab['name'];
-		$resetname = 'reset-' . $tab['name'];
-		if ( ! empty( $input[$submitname] ) || ! empty($input[$resetname] ) ) {
-			$submittab = $tab['name'];
-		}
-	}
-	// Get settings by tab
-	$tabsettings = $settingsbytab[$submittab];
+        // Determine what tab was input
+        $submittab = '';
+        foreach ( $up_tabs as $tab ) {
+                $submitname = 'submit-' . $tab['name'];
+                $resetname = 'reset-' . $tab['name'];
+                if ( ! empty( $input[$submitname] ) || ! empty($input[$resetname] ) ) {
+                        $submittab = $tab['name'];
+                }
+        }
+        // Get settings by tab
+        $tabsettings = $settingsbytab[$submittab];
 
-	// Loop through each tab setting
-	foreach ( $tabsettings as $setting ) {
+        // Loop through each tab setting
+        foreach ( $tabsettings as $setting ) {
 
-		// If no option is selected, set the default
-		$valid_input[$setting] = ( ! isset( $input[$setting] ) ? $option_defaults[$setting] : $input[$setting] );
+                // If no option is selected, set the default
+                $valid_input[$setting] = ( ! isset( $input[$setting] ) ? $option_defaults[$setting] : $input[$setting] );
 
-		// If submit, validate/sanitize $input
-		if ( 'submit' == $submittype ) {
+                // If submit, validate/sanitize $input
+                if ( 'submit' == $submittype ) {
 
-			// Get the setting details from the defaults array
-			$optiondetails = $option_parameters[$setting];
-			// Get the array of valid options, if applicable
-			$valid_options = ( isset( $optiondetails['valid_options'] ) ? $optiondetails['valid_options'] : false );
+                    // Get the setting details from the defaults array
+                    $option = $option_parameters[$setting];
 
-			// Validate checkbox fields
-			if ( 'checkbox' == $optiondetails['type'] ) {
-				// If input value is set and is true, return true; otherwise return false
-				if( is_array($input[$setting]) ):
-					foreach($input[$setting] as $key => $checkbox):
-						$valid_input[$setting][$key] = ( ( isset( $checkbox ) && 'on' == $checkbox ) ? true : false );
-					endforeach;
-				else:
-					$valid_input[$setting] = ( ( isset( $input[$setting] ) && true == $input[$setting] ) ? true : false );
-				endif;
-			}
-			// Validate radio button fields
-			else if ( 'radio' == $optiondetails['type'] ) {
-				// Only update setting if input value is in the list of valid options
-				$valid_input[$setting] = ( array_key_exists( $input[$setting], $valid_options ) ? $input[$setting] : $valid_input[$setting] );
-			}
-			// Validate select fields
-			else if ( 'select' == $optiondetails['type'] ) {
-				// Only update setting if input value is in the list of valid options
-				$valid_input[$setting] = ( array_key_exists( $setting, $valid_options ) ? $input[$setting] : $valid_input[$setting] );
-			}
-			else if ( 'multiple' == $optiondetails['type'] ) {
-				// Only update setting if input value is in the list of valid options
-				$valid_input[$setting] = ( array_key_exists( $setting, $valid_options ) ? $input[$setting] : $valid_input[$setting] );
-			}
-			// Validate text input and textarea fields
-			else if ( ( 'text' == $optiondetails['type'] || 'textarea' == $optiondetails['type'] ) ) {
-				// Validate no-HTML content
-				if ( 'nohtml' == $optiondetails['sanitize'] ) {
-					// Pass input data through the wp_filter_nohtml_kses filter
-					$valid_input[$setting] = wp_filter_nohtml_kses( $input[$setting] );
-				}
-				// Validate HTML content
-				if ( 'html' == $optiondetails['sanitize'] ) {
-					// Pass input data through the wp_filter_kses filter
-					$valid_input[$setting] = wp_filter_kses( $input[$setting] );
-				}
-			}
-		}
-		// If reset, reset defaults
-		elseif ( 'reset' == $submittype ) {
-			// Set $setting to the default value
-			$valid_input[$setting] = $option_defaults[$setting];
-		}
-	}
-	return $valid_input;
+                    // Get the array of valid options, if applicable
+                    $valid_options = ( isset( $option['valid_options'] ) ? $option['valid_options'] : false );
+
+	                if ( ! isset( $option['name'] ) ) {
+	                        continue;
+	                }
+
+	                if ( ! isset( $option['type'] ) ) {
+	                        continue;
+	                }
+
+	                $setting = preg_replace( '/[^a-zA-Z0-9._\-]/', '', strtolower( $option['name'] ) );
+
+	                // Set checkbox to false if it wasn't sent in the $_POST
+	                if ( 'checkbox' == $option['type'] && ! isset( $input[$setting] ) ) {
+	                        $input[$setting] = false;
+	                }
+
+	                // Set each item in the multicheck to false if it wasn't sent in the $_POST
+	                if ( 'multicheck' == $option['type'] && ! isset( $input[$setting] ) ) {
+	                        foreach ( $option['valid_options'] as $key => $value ) {
+	                            $input[$setting][$key] = false;
+	                        }
+	                }
+
+	                // For a value to be submitted to database it must pass through a sanitization filter
+	                if ( has_filter( 'upfw_sanitize_' . $option['type'] ) ) {
+	                        $clean[$setting] = apply_filters( 'upfw_sanitize_' . $option['type'], $input[$setting], $option );
+	                }
+
+                }
+                // If reset, reset defaults
+                elseif ( 'reset' == $submittype ) {
+                        // Set $setting to the default value
+                        $clean[$setting] = $option_defaults[$setting];
+                }
+        }
+
+		// Hook to run after validation
+		do_action( 'upfw_after_validate', $clean );
+
+        return $clean;
 
 }
 
@@ -205,27 +172,27 @@ global $up_tabs;
  * @param	string		$pageid		Name of the Settings page to which to add the section; passed to do_settings_sections()
  */
 if ($up_tabs) {
-    foreach ( $up_tabs as $tab ) {
-    	$tabname = $tab['name'];
-    	$tabsections = $tab['sections'];
-    	foreach ( $tabsections as $section ) {
-    		$sectionname = $section['name'];
-    		$sectiontitle = $section['title'];
+	foreach ( $up_tabs as $tab ) {
+		$tabname = $tab['name'];
+		$tabsections = $tab['sections'];
+		foreach ( $tabsections as $section ) {
+			$sectionname = $section['name'];
+			$sectiontitle = $section['title'];
 
-    		// Add settings section
-    		add_settings_section(
-    			// $sectionid
-    			'upfw_' . $sectionname . '_section',
-    			// $title
-    			$sectiontitle,
-    			// $callback
-    			'upfw_sections_callback',
-    			// $pageid
-    			'upfw_' . $tabname . '_tab'
-    		);
+			// Add settings section
+			add_settings_section(
+				// $sectionid
+				'upfw_' . $sectionname . '_section',
+				// $title
+				$sectiontitle,
+				// $callback
+				'upfw_sections_callback',
+				// $pageid
+				'upfw_' . $tabname . '_tab'
+			);
 
-    	}
-    }
+		}
+	}
 }
 
 /**
@@ -303,7 +270,7 @@ foreach ( $option_parameters as $option ) {
 function upfw_setting_callback( $option ) {
 	global $upfw_custom_callbacks;
 
-    $upfw_options = (array) upfw_get_options();
+	$upfw_options = (array) upfw_get_options();
 
 	$option_parameters = upfw_get_option_parameters();
 	$optionname = $option['name'];
@@ -315,81 +282,57 @@ function upfw_setting_callback( $option ) {
 	$attr = $option_parameters[$option['name']];
 	$value = $upfw_options[$optionname];
 
-    //Determine the type of input field
-    switch ( $fieldtype ) {
+	//Determine the type of input field
+	switch ( $fieldtype ) {
 
-        //Render Text Input
-        case 'text': upfw_text_field($value,$attr);
-        break;
+		//Render Text Input
+		case 'text': upfw_text($value,$attr);
+		break;
 
-        //Render Custom User Text Inputs
-        case 'text_list': upfw_text_list($value,$attr);
-        break;
+		//Render textarea options
+		case 'textarea': upfw_textarea($value,$attr);
+		break;
 
-        //Render textarea options
-        case 'textarea': upfw_textarea($value,$attr);
-        break;
+		//Render wordpress editor options
+		case 'editor': upfw_editor($value,$attr);
+		break;
 
-        //Render wordpress editor options
-        case 'editor': upfw_editor($value,$attr);
-        break;
+		//Render select dropdowns
+		case 'select': upfw_select($value,$attr);
+		break;
 
-        //Render select dropdowns
-        case 'select': upfw_select($value,$attr);
-        break;
+		//Render radio image dropdowns
+		case 'radio': upfw_radio($value,$attr);
+		break;
 
-        //Render radio image dropdowns
-        case 'radio': upfw_radio($value,$attr);
-        break;
+		//Render radio image dropdowns
+		case 'radio_image': upfw_radio_image($value,$attr);
+		break;
 
-        //Render radio image dropdowns
-        case 'radio_image': upfw_radio_image($value,$attr);
-        break;
+		//Render checkboxes
+		case 'multicheck': upfw_multicheck($value,$attr);
+		break;
 
-        //Render multple selects
-        case 'multiple': upfw_multiple($value,$attr);
-        break;
+		//Render color picker
+		case 'color': upfw_color($value,$attr);
+		break;
 
-        //Render checkboxes
-        case 'checkbox': upfw_checkbox($value,$attr);
-        break;
+		//Render upload image
+		case 'image': upfw_image($value,$attr);
+		break;
 
-        //Render color picker
-        case 'color': upfw_color($value,$attr);
-        break;
+		//Render upload
+		case 'upload': upfw_upload($value,$attr);
+		break;
 
-        //Render upload image
-        case 'image': upfw_image($value,$attr);
-        break;
+		default:
+		break;
+	}
 
-        //Render category dropdown
-        case 'category': upfw_category($value,$attr);
-        break;
+	// Check if there is a callback to envoke for custom fields
+	if (isset($upfw_custom_callbacks[$fieldtype])) {
+		$custom_field_name = 'theme_' . upfw_get_current_theme_id() . '_options[' . $attr['name'] . ']';
 
-        //Render categories multiple select
-        case 'categories': upfw_categories($value,$attr);
-        break;
-
-        //Render page dropdown
-        case 'page': upfw_page($value,$attr);
-        break;
-
-        //Render pages muliple select
-        case 'pages': upfw_pages($value,$attr);
-        break;
-
-        //Render taxonomy multiple select
-        case 'taxonomy': upfw_taxonomy($value,$attr);
-        break;
-
-        default:
-        break;
-    }
-
-    // Check if there is a callback to envoke for custom fields
-    if (isset($upfw_custom_callbacks[$fieldtype])) {
-        $custom_field_name = 'theme_' . upfw_get_current_theme_id() . '_options[' . $attr['name'] . ']';
-
-        call_user_func($upfw_custom_callbacks[$fieldtype], $value, $attr, $custom_field_name);
-    }
+		call_user_func($upfw_custom_callbacks[$fieldtype], $value, $attr, $custom_field_name);
+	}
 }

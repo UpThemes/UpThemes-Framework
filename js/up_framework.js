@@ -11,7 +11,9 @@
       if ("" === colorPicker.val().replace("#", "")) {
           colorPicker.val(default_color);
           pickColor(default_color);
-      } else pickColor(colorPicker.val());
+      } else {
+        pickColor(colorPicker.val());
+      }
   }
 
   var default_color = "fbfbfb";
@@ -29,31 +31,14 @@
     });
 
     colorPicker.click(toggle_text);
-    if( colorPicker.length ) toggle_text();
+    if( colorPicker.length ) {
+      toggle_text();
+    }
 
     $('.imageWrapper').each(function(i){
-    	if( $(this).find('input[type="text"]').val() )
+    	if( $(this).find('input[type="text"]').val() ){
 				$(this).find('.image_preview').html('<img src="'+$(this).find('input[type="text"]').val()+'" alt="">');
-		});
-
-		$('.add_text_list').find('a').live('click', function(e){
-
-			var $clone = $(this).parents('td').find('div.text_list').find('.entry').eq(0).clone();
-
-			$(this).parents('td').find('div.text_list').append($clone).find('input:last').val('');
-
-		    return false;
-		});
-
-		$('.text_list').find('.delete_text_list').live('click',function(e){
-
-			if( $(this).parents('.text_list').find('.entry').length > 1 )
-				$(this).parents('.entry').remove();
-			else
-				$(this).parents('.entry').find('input').val('');
-
-		    return false;
-
+      }
 		});
 
 	});

@@ -1,113 +1,5 @@
 <?php
 
-global $up_theme_options;
-
-$up_theme_options = array();
-
-/**
-* UpThemes Framework Version
-*/
-define('UPTHEMES_VER', '2.3.1');
-
-function register_theme_options( $options ){
-    global $up_theme_options;
-    $up_theme_options = array_merge( $up_theme_options, $options );
-}
-
-function register_theme_option_tab( $args ){
-    global $up_tabs;
-    extract( $args );
-    if($name):
-        $up_tabs[] = $args;
-        return true;
-    endif;
-}
-
-/**
- * Define Theme Title Constant
- *
- * Set up the constant named THEME_TITLE
- *
- * @link	http://codex.wordpress.org/Function_Reference/register_setting	Codex Reference: register_setting()
- *
- * @uses  wp_get_theme()            http://codex.wordpress.org/Function_Reference/wp_get_theme	Codex Reference: wp_get_theme()
- * @uses  get_template_directory()  http://codex.wordpress.org/Function_Reference/get_template_directory	Codex Reference: get_template_directory()
- * @param	array		$themedata		    Holds the theme object
- * @param	string	$theme_title	    Name of the current theme
- */
-function upfw_define_theme_title(){
-	$themedata = wp_get_theme();
-	$theme_title = $themedata->title;
-
-	if( !defined('THEME_TITLE') )
-		define('THEME_TITLE',$theme_title);
-}
-
-add_action('after_setup_theme','upfw_define_theme_title');
-
-/**
- * Return current theme ID
- *
- * Checks theme data for theme ID and returns it
- *
- * @uses  wp_get_theme()              http://codex.wordpress.org/Function_Reference/wp_get_theme	Codex Reference: wp_get_theme()
- * @uses  get_template_directory()    http://codex.wordpress.org/Function_Reference/get_template_directory	Codex Reference: get_template_directory()
- * @param	array		$themedata		      Holds the theme object
- * @param	string	$theme_title	      Name of current theme
- *
- * @returns  string $theme_shortname  Name of current theme
- */
-function upfw_get_current_theme_id(){
-	$themedata = wp_get_theme();
-	$theme_title = $themedata->title;
-
-	$theme_shortname = strtolower(preg_replace('/ /', '_', $theme_title));
-
-	return $theme_shortname;
-}
-
-function upfw_get_theme_options_directory_uri(){
-  return trailingslashit( trailingslashit( get_template_directory_uri() ) . basename( dirname(__FILE__) ) );
-}
-
-/**
-* Gentlemen, start your engines
-*/
-function upfw_engines_init(){
-	include_once('library/theme-customizer.php');
-}
-
-add_action('after_setup_theme','upfw_engines_init',10);
-
-/**
-* Add CSS and Javascript includes
-*/
-function upfw_enqueue_scripts_styles(){
-
-	wp_enqueue_style('up_framework',upfw_get_theme_options_directory_uri() . "css/up_framework.css");
-
-	wp_enqueue_script( 'wp-color-picker' );
-	wp_enqueue_style( 'wp-color-picker' );
-
-	wp_enqueue_script('up_framework', upfw_get_theme_options_directory_uri() . "js/up_framework.js", array('jquery'));
-
-	// This function loads in the required media files for the media manager.
-	wp_enqueue_media();
-
-  // Register, localize and enqueue our custom JS.
-  wp_register_script( 'upfw-nmp-media', upfw_get_theme_options_directory_uri() . 'js/media.js', array( 'jquery' ), '1.0.0', true );
-  wp_localize_script( 'upfw-nmp-media', 'upfw_nmp_media',
-      array(
-          'title'     => __( 'Upload or Choose Your Custom Image File', 'upfw' ), // This will be used as the default title
-          'button'    => __( 'Insert Image into Input Field', 'upfw' )            // This will be used as the default button text
-      )
-  );
-  wp_enqueue_script( 'upfw-nmp-media' );
-
-}
-
-add_action('admin_print_scripts-appearance_page_upfw-settings','upfw_enqueue_scripts_styles',40);
-
 /**
  * UpThemes Framework Theme Options
  *
@@ -121,7 +13,7 @@ add_action('admin_print_scripts-appearance_page_upfw-settings','upfw_enqueue_scr
  *  - Register Contextual Help
  *
  * @package 	UpThemes Framework
- * @copyright	Copyright (c) 2011, Chip Bennett
+ * @copyright	Copyright (c) 2013, UpThemes
  * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License, v2 (or newer)
  *
  * @since 		upfw 1.0
@@ -133,6 +25,102 @@ add_action('admin_print_scripts-appearance_page_upfw-settings','upfw_enqueue_scr
  * @global	array	$up_theme_options	holds Theme options
  */
 global $up_theme_options;
+
+$up_theme_options = array();
+
+/**
+* UpThemes Framework Version
+*/
+define('UPTHEMES_VER', '2.4');
+
+function register_theme_options( $options ) {
+	global $up_theme_options;
+	$up_theme_options = array_merge( $up_theme_options, $options );
+}
+
+function register_theme_option_tab( $args ) {
+	global $up_tabs;
+	extract( $args );
+	if($name):
+		$up_tabs[] = $args;
+		return true;
+	endif;
+}
+
+/**
+ * Define Theme Title Constant
+ *
+ * Set up the constant named THEME_TITLE
+ *
+ * @link	http://codex.wordpress.org/Function_Reference/register_setting	Codex Reference: register_setting()
+ *
+ * @uses	wp_get_theme()			http://codex.wordpress.org/Function_Reference/wp_get_theme	Codex Reference: wp_get_theme()
+ * @param	array	$theme		    Holds the theme object
+ * @param	string	$theme_title	Name of the current theme
+ */
+function upfw_define_theme_title() {
+	$theme = wp_get_theme();
+
+	if( !defined('THEME_TITLE') )
+		define('THEME_TITLE',$theme->title);
+}
+
+add_action('after_setup_theme','upfw_define_theme_title',5);
+
+/**
+ * Return current theme ID
+ *
+ * Checks theme data for theme ID and returns it
+ *
+ * @uses	wp_get_theme()			http://codex.wordpress.org/Function_Reference/wp_get_theme	Codex Reference: wp_get_theme()
+ * @param	array	$theme		    Holds the theme object
+ * @param	string	$theme_title	Name of the current theme
+ *
+ * @return	string $theme_shortname  Name of current theme
+ */
+function upfw_get_current_theme_id() {
+	$theme = wp_get_theme();
+
+	$theme_shortname = strtolower(preg_replace('/ /', '_', $theme->title));
+
+	return $theme_shortname;
+}
+
+function upfw_get_theme_options_directory() {
+	return dirname(__FILE__);
+}
+
+function upfw_get_theme_options_directory_uri() {
+	return trailingslashit( trailingslashit( get_template_directory_uri() ) . basename( dirname(__FILE__) ) );
+}
+
+/**
+* Add CSS and Javascript includes
+*/
+function upfw_enqueue_scripts_styles() {
+
+	wp_enqueue_style('up_framework',upfw_get_theme_options_directory_uri() . "css/up_framework.css");
+
+	wp_enqueue_script( 'wp-color-picker' );
+	wp_enqueue_style( 'wp-color-picker' );
+
+	wp_enqueue_script('up_framework', upfw_get_theme_options_directory_uri() . "js/up_framework.js", array('jquery'));
+
+	// This function loads in the required media files for the media manager.
+	wp_enqueue_media();
+
+	// Register, localize and enqueue our custom JS.
+	wp_register_script( 'upfw-nmp-media', upfw_get_theme_options_directory_uri() . 'js/media.js', array( 'jquery' ), '1.0.0', true );
+	wp_localize_script( 'upfw-nmp-media', 'upfw_nmp_media',
+		array(
+			'title'     => __( 'Upload or Choose Your Custom Image File', 'upfw' ), // This will be used as the default title
+			'button'    => __( 'Insert Image into Input Field', 'upfw' )            // This will be used as the default button text
+		)
+	);
+	wp_enqueue_script( 'upfw-nmp-media' );
+
+}
+
 /**
  * upfw Theme Settings API Implementation
  *
@@ -143,17 +131,42 @@ global $up_theme_options;
  * @link	http://ottopress.com/2009/wordpress-settings-api-tutorial/	Otto
  * @link	http://planetozh.com/blog/2009/05/handling-plugins-options-in-wordpress-28-with-register_setting/	Ozh
  */
-function upfw_register_options(){
-	include_once( 'library/options-register.php' );
-	include_once( 'library/custom.php' );
+function upfw_rolescheck() {
+
+	if( current_user_can( 'edit_theme_options' )  ){
+		// If the user can edit theme options, load the UpThemes framework
+
+		// Load the functionality for theme options page
+		add_action( 'admin_menu', 'upfw_add_theme_page' );
+		add_action( 'admin_init', 'upfw_init' );
+		add_action('admin_print_scripts-appearance_page_upfw-settings','upfw_enqueue_scripts_styles',40);
+
+	}
+
 }
 // Settings API options initilization and validation
-add_action( 'admin_init', 'upfw_register_options' );
+add_action( 'init', 'upfw_rolescheck' );
+
+function upfw_init(){
+	include_once( dirname( __FILE__ ) . '/library/theme-customizer.php' );
+	include_once( dirname( __FILE__ ) . '/library/options-sanitize.php' );
+	include_once( dirname( __FILE__ ) . '/library/options-register.php' );
+	include_once( dirname( __FILE__ ) . '/library/custom.php' );
+
+	register_setting(
+		// $option_group
+		"theme_" . upfw_get_current_theme_id() . "_options",
+		// $option_name
+		"theme_" . upfw_get_current_theme_id() . "_options",
+		// $sanitize_callback
+		'upfw_options_validate'
+	);
+}
 
 /**
  * Setup the Theme Admin Settings Page
  *
- * Add "upfw Options" link to the "Appearance" menu
+ * Add "Theme Options" link to the "Appearance" menu
  *
  * @uses	upfw_get_settings_page_cap()	defined in \functions\wordpress-hooks.php
  */
@@ -179,8 +192,6 @@ function upfw_add_theme_page() {
 		'upfw_admin_options_page'
 	);
 }
-// Load the Admin Options page
-add_action( 'admin_menu', 'upfw_add_theme_page' );
 
 /**
  * upfw Theme Settings Page Markup
@@ -199,7 +210,7 @@ function upfw_admin_options_page() {
 	<div class="wrap">
 		<?php upfw_get_page_tab_markup(); ?>
 		<?php if ( isset( $_GET['settings-updated'] ) ) {
-    			echo '<div class="updated"><p>';
+				echo '<div class="updated"><p>';
 				echo __( 'Theme settings updated successfully.', 'upfw' );
 				echo '</p></div>';
 		} ?>
@@ -294,46 +305,8 @@ function upfw_get_option_default($name) {
  */
 function upfw_get_option_parameters() {
 	global $up_theme_options;
-    return $up_theme_options;
+	return $up_theme_options;
 }
-
-/**
- * upfw Migrate Theme Options
- *
- * For users who are upgrading from an older theme
- * that uses the UpThemes Framework, this function
- * checks for the existence of the old theme option
- * array and renames it to the new theme option
- * array.
- */
-
-function upfw_migrate_theme_options(){
-
-	if( is_admin() && isset($_GET['activated'] ) && $pagenow == 'themes.php' ):
-
-		$theme_key = "theme_" . upfw_get_current_theme_id() . "_options";
-
-		$old_upfw_options = get_option("up_themes_".UPTHEMES_SHORT_NAME);
-		$new_upfw_options = get_option($theme_key);
-
-		if( $old_upfw_options === false )
-			return;
-
-		if( !$new_upfw_options && $old_upfw_options ):
-
-			if( !update_option($theme_key, $old_upfw_options) )
-				wp_die( __("Could not update theme options.","upfw") );
-
-			if( get_option($theme_key) === $old_upfw_options )
-				delete_option("up_themes_".UPTHEMES_SHORT_NAME);
-
-		endif;
-
-	endif;
-
-}
-
-add_action('switch_themes','upfw_migrate_theme_options');
 
 /**
  * Get upfw Theme Options
@@ -420,300 +393,150 @@ add_action( 'option_page_capability_upfw-settings', 'upfw_get_settings_page_cap'
 
 global $upfw_custom_callbacks;
 
-function upfw_add_custom_field($type = null, $callback = null)
-{
-    // don't do anything if they don't input the correct args
-    if (is_null($type) or is_null($callback)) {
-        return false;
-    }
+function upfw_add_custom_field($type = null, $callback = null) {
+	// don't do anything if they don't input the correct args
+	if (is_null($type) or is_null($callback)) {
+		return false;
+	}
 
-    // check to see if $callback is an actual function
-    // we only want to add the callback if the function exists
-    if (function_exists($callback)) {
-        global $upfw_custom_callbacks;
+	// check to see if $callback is an actual function
+	// we only want to add the callback if the function exists
+	if (function_exists($callback)) {
+		global $upfw_custom_callbacks;
 
-        // for right now we will override any previous callbacks added
-        $upfw_custom_callbacks[$type] = $callback;
-    }
+		// for right now we will override any previous callbacks added
+		$upfw_custom_callbacks[$type] = $callback;
+	}
 }
 
 
-function upfw_text_field($value,$attr){ ?>
+function upfw_text($value,$attr) { ?>
 
-	<input type="text" name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]" value="<?php echo $value; ?>">
+	<input type="text" name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>]" value="<?php echo esc_attr( $value ); ?>">
 
 <?php
 }
 
-function upfw_text_list($value,$attr){ ?>
-
-    <div class="text_list">
-        <?php
-        if( isset( $value ) ) :
-            if( is_array( $value ) ):
-                foreach( $value as $text ):?>
-                    <div class="entry">
-                        <input class="text_list" type="text" name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>][]" value="<?php echo $text?>" />
-                        <span class="delete_text_list"><a href="#"><img src="<?php echo upfw_get_theme_options_directory_uri(); ?>images/upfw_ico_delete.png" alt="Delete Text Field" /></a></span>
-                        <div class="clear"></div>
-                    </div>
-                <?php endforeach;
-            endif;
-        else:
-            if( isset( $value['value'] ) ) :
-                if(preg_match('/,/', $value['value'])):
-                    $list = explode(', ', $value['value']);
-                    foreach($list as $text):?>
-                            <div class="entry">
-                                <input class="text_list" type="text" name="<?php echo $attr['name']; ?>[]" id="<?php echo $attr['name']; ?>" value="<?php echo $text?>" <?php echo $attr; ?> />
-                                <span class="delete_text_list"><a href="#"><img src="<?php echo upfw_get_theme_options_directory_uri(); ?>images/upfw_ico_delete.png" alt="Delete Text Field" /></a></span>
-                                <div class="clear"></div>
-                            </div>
-                    <?php endforeach;
-                else:
-                    if($value['value'] == $v ):
-                        $selected = ' selected = "selected"';
-                    endif;
-                endif;
-            endif;
-        endif;?>
-
-    </div>
-
-	<?php $add_text = __('Add New Field', 'upfw');?>
-	<p class="add_text_list"><a href="#"><?php echo $add_text;?></a></p>
-
-<?php
-}
-
-function upfw_textarea($value,$attr){ ?>
-	<textarea name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]" cols="48" rows="8"><?php echo $value; ?></textarea>
+function upfw_textarea($value,$attr) { ?>
+	<textarea name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>]" cols="48" rows="8"><?php echo esc_attr( $value ); ?></textarea>
 <?php
 }
 
 function upfw_editor($value, $attr) {
-    // setup some basic variables to help
-    $theme_id = upfw_get_current_theme_id();
-    $name = $attr['name'];
+	// setup some basic variables to help
+	$theme_id = upfw_get_current_theme_id();
+	$name = $attr['name'];
 
-    // remap some of the $attr keys to wp_editor keys
-    // more settings can be remapped once they are needed
-    $editor_settings = array(
-        'textarea_name' => "theme_{$theme_id}_options[{$name}]"
-    );
+	// remap some of the $attr keys to wp_editor keys
+	// more settings can be remapped once they are needed
+	$editor_settings = array(
+		'textarea_name' => "theme_{$theme_id}_options[{$name}]"
+	);
 
-    // WordPress Editor generator
-    wp_editor($value, $attr['id'], $editor_settings);
+	// WordPress Editor generator
+	wp_editor($value, $attr['id'], $editor_settings);
 }
 
-function upfw_select($value,$attr){ ?>
-<select name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]">
-    <?php
-    if ( isset( $attr['valid_options'] ) ) :
-        $options = $attr['valid_options'];
-        foreach( $options as $option ) :
-        ?>
-            <option value="<?php echo $option['name']; ?>" <?php selected($option['name'],$value); ?>><?php echo $option['title']; ?></option>
+function upfw_select($value,$attr) { ?>
+<select name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>]">
+	<?php
+	if ( isset( $attr['valid_options'] ) ) :
+		$options = $attr['valid_options'];
+		foreach( $options as $option ) :
+		?>
+			<option value="<?php echo esc_attr( $option['name'] ); ?>" <?php selected($option['name'],$value); ?>><?php echo esc_html( $option['title'] ); ?></option>
 			<?php
 		endforeach;
 	else:
 		_e("This option has no valid options. Please create valid options as an array inside the UpThemes Framework.","upfw");
-    endif;
-    ?>
+	endif;
+	?>
 </select>
 <?php
 }
 
-function upfw_radio_image($value,$attr){ ?>
-    <?php
-    if ( isset( $attr['valid_options'] ) ) :
-        $options = $attr['valid_options'];
-        foreach( $options as $option ) :
-        ?>
-    <label class="radio_image">
-    <input type="radio" name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]" value="<?php echo $option['name']; ?>" <?php checked($option['name'],$value); ?>>
-      <?php if( $option['image'] ) echo '<img src="' . $option['image'] . '">'; ?>
-    </label>
+function upfw_radio_image($value,$attr) { ?>
+	<?php
+	if ( isset( $attr['valid_options'] ) ) :
+		$options = $attr['valid_options'];
+		foreach( $options as $option ) :
+		?>
+	<label class="radio_image">
+	<input type="radio" name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>]" value="<?php echo esc_attr( $option['name'] ); ?>" <?php checked($option['name'],$value); ?>>
+	  <?php if( $option['image'] ) echo '<img src="' . esc_url( $option['image'] ) . '">'; ?>
+	</label>
 			<?php
 		endforeach;
 	else:
 		_e("This option has no valid options. Please create valid options as an array inside the UpThemes Framework.","upfw");
-    endif;
-    ?>
+	endif;
+	?>
 </select>
 <?php
 }
 
-function upfw_radio($value,$attr){ ?>
-    <?php
-    if ( isset( $attr['valid_options'] ) ) :
-        $options = $attr['valid_options'];
-        foreach( $options as $option ) :
-        ?>
-    <label class="radio">
-      <input type="radio" name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]" value="<?php echo $option['name']; ?>" <?php checked($option['name'],$value); ?>> <?php echo $option['title']; ?>
-    </label>
+function upfw_radio($value,$attr) { ?>
+	<?php
+	if ( isset( $attr['valid_options'] ) ) :
+		$options = $attr['valid_options'];
+		foreach( $options as $option ) :
+		?>
+	<label class="radio">
+	  <input type="radio" name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>]" value="<?php echo esc_attr( $option['name'] ); ?>" <?php checked( esc_attr( $option['name'] ), esc_attr( $value ) ); ?>> <?php echo esc_attr( $option['title'] ); ?>
+	</label>
 			<?php
 		endforeach;
 	else:
 		_e("This option has no valid options. Please create valid options as an array inside the UpThemes Framework.","upfw");
-    endif;
-    ?>
+	endif;
+	?>
 </select>
 <?php
 }
 
-function upfw_multiple($value,$attr){ ?>
+function upfw_multiple($value,$attr) { ?>
 
-    <select name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>][]" multiple>
-        <?php
+	<select name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>][]" multiple>
+		<?php
 		if ( isset( $attr['valid_options'] ) ) :
-		    $options = $attr['valid_options'];
-		    foreach( $options as $option_key => $option_value ) : ?>
-                <option value="<?php echo $option_value['name']; ?>" <?php selected( in_array($option_value['name'],$value) ); ?>><?php echo $option_value['title']; ?></option>
+			$options = $attr['valid_options'];
+			foreach( $options as $option_key => $option_value ) : ?>
+				<option value="<?php esc_attr( $option_value['name'] ); ?>" <?php selected( in_array($option_value['name'],$value) ); ?>><?php echo esc_html( $option_value['title'] ); ?></option>
 		<?php endforeach;
 		endif;
-        ?>
-    </select>
+		?>
+	</select>
 <?php
 }
 
-function upfw_checkbox($value,$attr){
+function upfw_multicheck($value,$attr) {
 
 	if ( isset( $attr['valid_options'] ) ) :
-	    $options = $attr['valid_options'];
-	    foreach( $options as $option_key => $option_value ) : ?>
-			<input type="checkbox" <?php checked($value[$option_value['name']]);?> name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>][<?php echo $option_value['name']; ?>]">
-	        <label for="<?php echo $option_value['name']; ?>"><?php echo $option_value['title'];?></label><br>
+		$options = $attr['valid_options'];
+		foreach( $options as $option_key => $option_value ) : ?>
+			<input type="checkbox" <?php checked($value[$option_value['name']]);?> name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>][<?php echo esc_attr( $option_value['name'] ) ?>]">
+			<label for="<?php echo esc_html( $option_value['name'] ) ?>"><?php echo esc_html( $option_value['title'] ); ?></label><br>
 	<?php endforeach;
 	endif;
 
 }
 
-function upfw_color($value,$attr){ ?>
+function upfw_color($value,$attr) { ?>
 
-    <span class="colorPickerWrapper">
-        <input type="text" class="popup-colorpicker" id="<?php echo $attr['name']; ?>" name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]" value="<?php echo $value; ?>" />
-    </span>
+	<span class="colorPickerWrapper">
+		<input type="text" class="popup-colorpicker" id="<?php echo esc_attr( $attr['name'] ); ?>" name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>]" value="<?php echo esc_attr( $value ); ?>" />
+	</span>
 
 <?php
 }
 
-function upfw_image($value,$attr){ ?>
+function upfw_upload($value,$attr) { ?>
 
-	<div id="<?php echo $attr['name']; ?>_container" class="imageWrapper">
-		<input type="text" class="upfw-open-media" id="<?php echo $attr['name']; ?>" name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]" value="<?php echo $value; ?>">
-		<input class="upfw-open-media button button-primary" type="submit" value="Upload or Select Image" />
+	<div id="<?php echo esc_html( $attr['name'] ); ?>_container" class="imageWrapper">
+		<input type="text" class="upfw-open-media" id="<?php echo esc_attr( $attr['name'] ); ?>" name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>]" value="<?php echo esc_attr( $value ); ?>">
+		<input class="upfw-open-media button button-primary" type="submit" value="<?php esc_attr_e('Upload or Select a File','upfw'); ?>" />
 		<div class="image_preview"></div>
 	</div>
 
 <?php
-}
-
-function upfw_category($value,$attr){
-    global $wpdb;
-?>
-
-    <select name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]" id="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]">
-        <?php
-		$categories = upfw_get_category_list();
-		foreach ( $categories as $cat ) {
-			echo '<option value="' . $cat['name'] . '"' . selected( $cat['name'] == $attr['name'] || $cat['name'] == $attr['value'] ) . '>' . $cat['title'] . '</option>';
-		}
-        ?>
-    </select>
-
-<?php
-}
-
-function upfw_categories($value,$attr){
-    global $wpdb;
-?>
-
-<select name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]" id="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]" multiple>
-    <?php
-    $i = $wpdb->get_results("SELECT $wpdb->terms.name, $wpdb->terms.slug, $wpdb->term_taxonomy.term_id FROM $wpdb->terms LEFT JOIN $wpdb->term_taxonomy ON $wpdb->terms.term_id = $wpdb->term_taxonomy.term_id WHERE $wpdb->term_taxonomy.taxonomy = 'category' ORDER BY $wpdb->terms.name", ARRAY_A);
-    foreach($i as $row):
-            if($attr['name']):
-                if($row['slug'] == $attr['name']):
-                    $selected = " selected='selected'";
-                endif;
-            else:
-                if($value['value'] == $row['slug']):
-                    $selected = ' selected = "selected"';
-                endif;
-            endif;
-        echo "<option value='".$row['slug']."'".$selected.">".$row['name']."</option>";
-        $selected = '';
-    endforeach;
-    ?>
-</select>
-
-<?php
-}
-
-function upfw_page($value,$attr){
-    global $wpdb;
-?>
-
-	<select name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]" id="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]">
-	    <?php
-	    $i = $wpdb->get_results("SELECT post_title, ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type='page' ORDER BY post_title", ARRAY_A);
-	    foreach($i as $row):
-	        if($attr['name']):
-	            if($row['ID'] == $attr['name']):
-	                $selected = " selected='selected'";
-	            endif;
-	        else:
-	            if($row['post_title'] == $value['value']):
-	                $selected = " selected='selected'";
-	            endif;
-	        endif;
-	        echo "<option value='".$row['ID']."'".$selected.">".$row['post_title']."</option>";
-	        $selected = '';
-	    endforeach;
-	    ?>
-	</select>
-
-<?php
-}
-
-function upfw_pages($value,$attr){
-    global $wpdb;
-?>
-
-	<select name="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]" id="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo $attr['name']; ?>]" multiple>
-	    <?php
-	    $i = $wpdb->get_results("SELECT post_title, ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type='page' ORDER BY post_title", ARRAY_A);
-	    foreach($i as $row):
-	        if($attr['name']):
-	            if($row['ID'] == $attr['name']):
-	                $selected = " selected='selected'";
-	            endif;
-	        else:
-	            if($row['post_title'] == $value['value']):
-	                $selected = " selected='selected'";
-	            endif;
-	        endif;
-	        echo "<option value='".$row['ID']."'".$selected.">".$row['post_title']."</option>";
-	        $selected = '';
-	    endforeach;
-	    ?>
-	</select>
-
-<?php
-}
-
-function upfw_taxonomy($value,$attr){
-  global $wpdb;
-
-  $terms = get_terms( $attr['taxonomy'] );
-  if ( $terms ) {
-  	printf( '<select name="%s" class="postform">', "theme_" . upfw_get_current_theme_id() . "_options[" . $attr['name'] . "]" );
-  	foreach ( $terms as $term ) {
-  		printf( '<option value="%s" ' . selected( $term->slug, $value ) . '>%s</option>', $term->slug, $term->name );
-  	}
-  	print( '</select>' );
-  }
-
 }

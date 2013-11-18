@@ -6,7 +6,7 @@
  * helper functions and various filters.
  *
  * @package 	upfw
- * @copyright	Copyright (c) 2010 Chip Bennett
+ * @copyright	Copyright (c) 2013, UpThemes
  * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License, v2 (or newer)
  *
  * @since 		upfw 1.0
@@ -75,24 +75,6 @@ function upfw_get_context() {
 	return $context;
 }
 
-
-/**
- * Get list of categories
- */
-function upfw_get_category_list() {
-	$cat_list = get_categories();
-	$category_list = array();
-	foreach ( $cat_list as $cat ) {
-		$slug = $cat->slug;
-		$name = $cat->name;
-		$category_list[$slug] = array(
-			'name' => $slug,
-			'title' => $name
-		);
-	}
-	return $category_list;
-}
-
 /**
  * Get current settings page tab
  */
@@ -102,11 +84,11 @@ function upfw_get_current_tab() {
 
 	$first_tab = $up_tabs[0]['name'];
 
-    if ( isset( $_GET['tab'] ) ) {
-        $current = esc_attr( $_GET['tab'] );
-    } else {
-    	$current = $first_tab;
-    }
+	if ( isset( $_GET['tab'] ) ) {
+		$current = esc_attr( $_GET['tab'] );
+	} else {
+		$current = $first_tab;
+	}
 
 	return $current;
 }
@@ -130,24 +112,24 @@ function upfw_get_page_tab_markup() {
 	if ( 'upfw-settings' == $page ) {
 		$tabs = $up_tabs;
 
-    $links = array();
+	$links = array();
 
-    foreach( $tabs as $tab ) {
+	foreach( $tabs as $tab ) {
 		if( isset($tab['name']) )
 			$tabname = $tab['name'];
 		if( isset($tab['title']) )
 			$tabtitle = $tab['title'];
-        if ( $tabname == $current ) {
-            $links[] = "<a class='nav-tab nav-tab-active' href='?page=$page&tab=$tabname'>$tabtitle</a>";
-        } else {
-            $links[] = "<a class='nav-tab' href='?page=$page&tab=$tabname'>$tabtitle</a>";
-        }
-    }
+		if ( $tabname == $current ) {
+			$links[] = "<a class='nav-tab nav-tab-active' href='?page=$page&tab=$tabname'>$tabtitle</a>";
+		} else {
+			$links[] = "<a class='nav-tab' href='?page=$page&tab=$tabname'>$tabtitle</a>";
+		}
+	}
 
-    echo '<div id="icon-themes" class="icon32"><br /></div>';
-    echo '<h2 class="nav-tab-wrapper">';
-    foreach ( $links as $link )
-        echo $link;
-    echo '</h2>';
+	echo '<div id="icon-themes" class="icon32"><br /></div>';
+	echo '<h2 class="nav-tab-wrapper">';
+	foreach ( $links as $link )
+		echo $link;
+	echo '</h2>';
   }
 }
