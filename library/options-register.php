@@ -149,51 +149,6 @@ function upfw_options_validate( $input ) {
 
 }
 
-/**
- * Globalize the variable that holds
- * the Settings Page tab definitions
- *
- * @global	array	Settings Page Tab definitions
- */
-global $up_tabs;
-
-/**
- * Call add_settings_section() for each Settings
- *
- * Loop through each Theme Settings page tab, and add
- * a new section to the Theme Settings page for each
- * section specified for each tab.
- *
- * @link	http://codex.wordpress.org/Function_Reference/add_settings_section	Codex Reference: add_settings_section()
- *
- * @param	string		$sectionid	Unique Settings API identifier; passed to add_settings_field() call
- * @param	string		$title		Title of the Settings page section
- * @param	callback	$callback	Name of the callback function in which section text is output
- * @param	string		$pageid		Name of the Settings page to which to add the section; passed to do_settings_sections()
- */
-if ($up_tabs) {
-	foreach ( $up_tabs as $tab ) {
-		$tabname = $tab['name'];
-		$tabsections = $tab['sections'];
-		foreach ( $tabsections as $section ) {
-			$sectionname = $section['name'];
-			$sectiontitle = $section['title'];
-
-			// Add settings section
-			add_settings_section(
-				// $sectionid
-				'upfw_' . $sectionname . '_section',
-				// $title
-				$sectiontitle,
-				// $callback
-				'upfw_sections_callback',
-				// $pageid
-				'upfw_' . $tabname . '_tab'
-			);
-
-		}
-	}
-}
 
 /**
  * Callback for add_settings_section()
@@ -217,52 +172,102 @@ function upfw_sections_callback( $section_passed ) {
 	}
 }
 
-/**
- * Globalize the variable that holds
- * all the Theme option parameters
- *
- * @global	array	Theme options parameters
- */
-global $option_parameters;
-$option_parameters = upfw_get_option_parameters();
+function upfw_init_page(){
+	/**
+	 * Globalize the variable that holds
+	 * the Settings Page tab definitions
+	 *
+	 * @global	array	Settings Page Tab definitions
+	 */
+	global $up_tabs;
 
-/**
- * Call add_settings_field() for each Setting Field
- *
- * Loop through each Theme option, and add a new
- * setting field to the Theme Settings page for each
- * setting.
- *
- * @link	http://codex.wordpress.org/Function_Reference/add_settings_field	Codex Reference: add_settings_field()
- *
- * @param	string		$settingid	Unique Settings API identifier; passed to the callback function
- * @param	string		$title		Title of the setting field
- * @param	callback	$callback	Name of the callback function in which setting field markup is output
- * @param	string		$pageid		Name of the Settings page to which to add the setting field; passed from add_settings_section()
- * @param	string		$sectionid	ID of the Settings page section to which to add the setting field; passed from add_settings_section()
- * @param	array		$args		Array of arguments to pass to the callback function
- */
-foreach ( $option_parameters as $option ) {
-	$optionname = $option['name'];
-	$optiontitle = $option['title'];
-	$optiontab = $option['tab'];
-	$optionsection = $option['section'];
-	$optiontype = $option['type'];
-	add_settings_field(
-		// $settingid
-		'upfw_setting_' . $optionname,
-		// $title
-		$optiontitle,
-		// $callback
-		'upfw_setting_callback',
-		// $pageid
-		'upfw_' . $optiontab . '_tab',
-		// $sectionid
-		'upfw_' . $optionsection . '_section',
-		// $args
-		$option
-	);
+	/**
+	 * Call add_settings_section() for each Settings
+	 *
+	 * Loop through each Theme Settings page tab, and add
+	 * a new section to the Theme Settings page for each
+	 * section specified for each tab.
+	 *
+	 * @link	http://codex.wordpress.org/Function_Reference/add_settings_section	Codex Reference: add_settings_section()
+	 *
+	 * @param	string		$sectionid	Unique Settings API identifier; passed to add_settings_field() call
+	 * @param	string		$title		Title of the Settings page section
+	 * @param	callback	$callback	Name of the callback function in which section text is output
+	 * @param	string		$pageid		Name of the Settings page to which to add the section; passed to do_settings_sections()
+	 */
+	if ($up_tabs) {
+		foreach ( $up_tabs as $tab ) {
+			$tabname = $tab['name'];
+			$tabsections = $tab['sections'];
+			foreach ( $tabsections as $section ) {
+				$sectionname = $section['name'];
+				$sectiontitle = $section['title'];
+
+				// Add settings section
+				add_settings_section(
+					// $sectionid
+					'upfw_' . $sectionname . '_section',
+					// $title
+					$sectiontitle,
+					// $callback
+					'upfw_sections_callback',
+					// $pageid
+					'upfw_' . $tabname . '_tab'
+				);
+
+			}
+		}
+	}
+
+	/**
+	 * Globalize the variable that holds
+	 * all the Theme option parameters
+	 *
+	 * @global	array	Theme options parameters
+	 */
+	global $option_parameters;
+	$option_parameters = upfw_get_option_parameters();
+
+	/**
+	 * Call add_settings_field() for each Setting Field
+	 *
+	 * Loop through each Theme option, and add a new
+	 * setting field to the Theme Settings page for each
+	 * setting.
+	 *
+	 * @link	http://codex.wordpress.org/Function_Reference/add_settings_field	Codex Reference: add_settings_field()
+	 *
+	 * @param	string		$settingid	Unique Settings API identifier; passed to the callback function
+	 * @param	string		$title		Title of the setting field
+	 * @param	callback	$callback	Name of the callback function in which setting field markup is output
+	 * @param	string		$pageid		Name of the Settings page to which to add the setting field; passed from add_settings_section()
+	 * @param	string		$sectionid	ID of the Settings page section to which to add the setting field; passed from add_settings_section()
+	 * @param	array		$args		Array of arguments to pass to the callback function
+	 */
+	foreach ( $option_parameters as $option ) {
+		$optionname = $option['name'];
+		$optiontitle = $option['title'];
+		$optiontab = $option['tab'];
+		$optionsection = $option['section'];
+		$optiontype = $option['type'];
+		add_settings_field(
+			// $settingid
+			'upfw_setting_' . $optionname,
+			// $title
+			$optiontitle,
+			// $callback
+			'upfw_setting_callback',
+			// $pageid
+			'upfw_' . $optiontab . '_tab',
+			// $sectionid
+			'upfw_' . $optionsection . '_section',
+			// $args
+			$option
+		);
+	}
 }
+
+add_action('current_screen','upfw_init_page');
 
 /**
  * Callback for get_settings_field()

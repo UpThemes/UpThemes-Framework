@@ -28,6 +28,36 @@ global $up_theme_options;
 
 $up_theme_options = array();
 
+add_action( 'init', 'upfw_rolescheck', 20 );
+
+function upfw_rolescheck() {
+	if ( current_user_can( 'edit_theme_options' ) ) {
+		// Load the functionality for theme options page
+		add_action( 'admin_menu', 'upfw_add_theme_page' );
+		add_action( 'admin_print_scripts-appearance_page_upfw-settings', 'upfw_enqueue_scripts_styles', 40 );
+		add_action( 'admin_init', 'upfw_init' );
+		//add_action( 'wp_before_admin_bar_render', 'optionsframework_adminbar' );
+		require_once( dirname( __FILE__ ) . '/library/theme-customizer.php' );
+	}
+}
+
+function upfw_init() {
+
+	require_once( dirname( __FILE__ ) . '/library/options-sanitize.php' );
+	require_once( dirname( __FILE__ ) . '/library/options-register.php' );
+	require_once( dirname( __FILE__ ) . '/library/custom.php' );
+
+	register_setting(
+		// $option_group
+		"theme_" . upfw_get_current_theme_id() . "_options",
+		// $option_name
+		"theme_" . upfw_get_current_theme_id() . "_options",
+		// $sanitize_callback
+		'upfw_options_validate'
+	);
+
+}
+
 /**
 * UpThemes Framework Version
 */
@@ -118,52 +148,6 @@ function upfw_enqueue_scripts_styles() {
 		)
 	);
 	wp_enqueue_script( 'upfw-nmp-media' );
-
-}
-
-/**
- * upfw Theme Settings API Implementation
- *
- * Implement the WordPress Settings API for the
- * upfw Theme Settings.
- *
- * @link	http://codex.wordpress.org/Settings_API	Codex Reference: Settings API
- * @link	http://ottopress.com/2009/wordpress-settings-api-tutorial/	Otto
- * @link	http://planetozh.com/blog/2009/05/handling-plugins-options-in-wordpress-28-with-register_setting/	Ozh
- */
-function upfw_rolescheck() {
-
-	if( current_user_can( 'edit_theme_options' )  ){
-		// If the user can edit theme options, load the UpThemes framework
-
-		// Load the functionality for theme options page
-		add_action( 'admin_menu', 'upfw_add_theme_page' );
-		add_action( 'admin_init', 'upfw_init' );
-		add_action( 'admin_print_scripts-appearance_page_upfw-settings', 'upfw_enqueue_scripts_styles', 40 );
-
-		if( file_exists( dirname( __FILE__ ) . '/library/theme-customizer.php' ) ){
-			require_once( dirname( __FILE__ ) . '/library/theme-customizer.php' );
-		}
-
-	}
-
-}
-// Settings API options initilization and validation
-add_action( 'init', 'upfw_rolescheck', 1 );
-
-function upfw_init(){
-	require_once( dirname( __FILE__ ) . '/library/options-sanitize.php' );
-	require_once( dirname( __FILE__ ) . '/library/options-register.php' );
-	require_once( dirname( __FILE__ ) . '/library/custom.php' );
-
-	register_setting(
-		// $option_group
-		"theme_" . upfw_get_current_theme_id() . "_options",
-		// $option_name
-		"theme_" . upfw_get_current_theme_id() . "_options",
-		// $sanitize_callback
-		'upfw_options_validate'
-	);
 
 }
 

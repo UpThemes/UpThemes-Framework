@@ -9,6 +9,7 @@
 add_action( 'customize_register', 'upfw_customize_register' );
 
 function upfw_customize_register($wp_customize) {
+
 	/**
 	 * Globalize the variable that holds
 	 * the Settings Page tab definitions
@@ -44,6 +45,10 @@ function upfw_customize_register($wp_customize) {
 	$upfw_option_parameters = upfw_get_option_parameters();
 
 	foreach( $upfw_option_parameters as $option ){
+
+		if( $option['type'] == 'editor' || $option['type'] == 'multicheck' ){
+			continue;
+		}
 
 		$optionname = $option['name'];
 		$theme_id = upfw_get_current_theme_id();
@@ -109,6 +114,7 @@ function upfw_customize_register($wp_customize) {
 			) );
 		}
 	}
+
 }
 
 function upfw_extract_valid_options($options){
