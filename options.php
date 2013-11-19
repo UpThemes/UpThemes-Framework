@@ -139,19 +139,18 @@ function upfw_rolescheck() {
 		// Load the functionality for theme options page
 		add_action( 'admin_menu', 'upfw_add_theme_page' );
 		add_action( 'admin_init', 'upfw_init' );
-		add_action('admin_print_scripts-appearance_page_upfw-settings','upfw_enqueue_scripts_styles',40);
+		add_action( 'admin_print_scripts-appearance_page_upfw-settings', 'upfw_enqueue_scripts_styles', 40 );
 
 	}
 
 }
 // Settings API options initilization and validation
-add_action( 'init', 'upfw_rolescheck' );
+add_action( 'init', 'upfw_rolescheck', 1 );
 
 function upfw_init(){
-	include_once( dirname( __FILE__ ) . '/library/options-sanitize.php' );
-	include_once( dirname( __FILE__ ) . '/library/options-register.php' );
-	include_once( dirname( __FILE__ ) . '/library/theme-customizer.php' );
-	include_once( dirname( __FILE__ ) . '/library/custom.php' );
+	require_once( dirname( __FILE__ ) . '/library/options-sanitize.php' );
+	require_once( dirname( __FILE__ ) . '/library/options-register.php' );
+	require_once( dirname( __FILE__ ) . '/library/custom.php' );
 
 	register_setting(
 		// $option_group
@@ -161,6 +160,10 @@ function upfw_init(){
 		// $sanitize_callback
 		'upfw_options_validate'
 	);
+
+	if( file_exists( dirname( __FILE__ ) . '/library/theme-customizer.php' ) ){
+		require_once( dirname( __FILE__ ) . '/library/theme-customizer.php' );
+	}
 }
 
 /**
@@ -434,7 +437,7 @@ function upfw_editor($value, $attr) {
 	);
 
 	// WordPress Editor generator
-	wp_editor($value, $attr['id'], $editor_settings);
+	wp_editor($value, $attr['name'], $editor_settings);
 }
 
 function upfw_select($value,$attr) { ?>
