@@ -26,8 +26,8 @@ add_filter( 'upfw_sanitize_select', 'upfw_sanitize_enum', 10, 2 );
 
 /* Radio */
 
-add_filter( 'upfw_sanitize_radio', 'upfw_sanitize_enum', 10, 2 );
-add_filter( 'upfw_sanitize_radio_image', 'upfw_sanitize_enum', 10, 2 );
+//add_filter( 'upfw_sanitize_radio', 'upfw_sanitize_enum', 10, 2 );
+//add_filter( 'upfw_sanitize_radio_image', 'upfw_sanitize_enum', 10, 2 );
 
 /* Images */
 

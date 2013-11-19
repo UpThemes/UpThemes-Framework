@@ -141,6 +141,10 @@ function upfw_rolescheck() {
 		add_action( 'admin_init', 'upfw_init' );
 		add_action( 'admin_print_scripts-appearance_page_upfw-settings', 'upfw_enqueue_scripts_styles', 40 );
 
+		if( file_exists( dirname( __FILE__ ) . '/library/theme-customizer.php' ) ){
+			require_once( dirname( __FILE__ ) . '/library/theme-customizer.php' );
+		}
+
 	}
 
 }
@@ -161,9 +165,6 @@ function upfw_init(){
 		'upfw_options_validate'
 	);
 
-	if( file_exists( dirname( __FILE__ ) . '/library/theme-customizer.php' ) ){
-		require_once( dirname( __FILE__ ) . '/library/theme-customizer.php' );
-	}
 }
 
 /**
@@ -421,7 +422,9 @@ function upfw_text($value,$attr) { ?>
 }
 
 function upfw_textarea($value,$attr) { ?>
+
 	<textarea name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>]" cols="48" rows="8"><?php echo esc_attr( $value ); ?></textarea>
+
 <?php
 }
 
@@ -458,43 +461,44 @@ function upfw_select($value,$attr) { ?>
 <?php
 }
 
-function upfw_radio_image($value,$attr) { ?>
-	<?php
+function upfw_radio_image($value,$attr) {
+
 	if ( isset( $attr['valid_options'] ) ) :
 		$options = $attr['valid_options'];
 		foreach( $options as $option ) :
-		?>
+
+?>
+
 	<label class="radio_image">
-	<input type="radio" name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>]" value="<?php echo esc_attr( $option['name'] ); ?>" <?php checked($option['name'],$value); ?>>
-	  <?php if( $option['image'] ) echo '<img src="' . esc_url( $option['image'] ) . '">'; ?>
+		<input type="radio" name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>]" value="<?php echo esc_attr( $option['name'] ); ?>" <?php checked( $option['name'], $value ); ?>>
+		<?php if( $option['image'] ) echo '<img src="' . esc_url( $option['image'] ) . '">'; ?>
 	</label>
-			<?php
+<?php
 		endforeach;
 	else:
 		_e("This option has no valid options. Please create valid options as an array inside the UpThemes Framework.","upfw");
 	endif;
-	?>
-</select>
-<?php
+
 }
 
-function upfw_radio($value,$attr) { ?>
-	<?php
+function upfw_radio($value,$attr) {
+
 	if ( isset( $attr['valid_options'] ) ) :
 		$options = $attr['valid_options'];
 		foreach( $options as $option ) :
-		?>
+
+?>
+
 	<label class="radio">
-	  <input type="radio" name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>]" value="<?php echo esc_attr( $option['name'] ); ?>" <?php checked( esc_attr( $option['name'] ), esc_attr( $value ) ); ?>> <?php echo esc_attr( $option['title'] ); ?>
+	  <input type="radio" name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>]" value="<?php echo esc_attr( $option['name'] ); ?>" <?php checked( esc_attr( $option['name'] ), $value ); ?>> <?php echo esc_attr( $option['title'] ); ?>
 	</label>
-			<?php
+
+<?php
 		endforeach;
 	else:
 		_e("This option has no valid options. Please create valid options as an array inside the UpThemes Framework.","upfw");
 	endif;
-	?>
-</select>
-<?php
+
 }
 
 function upfw_multicheck($value,$attr) {

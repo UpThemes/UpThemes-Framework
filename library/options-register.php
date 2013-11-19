@@ -34,12 +34,12 @@ function upfw_register_admin_js_globals(){
 
 	echo "<script type=\"text/javascript\">\n";
 	echo "var upfw = {\n";
-	echo "    'theme' : '$theme_name',\n";
+	echo "		'theme' : '$theme_name',\n";
 
 	if( isset( $_GET['page']) && esc_attr( $_GET['page'] ) == 'upfw-settings' && $selected_tab )
-		echo "    'current_tab' : '$selected_tab',\n";
+		echo "		'current_tab' : '$selected_tab',\n";
 
-	echo "    'theme_url' : '$theme_url'\n";
+	echo "		'theme_url' : '$theme_url'\n";
 	echo "}" . "\n";
 	echo "</script>" . "\n";
 
@@ -59,93 +59,93 @@ add_action('admin_enqueue_scripts','upfw_register_admin_js_globals',1);
  */
 function upfw_options_validate( $input ) {
 
-        global $up_tabs;
+	global $up_tabs;
 
-        // This is the "whitelist": current settings
-        $valid_input = (array) upfw_get_options();
-        // Get the array of Theme settings, by Settings Page tab
-        $settingsbytab = upfw_get_settings_by_tab();
-        // Get the array of option parameters
-        $option_parameters = upfw_get_option_parameters();
-        // Get the array of option defaults
-        $option_defaults = upfw_get_option_defaults();
-        // Get list of tabs
+	// This is the "whitelist": current settings
+	$valid_input = (array) upfw_get_options();
+	// Get the array of Theme settings, by Settings Page tab
+	$settingsbytab = upfw_get_settings_by_tab();
+	// Get the array of option parameters
+	$option_parameters = upfw_get_option_parameters();
+	// Get the array of option defaults
+	$option_defaults = upfw_get_option_defaults();
+	// Get list of tabs
 
-        // Determine what type of submit was input
-        $submittype = 'submit';
-        foreach ( $up_tabs as $tab ) {
-                $resetname = 'reset-' . $tab['name'];
-                if ( ! empty( $input[$resetname] ) ) {
-                        $submittype = 'reset';
-                }
-        }
+	// Determine what type of submit was input
+	$submittype = 'submit';
+	foreach ( $up_tabs as $tab ) {
+		$resetname = 'reset-' . $tab['name'];
+		if ( ! empty( $input[$resetname] ) ) {
+			$submittype = 'reset';
+		}
+	}
 
-        // Determine what tab was input
-        $submittab = '';
-        foreach ( $up_tabs as $tab ) {
-                $submitname = 'submit-' . $tab['name'];
-                $resetname = 'reset-' . $tab['name'];
-                if ( ! empty( $input[$submitname] ) || ! empty($input[$resetname] ) ) {
-                        $submittab = $tab['name'];
-                }
-        }
-        // Get settings by tab
-        $tabsettings = $settingsbytab[$submittab];
+	// Determine what tab was input
+	$submittab = '';
+	foreach ( $up_tabs as $tab ) {
+		$submitname = 'submit-' . $tab['name'];
+		$resetname = 'reset-' . $tab['name'];
+		if ( ! empty( $input[$submitname] ) || ! empty($input[$resetname] ) ) {
+			$submittab = $tab['name'];
+		}
+	}
+	// Get settings by tab
+	$tabsettings = $settingsbytab[$submittab];
 
-        // Loop through each tab setting
-        foreach ( $tabsettings as $setting ) {
+	// Loop through each tab setting
+	foreach ( $tabsettings as $setting ) {
 
-                // If no option is selected, set the default
-                $valid_input[$setting] = ( ! isset( $input[$setting] ) ? $option_defaults[$setting] : $input[$setting] );
+		// If no option is selected, set the default
+		$valid_input[$setting] = ( ! isset( $input[$setting] ) ? $option_defaults[$setting] : $input[$setting] );
 
-                // If submit, validate/sanitize $input
-                if ( 'submit' == $submittype ) {
+		// If submit, validate/sanitize $input
+		if ( 'submit' == $submittype ) {
 
-                    // Get the setting details from the defaults array
-                    $option = $option_parameters[$setting];
+			// Get the setting details from the defaults array
+			$option = $option_parameters[$setting];
 
-                    // Get the array of valid options, if applicable
-                    $valid_options = ( isset( $option['valid_options'] ) ? $option['valid_options'] : false );
+			// Get the array of valid options, if applicable
+			$valid_options = ( isset( $option['valid_options'] ) ? $option['valid_options'] : false );
 
-	                if ( ! isset( $option['name'] ) ) {
-	                        continue;
-	                }
+			if ( ! isset( $option['name'] ) ) {
+				continue;
+			}
 
-	                if ( ! isset( $option['type'] ) ) {
-	                        continue;
-	                }
+			if ( ! isset( $option['type'] ) ) {
+				continue;
+			}
 
-	                $setting = preg_replace( '/[^a-zA-Z0-9._\-]/', '', strtolower( $option['name'] ) );
+			$setting = preg_replace( '/[^a-zA-Z0-9._\-]/', '', strtolower( $option['name'] ) );
 
-	                // Set checkbox to false if it wasn't sent in the $_POST
-	                if ( 'checkbox' == $option['type'] && ! isset( $input[$setting] ) ) {
-	                        $input[$setting] = false;
-	                }
+			// Set checkbox to false if it wasn't sent in the $_POST
+			if ( 'checkbox' == $option['type'] && ! isset( $input[$setting] ) ) {
+				$input[$setting] = false;
+			}
 
-	                // Set each item in the multicheck to false if it wasn't sent in the $_POST
-	                if ( 'multicheck' == $option['type'] && ! isset( $input[$setting] ) ) {
-	                        foreach ( $option['valid_options'] as $key => $value ) {
-	                            $input[$setting][$key] = false;
-	                        }
-	                }
+			// Set each item in the multicheck to false if it wasn't sent in the $_POST
+			if ( ( 'multicheck' == $option['type'] ) && ! isset( $input[$setting] ) ) {
+				foreach ( $option['valid_options'] as $key => $value ) {
+					$input[$setting][$key] = false;
+				}
+			}
 
-	                // For a value to be submitted to database it must pass through a sanitization filter
-	                if ( has_filter( 'upfw_sanitize_' . $option['type'] ) ) {
-	                        $clean[$setting] = apply_filters( 'upfw_sanitize_' . $option['type'], $input[$setting], $option );
-	                }
+			// For a value to be submitted to database it must pass through a sanitization filter
+			if ( has_filter( 'upfw_sanitize_' . $option['type'] ) ) {
+				$clean[$setting] = apply_filters( 'upfw_sanitize_' . $option['type'], $input[$setting], $option );
+			}
 
-                }
-                // If reset, reset defaults
-                elseif ( 'reset' == $submittype ) {
-                        // Set $setting to the default value
-                        $clean[$setting] = $option_defaults[$setting];
-                }
-        }
+		}
+		// If reset, reset defaults
+		elseif ( 'reset' == $submittype ) {
+			// Set $setting to the default value
+			$clean[$setting] = $option_defaults[$setting];
+		}
+	}
 
-		// Hook to run after validation
-		do_action( 'upfw_after_validate', $clean );
+	// Hook to run after validation
+	do_action( 'upfw_after_validate', $clean );
 
-        return $clean;
+	return $clean;
 
 }
 
