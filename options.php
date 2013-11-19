@@ -148,9 +148,9 @@ function upfw_rolescheck() {
 add_action( 'init', 'upfw_rolescheck' );
 
 function upfw_init(){
-	include_once( dirname( __FILE__ ) . '/library/theme-customizer.php' );
 	include_once( dirname( __FILE__ ) . '/library/options-sanitize.php' );
 	include_once( dirname( __FILE__ ) . '/library/options-register.php' );
+	include_once( dirname( __FILE__ ) . '/library/theme-customizer.php' );
 	include_once( dirname( __FILE__ ) . '/library/custom.php' );
 
 	register_setting(
@@ -494,27 +494,20 @@ function upfw_radio($value,$attr) { ?>
 <?php
 }
 
-function upfw_multiple($value,$attr) { ?>
-
-	<select name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>][]" multiple>
-		<?php
-		if ( isset( $attr['valid_options'] ) ) :
-			$options = $attr['valid_options'];
-			foreach( $options as $option_key => $option_value ) : ?>
-				<option value="<?php esc_attr( $option_value['name'] ); ?>" <?php selected( in_array($option_value['name'],$value) ); ?>><?php echo esc_html( $option_value['title'] ); ?></option>
-		<?php endforeach;
-		endif;
-		?>
-	</select>
-<?php
-}
-
 function upfw_multicheck($value,$attr) {
 
 	if ( isset( $attr['valid_options'] ) ) :
 		$options = $attr['valid_options'];
-		foreach( $options as $option_key => $option_value ) : ?>
-			<input type="checkbox" <?php checked($value[$option_value['name']]);?> name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>][<?php echo esc_attr( $option_value['name'] ) ?>]">
+
+		foreach( $options as $option_key => $option_value ) :
+			$checked;
+			if( isset( $value[$option_value['name']] ) ){
+				$checked = checked( $value[$option_value['name']], true, false );
+			} else {
+				$checked = checked( false, true, false );
+			}
+		?>
+			<input type="checkbox" <?php echo $checked; ?> name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>][<?php echo esc_attr( $option_value['name'] ) ?>]">
 			<label for="<?php echo esc_html( $option_value['name'] ) ?>"><?php echo esc_html( $option_value['title'] ); ?></label><br>
 	<?php endforeach;
 	endif;

@@ -318,7 +318,7 @@ function upfw_setting_callback( $option ) {
 		break;
 
 		//Render upload image
-		case 'image': upfw_image($value,$attr);
+		case 'image': upfw_upload($value,$attr);
 		break;
 
 		//Render upload
