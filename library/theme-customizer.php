@@ -103,6 +103,21 @@ function upfw_customize_register($wp_customize) {
 			);
 		}
 
+		if( $option['type'] == 'radio_image' ){
+			$wp_customize->add_control(
+				new UpThemes_Image_Radio_Control(
+					$wp_customize,
+					$option['name'],
+					array(
+						'label'    => $option['title'],
+						'section'  => $option_section_name,
+						'settings' => $optiondb,
+						'choices'  => upfw_extract_valid_options_radio_image($option['valid_options'])
+					)
+				)
+			);
+		}
+
 		if( $option['type'] == 'radio' || $option['type'] == 'select' ){
 
 			$wp_customize->add_control( $option['name'], array(
@@ -123,6 +138,53 @@ function upfw_extract_valid_options($options){
 		$new_options[$option['name']] = $option['title'];
 	}
 	return $new_options;
+}
+
+function upfw_extract_valid_options_radio_image($options){
+	$new_options = array();
+	foreach($options as $option){
+		$new_options[$option['name']] = array( 'title' => $option['title'], 'image' => $option['image'] );
+	}
+	return $new_options;
+}
+
+if ( class_exists( 'WP_Customize_Image_Control' ) && ! class_exists( 'UpThemes_Image_Radio_Control' ) ) {
+/**
+ * Creates Customizer control for radio replacement images fields
+ */
+class UpThemes_Image_Radio_Control extends WP_Customize_Control {
+
+		public $type = 'images_radio';
+
+		public function render_content() {
+			if ( empty( $this->choices ) )
+				return;
+
+			?>
+
+			<span class="customize-control-title"><?php echo esc_html( $this->label ); ?></span>
+
+			<?php
+			foreach ( $this->choices as $value => $choice ) {
+				?>
+				<label class="radio_image" for="<?php echo esc_html( $this->id ); ?>_<?php echo esc_html( $value ); ?>">
+					<input id="<?php echo esc_html( $this->id ); ?>_<?php echo esc_html( $value ); ?>" class="image-radio" type="radio" value="<?php echo esc_attr( $value ); ?>" name="<?php echo esc_html( $this->id ); ?>" <?php $this->link(); checked( $this->value(), $value ); ?> />
+					<img src="<?php echo $choice['image']; ?>" alt="<?php echo esc_html( $this->label ); ?>" />
+				</label>
+				<?php
+			} // end foreach
+
+        }
+
+		public function enqueue() {
+			wp_enqueue_style(
+				'upfw_styles',
+				upfw_get_theme_options_directory_uri() . '/css/up_framework.css'
+			);
+		}
+
+}
+
 }
 
 if ( class_exists( 'WP_Customize_Image_Control' ) && ! class_exists( 'UpThemes_Customize_Image_Control' ) ) :
