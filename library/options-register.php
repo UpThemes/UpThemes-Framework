@@ -89,8 +89,10 @@ function upfw_options_validate( $input ) {
 			$submittab = $tab['name'];
 		}
 	}
+
+	global $wp_customize;
 	// Get settings by tab
-	$tabsettings = $settingsbytab[$submittab];
+	$tabsettings = ( isset ( $wp_customize ) ? $settingsbytab['all'] : $settingsbytab[$submittab] );
 
 	// Loop through each tab setting
 	foreach ( $tabsettings as $setting ) {
@@ -146,7 +148,6 @@ function upfw_options_validate( $input ) {
 	do_action( 'upfw_after_validate', $clean );
 
 	return $clean;
-
 }
 
 

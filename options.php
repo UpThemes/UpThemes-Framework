@@ -354,15 +354,13 @@ function upfw_get_settings_by_tab() {
 	// Loop through the option parameters
 	// array
 	foreach ( $option_parameters as $option_parameter ) {
-		// Ignore "internal" type options
-		if ( in_array( $option_parameter['tab'] , $tabs ) ) {
-			$optiontab = $option_parameter['tab'];
-			$optionname = $option_parameter['name'];
-			// Add an indexed array key to the
-			// settings-by-tab array for each
-			// setting associated with each tab
-			$settingsbytab[$optiontab][] = $optionname;
-		}
+		$optiontab = $option_parameter['tab'];
+		$optionname = $option_parameter['name'];
+		// Add an indexed array key to the
+		// settings-by-tab array for each
+		// setting associated with each tab
+		$settingsbytab[$optiontab][] = $optionname;
+		$settingsbytab['all'][] = $optionname;
 	}
 	// Return the settings-by-tab
 	// array
