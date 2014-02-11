@@ -2,4 +2,4 @@
 
 To get started using the framework, you simply need your own WordPress theme.
 
-Read the documentation for more details: [UpThemes Framework Documentation](http://liftux.github.com/UpThemes-Framework/)
+Read the documentation for more details: [UpThemes Framework Documentation](https://upthemes.com/upthemes-framework/documentation/)
