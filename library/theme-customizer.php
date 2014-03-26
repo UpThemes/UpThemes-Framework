@@ -55,8 +55,14 @@ function upfw_customize_register($wp_customize) {
 		$optiondb = "theme_{$theme_id}_options[{$optionname}]";
 		$option_section_name =  $option['section'];
 
+		$default = '';
+
+		if( isset($option['default']) ){
+			$default = $option['default'];
+		}
+
 		$wp_customize->add_setting( $optiondb, array(
-			'default'		=> $option['default'],
+			'default'		=> $default,
 			'type'			=> 'option',
 			'capabilities'	=> 'edit_theme_options'
 		) );
