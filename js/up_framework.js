@@ -2,8 +2,8 @@
 
   // Color Picker adapted from Rachel Baker's color picker example
   // http://rachelbaker.me/how-to-use-the-new-wordpress-color-picker-in-a-plugin/
-  function pickColor(color) {
-      $(".colorPickerWrapper").find('input[type="text"]').val(color);
+  function pickColor(color,$el) {
+      $el.parent(".colorPickerWrapper").find('input[type="text"]').val(color);
   }
 
   function toggle_text() {
@@ -23,7 +23,7 @@
     var colorPicker = $(".colorPickerWrapper").find('input');
     colorPicker.wpColorPicker({
         change: function(event, ui) {
-            pickColor(colorPicker.wpColorPicker("color"));
+            pickColor(colorPicker.wpColorPicker("color"),$(this));
         },
         clear: function() {
             pickColor("");
