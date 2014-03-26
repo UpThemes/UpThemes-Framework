@@ -18,8 +18,7 @@ label.radio{
 }
 
 label.radio input{
-	vertical-align: text-top;
-	margin-right: 4px;
+	margin: 0 4px 0 0;
 }
 
 label.radio_image input{
@@ -37,10 +36,6 @@ label.radio_image img{
 
 label.radio_image input:checked + img{
 	background: #a2daec;
-}
-
-input[type="radio"]{
-	vertical-align: top;
 }
 
 /* @group Image Previews */
