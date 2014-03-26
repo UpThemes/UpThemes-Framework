@@ -401,6 +401,9 @@ function upfw_text($value,$attr) { ?>
 	<input type="text" name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>]" value="<?php echo esc_attr( $value ); ?>">
 
 <?php
+	if( $attr['description'] ){
+		echo '<div><em>' . $attr['description'] . '</em></div>';
+	}
 }
 
 function upfw_textarea($value,$attr) { ?>
@@ -408,6 +411,9 @@ function upfw_textarea($value,$attr) { ?>
 	<textarea name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>]" cols="48" rows="8"><?php echo esc_attr( $value ); ?></textarea>
 
 <?php
+	if( $attr['description'] ){
+		echo '<div><em>' . $attr['description'] . '</em></div>';
+	}
 }
 
 function upfw_editor($value, $attr) {
@@ -423,6 +429,10 @@ function upfw_editor($value, $attr) {
 
 	// WordPress Editor generator
 	wp_editor($value, $attr['name'], $editor_settings);
+
+	if( $attr['description'] ){
+		echo '<div><em>' . $attr['description'] . '</em></div>';
+	}
 }
 
 function upfw_select($value,$attr) { ?>
@@ -441,6 +451,9 @@ function upfw_select($value,$attr) { ?>
 	?>
 </select>
 <?php
+	if( $attr['description'] ){
+		echo '<div><em>' . $attr['description'] . '</em></div>';
+	}
 }
 
 function upfw_radio_image($value,$attr) {
@@ -457,6 +470,10 @@ function upfw_radio_image($value,$attr) {
 	</label>
 <?php
 		endforeach;
+
+		if( $attr['description'] ):
+			echo '<div><em>' . $attr['description'] . '</em></div>';
+		endif;
 	else:
 		_e("This option has no valid options. Please create valid options as an array inside the UpThemes Framework.","upfw");
 	endif;
@@ -477,6 +494,9 @@ function upfw_radio($value,$attr) {
 
 <?php
 		endforeach;
+		if( $attr['description'] ):
+			echo '<div><em>' . $attr['description'] . '</em></div>';
+		endif;
 	else:
 		_e("This option has no valid options. Please create valid options as an array inside the UpThemes Framework.","upfw");
 	endif;
@@ -501,6 +521,10 @@ function upfw_multicheck($value,$attr) {
 	<?php endforeach;
 	endif;
 
+	if( $attr['description'] ):
+		echo '<div><em>' . $attr['description'] . '</em></div>';
+	endif;
+
 }
 
 function upfw_color($value,$attr) { ?>
@@ -508,8 +532,10 @@ function upfw_color($value,$attr) { ?>
 	<span class="colorPickerWrapper">
 		<input type="text" class="popup-colorpicker" id="<?php echo esc_attr( $attr['name'] ); ?>" name="theme_<?php echo esc_attr( upfw_get_current_theme_id() ); ?>_options[<?php echo esc_attr( $attr['name'] ); ?>]" value="<?php echo esc_attr( $value ); ?>" />
 	</span>
-
 <?php
+	if( $attr['description'] ):
+		echo '<div><em>' . $attr['description'] . '</em></div>';
+	endif;
 }
 
 function upfw_upload($value,$attr) { ?>
@@ -519,6 +545,9 @@ function upfw_upload($value,$attr) { ?>
 		<input class="upfw-open-media button button-primary" type="submit" value="<?php esc_attr_e('Upload or Select a File','upfw'); ?>" />
 		<div class="image_preview"></div>
 	</div>
-
 <?php
+
+	if( $attr['description'] ):
+		echo '<div><em>' . $attr['description'] . '</em></div>';
+	endif;
 }
