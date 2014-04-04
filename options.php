@@ -162,23 +162,25 @@ function upfw_add_theme_page() {
 	// Globalize Theme options page
 	global $upfw_settings_page;
 	// Add Theme options page
-	$upfw_settings_page = add_theme_page(
-		// $page_title
-		// Name displayed in HTML title tag
-		__( 'Theme Options', 'upfw' ),
-		// $menu_title
-		// Name displayed in the Admin Menu
-		__( 'Theme Options', 'upfw' ),
-		// $capability
-		// User capability required to access page
-		upfw_get_settings_page_cap(),
-		// $menu_slug
-		// String to append to URL after "themes.php"
-		'upfw-settings',
-		// $callback
-		// Function to define settings page markup
-		'upfw_admin_options_page'
-	);
+	if( !defined('UPFW_NO_THEME_OPTIONS_PAGE') ){
+		$upfw_settings_page = add_theme_page(
+			// $page_title
+			// Name displayed in HTML title tag
+			__( 'Theme Options', 'upfw' ),
+			// $menu_title
+			// Name displayed in the Admin Menu
+			__( 'Theme Options', 'upfw' ),
+			// $capability
+			// User capability required to access page
+			upfw_get_settings_page_cap(),
+			// $menu_slug
+			// String to append to URL after "themes.php"
+			'upfw-settings',
+			// $callback
+			// Function to define settings page markup
+			'upfw_admin_options_page'
+		);
+	}
 }
 
 /**
