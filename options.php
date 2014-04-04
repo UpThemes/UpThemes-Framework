@@ -61,7 +61,7 @@ function upfw_init() {
 /**
 * UpThemes Framework Version
 */
-define('UPTHEMES_VER', '2.4');
+define('UPTHEMES_VER', '2.4.1');
 
 function register_theme_options( $options ) {
 	global $up_theme_options;
