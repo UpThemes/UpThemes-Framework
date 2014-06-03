@@ -67,14 +67,30 @@ function upfw_customize_register($wp_customize) {
 			'capabilities'	=> 'edit_theme_options'
 		) );
 
-		if( $option['type'] == 'text' || $option['type'] == 'textarea' ){
+		if( $option['type'] == 'text' ){
 
 			$wp_customize->add_control( $option['name'], array(
-				'label'   => $option['title'],
-				'section' => $option_section_name,
-				'settings' => $optiondb,
-				'type'    => 'text',
+				'label'   	=> $option['title'],
+				'section' 	=> $option_section_name,
+				'settings' 	=> $optiondb,
+				'type'    	=> 'text',
 			) );
+
+		}
+
+		if( $option['type'] == 'textarea' ){
+
+			$wp_customize->add_control(
+				new UpThemes_Customize_Textarea_Control(
+					$wp_customize,
+					$option['name'],
+					array(
+						'label'   => $option['title'],
+						'section' => $option_section_name,
+						'settings'=> $optiondb,
+					)
+				)
+			);
 
 		}
 
@@ -188,6 +204,27 @@ class UpThemes_Image_Radio_Control extends WP_Customize_Control {
 				upfw_get_theme_options_directory_uri() . '/css/up_framework.css'
 			);
 		}
+
+}
+
+}
+
+if ( class_exists( 'WP_Customize_Control' ) && ! class_exists( 'UpThemes_Customize_Textarea_Control' ) ) {
+/**
+ * Creates Customizer control for textarea
+ */
+class UpThemes_Customize_Textarea_Control extends WP_Customize_Control {
+
+		public $type = 'textarea';
+
+		public function render_content() { ?>
+
+			<label>
+				<span class="customize-control-title"><?php echo esc_html( $this->label ); ?></span>
+				<textarea rows="6" cols="25" id="<?php echo esc_html( $this->id ); ?>" class="image-radio" type="radio" name="<?php echo esc_html( $this->id ); ?>" data-customize-setting-link="theme_<?php echo upfw_get_current_theme_id(); ?>_options[<?php echo esc_html( $this->id ); ?>]"><?php echo esc_attr( $value ); ?></textarea>
+			</label>
+			<?php
+        }
 
 }
 
