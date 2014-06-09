@@ -120,8 +120,21 @@ function upfw_get_theme_options_directory() {
 	return dirname(__FILE__);
 }
 
+function upfw_get_theme_dir(){
+	$theme = wp_get_theme();
+
+	if( ! empty( $theme->get('Template') ) ){
+		return get_stylesheet_directory_uri();
+	}
+
+	return get_template_directory_uri();
+}
+
 function upfw_get_theme_options_directory_uri() {
-	return trailingslashit( trailingslashit( get_template_directory_uri() ) . basename( dirname(__FILE__) ) );
+
+	$theme_dir = upfw_get_theme_dir();
+
+	return trailingslashit( trailingslashit( $theme_dir ) . basename( dirname(__FILE__) ) );
 }
 
 /**

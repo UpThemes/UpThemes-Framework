@@ -30,7 +30,7 @@ function upfw_register_admin_js_globals(){
 
 	$selected_tab = $selected_tab ? $up_tabs[0]['name'] : $tab;
 	$theme_name = strtolower(THEME_TITLE);
-	$theme_url = get_template_directory_uri();
+	$theme_url = upfw_get_theme_dir();
 
 	echo "<script type=\"text/javascript\">\n";
 	echo "var upfw = {\n";
@@ -46,7 +46,6 @@ function upfw_register_admin_js_globals(){
 }
 
 add_action('admin_enqueue_scripts','upfw_register_admin_js_globals',1);
-
 
 /**
  * Callback for add_settings_section()
