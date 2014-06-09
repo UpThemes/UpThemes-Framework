@@ -20,6 +20,11 @@
  */
 
 /**
+* UpThemes Framework Version
+*/
+define('UPTHEMES_VER', '2.4.2');
+
+/**
  * Globalize the variable that holds the Theme Options
  *
  * @global	array	$up_theme_options	holds Theme options
@@ -57,11 +62,6 @@ function upfw_init() {
 	);
 
 }
-
-/**
-* UpThemes Framework Version
-*/
-define('UPTHEMES_VER', '2.4.1');
 
 function register_theme_options( $options ) {
 	global $up_theme_options;
