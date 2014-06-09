@@ -135,7 +135,7 @@ add_filter( 'upfw_sanitize_radio_image', 'upfw_sanitize_enum', 10, 2 );
 
 /* Images */
 
-add_filter( 'upfw_sanitize_image', 'upfw_sanitize_enum', 10, 2 );
+add_filter( 'upfw_sanitize_image', 'upfw_sanitize_upload', 10, 2 );
 
 /* Checkbox */
 
