@@ -122,8 +122,9 @@ function upfw_get_theme_options_directory() {
 
 function upfw_get_theme_dir(){
 	$theme = wp_get_theme();
-
-	if( ! empty( $theme->get('Template') ) ){
+	
+	$theme_template = $theme->get('Template');
+	if( ! empty( $theme_template ) ){
 		return get_stylesheet_directory_uri();
 	}
 
