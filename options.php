@@ -20,12 +20,48 @@ define( 'THEME_OPTIONS_DIR', dirname( __FILE__ ) );
 /**
  * Globalize the variable that holds the Theme Options
  *
- * @global	array	$up_theme_options	holds Theme options
+ * @global	array	$up_theme_options	holds theme options
  */
 global $up_theme_options;
 
 $up_theme_options = array();
 
+/**
+ * Checks user role and adds functionality for admin users with certain capabilities.
+ *
+ * @uses 	current_user_can() 			http://codex.wordpress.org/Function_Reference/current_user_can			Codex Reference: current_user_can()
+ * @uses 	add_action() 	 			http://codex.wordpress.org/Function_Reference/add_action				Codex Reference: add_action()
+ * @uses 	is_customize_preview() 		http://codex.wordpress.org/Function_Reference/is_customize_preview		Codex Reference: is_customize_preview()
+ */
+function upfw_rolescheck() {
+	if ( current_user_can( 'edit_theme_options' ) ) {
+
+		// Load the functionality for theme options page
+		add_action( 'admin_menu', 'upfw_add_theme_page' );
+
+		// Enqueue scripts and styles
+		add_action( 'admin_print_scripts-appearance_page_upfw-settings', 'upfw_enqueue_scripts_styles', 40 );
+
+		// Load the framework in the admin.
+		add_action( 'admin_init', 'upfw_init' );
+
+		// Check for Theme Customizer, then load customizer stuff.
+		if ( is_customize_preview() ) {
+			require_once( THEME_OPTIONS_DIR . '/library/theme-customizer.php' );
+		}
+	}
+}
+// Hook
+add_action( 'init', 'upfw_rolescheck', 20 );
+
+/**
+ * Initialize the UpThemes Framework.
+ *
+ * Loads the full framework for the theme options page.
+ *
+ * @uses 	register_setting() 				http://codex.wordpress.org/Function_Reference/register_setting	Codex Reference: register_setting()
+ * @uses 	upfw_get_current_theme_id() 	defined in options.php
+ */
 function upfw_init() {
 
 	require_once( THEME_OPTIONS_DIR . '/library/options-types.php' );
@@ -35,36 +71,14 @@ function upfw_init() {
 
 	register_setting(
 		// $option_group
-		"theme_" . upfw_get_current_theme_id() . "_options",
+		'theme_' . upfw_get_current_theme_id() . '_options',
 		// $option_name
-		"theme_" . upfw_get_current_theme_id() . "_options",
+		'theme_' . upfw_get_current_theme_id() . '_options',
 		// $sanitize_callback
 		'upfw_options_validate'
 	);
 
 }
-
-/**
- * Checks user role and adds functionality for admin users with certain capabilities.
- *
- * @uses 	current_user_can() 		http://codex.wordpress.org/Function_Reference/current_user_can	Codex Reference: current_user_can()
- * @uses 	add_action() 	 		http://codex.wordpress.org/Function_Reference/add_action	Codex Reference: add_action()
- */
-function upfw_rolescheck() {
-	if ( current_user_can( 'edit_theme_options' ) ) {
-
-		// Load the functionality for theme options page
-		add_action( 'admin_menu', 'upfw_add_theme_page' );
-
-		//
-		add_action( 'admin_print_scripts-appearance_page_upfw-settings', 'upfw_enqueue_scripts_styles', 40 );
-
-		add_action( 'admin_init', 'upfw_init' );
-
-		require_once( THEME_OPTIONS_DIR . '/library/theme-customizer.php' );
-	}
-}
-add_action( 'init', 'upfw_rolescheck', 20 );
 
 /**
  * Returns 'edit_theme_options' user capability to
@@ -247,10 +261,10 @@ function upfw_add_theme_page() {
 		$upfw_settings_page = add_theme_page(
 			// $page_title
 			// Name displayed in HTML title tag
-			__( 'Theme Options', 'upfw' ),
+			apply_filters('options_page_menu_title', __( 'Theme Options', 'upfw' ) ),
 			// $menu_title
 			// Name displayed in the Admin Menu
-			__( 'Theme Options', 'upfw' ),
+			apply_filters('options_page_title', __( 'Theme Options', 'upfw' ) ),
 			// $capability
 			// User capability required to access page
 			upfw_get_settings_page_cap(),
@@ -267,7 +281,7 @@ function upfw_add_theme_page() {
 /**
  * Theme Settings Page Markup
  *
- * @uses	upfw_get_current_tab()	defined in \library\custom.php
+ * @uses	upfw_get_current_tab()		defined in \library\custom.php
  * @uses	upfw_get_page_tab_markup()	defined in \library\custom.php
  */
 function upfw_admin_options_page() {
