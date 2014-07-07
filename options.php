@@ -31,7 +31,6 @@ $up_theme_options = array();
  *
  * @uses 	current_user_can() 			http://codex.wordpress.org/Function_Reference/current_user_can			Codex Reference: current_user_can()
  * @uses 	add_action() 	 			http://codex.wordpress.org/Function_Reference/add_action				Codex Reference: add_action()
- * @uses 	is_customize_preview() 		http://codex.wordpress.org/Function_Reference/is_customize_preview		Codex Reference: is_customize_preview()
  */
 function upfw_rolescheck() {
 	if ( current_user_can( 'edit_theme_options' ) ) {
@@ -45,10 +44,12 @@ function upfw_rolescheck() {
 		// Load the framework in the admin.
 		add_action( 'admin_init', 'upfw_init' );
 
-		// Check for Theme Customizer, then load customizer stuff.
-		if ( is_customize_preview() ) {
+		global $wp_customize;
+
+		if ( isset( $wp_customize ) && $wp_customize->is_preview() ){
 			require_once( THEME_OPTIONS_DIR . '/library/theme-customizer.php' );
 		}
+
 	}
 }
 // Hook
