@@ -1,13 +1,23 @@
 <?php
+/**
+ * Defines the default option types.
+ *
+ * This file implements the Customizer UI for theme options.
+ *
+ * @package 	UpThemes Framework
+ * @copyright	Copyright (c) 2013-2014, UpThemes
+ * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License, v2 (or newer)
+ *
+ * @since 		1.0
+ */
 
 /**
+ * Registers options in the Theme Customizer.
  *
- * This file exists to implement support for the Theme Customizer,
- * introduced in WordPress 3.4.
- *
- **/
-add_action( 'customize_register', 'upfw_customize_register' );
-
+ * Adds theme options to the Theme Customizer by looping through
+ * each settings section and implementing controls for option types
+ * that are allowed to be added to the Customizer.
+ */
 function upfw_customize_register($wp_customize) {
 
 	/**
@@ -21,8 +31,7 @@ function upfw_customize_register($wp_customize) {
 	/**
 	 * Register each tab section in the Theme Customizer
 	 *
-	 * @todo Add description.
-	 *
+	 * Loops through each option tab and creates a customizer section.
 	 */
 	foreach ( $up_tabs as $tab ) {
 		$tabname = $tab['name'];
@@ -147,21 +156,39 @@ function upfw_customize_register($wp_customize) {
 				'section' => $option_section_name,
 				'settings'=> $optiondb,
 				'type'    => $option['type'],
-				'choices' => upfw_extract_valid_options($option['valid_options'])
+				'choices' => upfw_extract_valid_options( $option['valid_options'] )
 			) );
 		}
 	}
 
 }
+add_action( 'customize_register', 'upfw_customize_register' );
 
+/**
+ * Extract valid options
+ *
+ * Converts options to be used within a select or radio control.
+ *
+ * @return 	array 	$new_options		Return options array to be injected as choices within valid options array for customizer control.
+ */
 function upfw_extract_valid_options($options){
+
 	$new_options = array();
-	foreach($options as $option){
-		$new_options[$option['name']] = $option['title'];
+
+	foreach( $options as $option ){
+		$new_options[ $option['name'] ] = $option['title'];
 	}
+
 	return $new_options;
 }
 
+/**
+ * Extract valid options for radio image type
+ *
+ * Converts options to be used within a radio image control.
+ *
+ * @return 	array 	$new_options		Return options array to be injected as choices within valid options array for customizer control.
+ */
 function upfw_extract_valid_options_radio_image($options){
 	$new_options = array();
 	foreach($options as $option){

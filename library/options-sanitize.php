@@ -1,5 +1,15 @@
 <?php
-
+/**
+ * Sanitization and validation functions.
+ *
+ * This file sanitizes and validates theme options.
+ *
+ * @package 	UpThemes Framework
+ * @copyright	Copyright (c) 2013-2014, UpThemes
+ * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License, v2 (or newer)
+ *
+ * @since 		1.0
+ */
 
 /**
  * Validate and sanitize options on save

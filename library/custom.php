@@ -2,14 +2,14 @@
 /**
  * UpThemes Framework custom functions
  *
- * Contains all of the Theme's custom functions, which include
- * helper functions and various filters.
+ * Contains all of the theme's custom functions, which include
+ * helper functions.
  *
- * @package 	upfw
+ * @package 	UpThemes Framework
  * @copyright	Copyright (c) 2013, UpThemes
  * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License, v2 (or newer)
  *
- * @since 		upfw 1.0
+ * @since 		1.0
  */
 
 /**

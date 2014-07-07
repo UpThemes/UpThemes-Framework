@@ -1,15 +1,15 @@
 <?php
 /**
- * Theme Options Settings API
+ * Settings API registration.
  *
  * This file implements the WordPress Settings API for the
- * Options for the UpThemes Framework.
+ * options within the UpThemes Framework.
  *
  * @package 	UpThemes Framework
  * @copyright	Copyright (c) 2013, UpThemes
  * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License, v2 (or newer)
  *
- * @since 		upfw 1.0
+ * @since 		1.0
  */
 
 /**
@@ -79,7 +79,7 @@ function upfw_init_page(){
 	global $up_tabs;
 
 	/**
-	 * Call add_settings_section() for each Settings
+	 * Call add_settings_section() for each settings page tab
 	 *
 	 * Loop through each Theme Settings page tab, and add
 	 * a new section to the Theme Settings page for each
