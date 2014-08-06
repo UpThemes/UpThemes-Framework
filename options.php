@@ -79,6 +79,8 @@ function upfw_init() {
 		'upfw_options_validate'
 	);
 
+
+	do_action( 'upfw_loaded' );
 }
 
 /**
