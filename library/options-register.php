@@ -45,7 +45,7 @@ function upfw_register_admin_js_globals(){
 
 }
 
-add_action('admin_enqueue_scripts','upfw_register_admin_js_globals',1);
+add_action('admin_print_scripts','upfw_register_admin_js_globals',1);
 
 /**
  * Callback for add_settings_section()
