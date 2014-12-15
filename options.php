@@ -42,7 +42,7 @@ function upfw_rolescheck() {
 		add_action( 'admin_print_scripts-appearance_page_upfw-settings', 'upfw_enqueue_scripts_styles', 40 );
 
 		// Load the framework in the admin.
-		add_action( 'admin_init', 'upfw_init' );
+		upfw_init();
 
 		global $wp_customize;
 
@@ -53,7 +53,7 @@ function upfw_rolescheck() {
 	}
 }
 // Hook
-add_action( 'init', 'upfw_rolescheck', 20 );
+add_action( 'init', 'upfw_rolescheck', 1 );
 
 /**
  * Initialize the UpThemes Framework.
@@ -260,25 +260,26 @@ function upfw_add_theme_page() {
 	global $upfw_settings_page;
 
 	// Add theme options page
-	if( !defined( 'UPFW_NO_THEME_OPTIONS_PAGE' ) ){
-		$upfw_settings_page = add_theme_page(
-			// $page_title
-			// Name displayed in HTML title tag
-			apply_filters('options_page_menu_title', __( 'Theme Options', 'upfw' ) ),
-			// $menu_title
-			// Name displayed in the Admin Menu
-			apply_filters('options_page_title', __( 'Theme Options', 'upfw' ) ),
-			// $capability
-			// User capability required to access page
-			upfw_get_settings_page_cap(),
-			// $menu_slug
-			// String to append to URL after "themes.php"
-			'upfw-settings',
-			// $callback
-			// Function to define settings page markup
-			'upfw_admin_options_page'
-		);
-	}
+	if( defined( 'UPFW_NO_THEME_OPTIONS_PAGE' ) && UPFW_NO_THEME_OPTIONS_PAGE == true )
+		return;
+
+	$upfw_settings_page = add_theme_page(
+		// $page_title
+		// Name displayed in HTML title tag
+		apply_filters('options_page_menu_title', __( 'Theme Options', 'upfw' ) ),
+		// $menu_title
+		// Name displayed in the Admin Menu
+		apply_filters('options_page_title', __( 'Theme Options', 'upfw' ) ),
+		// $capability
+		// User capability required to access page
+		upfw_get_settings_page_cap(),
+		// $menu_slug
+		// String to append to URL after "themes.php"
+		'upfw-settings',
+		// $callback
+		// Function to define settings page markup
+		'upfw_admin_options_page'
+	);
 }
 
 /**
