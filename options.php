@@ -14,7 +14,7 @@
 /**
 * UpThemes Framework Version
 */
-define( 'UPTHEMES_VER', '2.5' );
+define( 'UPTHEMES_VER', '2.5.1' );
 define( 'THEME_OPTIONS_DIR', dirname( __FILE__ ) );
 
 /**

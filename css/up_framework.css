@@ -57,3 +57,128 @@ label.radio_image input:checked + img{
 }
 
 /* @end */
+
+/* @group Color Schemes */
+
+@-webkit-keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-ms-keyframes spin {
+  100% {
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.color-schemes input{
+	display: none;
+}
+
+.color-schemes label{
+	display: inline-block;
+	float: left;
+	margin-right: 21px;
+	margin-bottom: 5px;
+}
+
+.color-schemes label.radio_image .table{
+	border: 8px solid #f2f2f2;
+	border-radius: 3px;
+	content: "";
+}
+
+.color-schemes label.radio_image input:checked + .table{
+	border-color: #a2daec;
+}
+
+.color-scheme-box{
+	position: relative;
+}
+
+.color-scheme-box.table{
+	display: table;
+}
+
+.color-scheme-box.table .row{
+	display: table-row;
+	height: 100%;
+}
+
+.color-scheme-box.table .row .cell{
+	display: table-cell;
+	height: 100%;
+	width: 1%;
+}
+
+.customize-control .color-scheme-box{
+	width: 30px;
+	height: 30px;
+}
+
+#scss-loading{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+  height: 100%;
+	opacity: .8;
+	background-color: #222;
+}
+
+  #scss-loading span {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translateY(-50%) translateX(-50%);
+    -ms-transform: translateY(-50%) translateX(-50%);
+    transform: translateY(-50%) translateX(-50%);
+    width: 48px;
+    height: 48px;
+    border: 2px solid #ccc;
+    border-radius: 100%;
+    display: block;
+  }
+
+  #scss-loading span:before {
+    display: block;
+    position: absolute;
+    left: 22px;
+    top: 4px;
+    width: 2px;
+    height: 20px;
+    background-color: #ccc;
+    -webkit-animation: spin 3s linear infinite;
+    animation: spin 3s linear infinite;
+    content: "";
+    -webkit-transform-origin: 1px 20px;
+    -ms-transform-origin: 1px 20px;
+    transform-origin: 1px 20px;
+  }
+
+  #scss-loading span:after {
+    display: block;
+    position: absolute;
+    left: 22px;
+    top: 6px;
+    width: 2px;
+    height: 18px;
+    background-color: #ccc;
+    -webkit-animation: spin 18s linear infinite;
+    animation: spin 18s linear infinite;
+    content: "";
+    -webkit-transform-origin: 1px 18px;
+    -ms-transform-origin: 1px 18px;
+    transform-origin: 1px 18px;
+  }
+
+/* @end */
