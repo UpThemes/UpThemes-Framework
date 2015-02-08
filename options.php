@@ -14,7 +14,7 @@
 /**
 * UpThemes Framework Version
 */
-define( 'UPTHEMES_VER', '2.5.1' );
+define( 'UPTHEMES_VER', '2.5.2' );
 define( 'THEME_OPTIONS_DIR', dirname( __FILE__ ) );
 
 /**
@@ -42,7 +42,7 @@ function upfw_rolescheck() {
 		add_action( 'admin_print_scripts-appearance_page_upfw-settings', 'upfw_enqueue_scripts_styles', 40 );
 
 		// Load the framework in the admin.
-		upfw_init();
+		add_action( 'admin_init', 'upfw_init' );
 
 		global $wp_customize;
 
