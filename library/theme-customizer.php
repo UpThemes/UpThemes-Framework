@@ -70,19 +70,32 @@ function upfw_customize_register($wp_customize) {
 			$default = $option['default'];
 		}
 
+		$sanitize_callback = 'wp_filter_kses';
+
+		if( isset( $option['sanitize_callback'] ) ) {
+			$sanitize_callback = $option['sanitize_callback'];
+		} else if( $option['type'] === 'text' || $option['type'] === 'select' || $option['type'] === 'radio' ) {
+			$sanitize_callback = 'sanitize_text_field';
+		} else if( $option['type'] === 'url' ) {
+			$sanitize_callback = 'esc_url_raw';
+		} else if( $option['type'] === 'color' ) {
+			$sanitize_callback = 'sanitize_hex_color';
+		}
+
 		$wp_customize->add_setting( $optiondb, array(
-			'default'		=> $default,
-			'type'			=> 'option',
-			'capabilities'	=> 'edit_theme_options'
+			'default'		    => $default,
+			'type'			    => 'option',
+			'capabilities'	    => 'edit_theme_options',
+			'sanitize_callback' => $sanitize_callback
 		) );
 
 		if( $option['type'] == 'text' ){
 
 			$wp_customize->add_control( $option['name'], array(
-				'label'   	=> $option['title'],
-				'section' 	=> $option_section_name,
-				'settings' 	=> $optiondb,
-				'type'    	=> 'text',
+				'label'   	        => $option['title'],
+				'section' 	        => $option_section_name,
+				'settings' 	        => $optiondb,
+				'type'    	        => 'text',
 			) );
 
 		}
