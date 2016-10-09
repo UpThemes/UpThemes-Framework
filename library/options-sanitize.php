@@ -26,7 +26,7 @@ function upfw_options_validate( $input ) {
 	global $up_tabs;
 
 	// This is the "whitelist": current settings
-	$valid_input = (array) upfw_get_options();
+	$actual_options = (array) upfw_get_options();
 	// Get the array of Theme settings, by Settings Page tab
 	$settingsbytab = upfw_get_settings_by_tab();
 	// Get the array of option parameters
@@ -45,24 +45,33 @@ function upfw_options_validate( $input ) {
 	}
 
 	// Determine what tab was input
+	global $wp_customize;
+
 	$submittab = '';
-	foreach ( $up_tabs as $tab ) {
-		$submitname = 'submit-' . $tab['name'];
-		$resetname = 'reset-' . $tab['name'];
-		if ( ! empty( $input[$submitname] ) || ! empty($input[$resetname] ) ) {
-			$submittab = $tab['name'];
+	if ( isset( $wp_customize ) ) {
+		$submittab = 'all';
+	} else {
+		foreach ( $up_tabs as $tab ) {
+			$submitname = 'submit-' . $tab['name'];
+			$resetname = 'reset-' . $tab['name'];
+			if ( ! empty( $input[$submitname] ) || ! empty($input[$resetname] ) ) {
+				$submittab = $tab['name'];
+			}
 		}
 	}
 
-	global $wp_customize;
-	// Get settings by tab
-	$tabsettings = ( isset ( $wp_customize ) ? $settingsbytab['all'] : $settingsbytab[$submittab] );
+	if ( ! isset( $settingsbytab[$submittab] ) ) {
+		return $actual_options;
+	}
+
+	$tabsettings = $settingsbytab[$submittab];
+
+	$clean = $actual_options;
 
 	// Loop through each tab setting
 	foreach ( $tabsettings as $setting ) {
-
 		// If no option is selected, set the default
-		$valid_input[$setting] = ( ! isset( $input[$setting] ) ? $option_defaults[$setting] : $input[$setting] );
+		$clean[$setting] = ( ! isset( $input[$setting] ) ? $option_defaults[$setting] : $input[$setting] );
 
 		// If submit, validate/sanitize $input
 		if ( 'submit' == $submittype ) {
@@ -84,22 +93,21 @@ function upfw_options_validate( $input ) {
 			$setting = preg_replace( '/[^a-zA-Z0-9._\-]/', '', strtolower( $option['name'] ) );
 
 			// Set checkbox to false if it wasn't sent in the $_POST
-			if ( 'checkbox' == $option['type'] && ! isset( $input[$setting] ) ) {
-				$input[$setting] = false;
+			if ( 'checkbox' == $option['type'] && ! isset( $clean[$setting] ) ) {
+				$clean[$setting] = false;
 			}
 
 			// Set each item in the multicheck to false if it wasn't sent in the $_POST
-			if ( ( 'multicheck' == $option['type'] ) && ! isset( $input[$setting] ) ) {
+			if ( ( 'multicheck' == $option['type'] ) && ! isset( $clean[$setting] ) ) {
 				foreach ( $option['valid_options'] as $key => $value ) {
-					$input[$setting][$key] = false;
+					$clean[$setting][$key] = false;
 				}
 			}
 
 			// For a value to be submitted to database it must pass through a sanitization filter
 			if ( has_filter( 'upfw_sanitize_' . $option['type'] ) ) {
-				$clean[$setting] = apply_filters( 'upfw_sanitize_' . $option['type'], $input[$setting], $option );
+				$clean[$setting] = apply_filters( 'upfw_sanitize_' . $option['type'], $clean[$setting], $option );
 			}
-
 		}
 		// If reset, reset defaults
 		elseif ( 'reset' == $submittype ) {
